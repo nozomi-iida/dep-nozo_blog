@@ -1,4 +1,4 @@
-import { CloseIcon, SearchIcon, SunIcon } from "@chakra-ui/icons";
+import { CloseIcon, MoonIcon, SearchIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Box,
   Center,
@@ -20,14 +20,10 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 
-const fadeOut = keyframes`
-  from { opacity: 1; }
-  to { opacity: 0; display: hidden; }
-`;
-
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useBoolean(true);
   const [isSearchOpen, setIsSearchOpen] = useBoolean();
+  const [isDarkTheme, setIsDarkTheme] = useBoolean();
 
   return (
     <Box backgroundColor="white">
@@ -100,10 +96,16 @@ export const Header = () => {
               href="#"
               transition="color 0.2s"
               _hover={{ color: "blue.400" }}
+              onClick={setIsDarkTheme.toggle}
             >
-              <SunIcon w={17} h={17} />
-            </Center>
+              <Fade in={isDarkTheme} hidden={!isDarkTheme}>
+                <SunIcon w={17} h={17} />
+              </Fade>
 
+              <Fade in={!isDarkTheme} hidden={isDarkTheme}>
+                <MoonIcon w={17} h={17} />
+              </Fade>
+            </Center>
             <Popover isOpen={isSearchOpen}>
               <PopoverTrigger>
                 <Center
