@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "programmings",
+  "info": {
+    "singularName": "programming",
+    "pluralName": "programmings",
+    "displayName": "Programming",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "languages": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::language.language",
+      "inversedBy": "programmings"
+    },
+    "content": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

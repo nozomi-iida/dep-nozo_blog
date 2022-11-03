@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "languages",
+  "info": {
+    "singularName": "language",
+    "pluralName": "languages",
+    "displayName": "Language"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "programmings": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::programming.programming",
+      "mappedBy": "languages"
+    }
+  }
+}
