@@ -1,13 +1,16 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Layout } from "../components/Layout";
 
-export default function App({ Component, pageProps }: AppProps) {
+export const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider>
-      <Box minH="100vh" backgroundColor="blackAlpha.50">
+      <Layout>
         <Component {...pageProps} />
-      </Box>
+      </Layout>
     </ChakraProvider>
   );
-}
+};
+
+export default App;
