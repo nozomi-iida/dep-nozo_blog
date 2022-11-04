@@ -33,17 +33,17 @@ export const Header = () => {
         <SlideFade in={isMenuOpen} offsetX={5} offsetY={0}>
           <Flex align="center" fontWeight="bold" h="full" gap={5}>
             <Link href="">
-              <Text transition="color 0.2s" _hover={{ color: "blue.400" }}>
+              <Text transition="color 0.2s" _hover={{ color: "activeColor" }}>
                 Engineer
               </Text>
             </Link>
             <Link href="">
-              <Text transition="color 0.2s" _hover={{ color: "blue.400" }}>
+              <Text transition="color 0.2s" _hover={{ color: "activeColor" }}>
                 Life
               </Text>
             </Link>
             <Link href="">
-              <Text transition="color 0.2s" _hover={{ color: "blue.400" }}>
+              <Text transition="color 0.2s" _hover={{ color: "activeColor" }}>
                 About
               </Text>
             </Link>
@@ -55,8 +55,8 @@ export const Header = () => {
             as="a"
             href="#"
             transition="color 0.2s"
-            _hover={{ color: "blue.400" }}
-            color={isMenuOpen ? "blue.400" : undefined}
+            _hover={{ color: "activeColor" }}
+            color={isMenuOpen ? "activeColor" : undefined}
             onClick={setIsMenuOpen.toggle}
           >
             <Box
@@ -73,7 +73,7 @@ export const Header = () => {
                 backgroundColor: "currentcolor",
                 position: "absolute",
                 top: "-7px",
-                transition: "all 0.2s",
+                transition: "width 0.2s, margin 0.2s",
               }}
               _after={{
                 h: "3px",
@@ -84,7 +84,7 @@ export const Header = () => {
                 backgroundColor: "currentcolor",
                 position: "absolute",
                 top: "7px",
-                transition: "all 0.2s",
+                transition: "width 0.2s, margin 0.2s",
               }}
             />
           </Center>
@@ -93,7 +93,7 @@ export const Header = () => {
             as="a"
             href="#"
             transition="color 0.2s"
-            _hover={{ color: "blue.400" }}
+            _hover={{ color: "activeColor" }}
             onClick={setIsDarkTheme.toggle}
           >
             <Fade in={isDarkTheme} hidden={!isDarkTheme}>
@@ -111,8 +111,8 @@ export const Header = () => {
                 as="a"
                 href="#"
                 transition="color 0.2s"
-                color={isSearchOpen ? "blue.400" : undefined}
-                _hover={{ color: "blue.400" }}
+                color={isSearchOpen ? "activeColor" : undefined}
+                _hover={{ color: "activeColor" }}
                 onClick={setIsSearchOpen.toggle}
               >
                 <Box>

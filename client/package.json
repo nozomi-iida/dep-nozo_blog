@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prettier": "prettier --write"
+    "prettier": "prettier --write",
+    "theme": "chakra-cli tokens ./src/libs/chakra/theme.ts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.11",
@@ -24,6 +25,7 @@
     "typescript": "4.8.4"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^2.1.8",
     "eslint": "8.26.0",
     "eslint-config-next": "13.0.1",
     "prettier": "^2.7.1"
