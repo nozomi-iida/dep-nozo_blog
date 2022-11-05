@@ -2,11 +2,37 @@ import { ReactElement } from "react";
 import { ArticleCard } from "components/ArticleCard";
 import { Layout } from "components/Layout";
 import { NextPageWithLayout } from "./_app";
+import { Grid, GridItem } from "@chakra-ui/react";
 
 const Home: NextPageWithLayout = () => {
   return (
     <Layout.Content>
-      <ArticleCard />
+      <Grid templateColumns="repeat(3, 1fr)" gap={10}>
+        <GridItem>
+          <ArticleCard />
+        </GridItem>
+        <GridItem>
+          <ArticleCard />
+        </GridItem>
+        <GridItem>
+          <ArticleCard />
+        </GridItem>
+        <GridItem>
+          <ArticleCard />
+        </GridItem>
+        <GridItem>
+          <ArticleCard />
+        </GridItem>
+        <GridItem>
+          <ArticleCard />
+        </GridItem>
+        <GridItem>
+          <ArticleCard />
+        </GridItem>
+        <GridItem>
+          <ArticleCard />
+        </GridItem>
+      </Grid>
     </Layout.Content>
   );
 };
