@@ -8,6 +8,7 @@ export const Footer = () => {
       borderColor="borderColor"
       position="relative"
       py={14}
+      as="footer"
       _before={{
         content: `""`,
         h: 0.5,

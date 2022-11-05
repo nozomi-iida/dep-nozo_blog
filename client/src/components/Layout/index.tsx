@@ -1,9 +1,8 @@
-import { Box, Button, useBoolean } from "@chakra-ui/react";
+import { Box, useBoolean } from "@chakra-ui/react";
 import { Footer } from "components/Footer";
 import { FC, ReactNode } from "react";
 import { Header } from "../Header";
 import { AiFillCaretUp } from "react-icons/ai";
-import { useState } from "react";
 import { useEffect } from "react";
 
 type LayoutProps = {
@@ -11,18 +10,13 @@ type LayoutProps = {
 };
 
 type LayoutSubComponent = {
-  // Header: FC<LayoutProps>;
   Content: FC<LayoutProps>;
 };
 
 export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
   return (
     <Box minH="100vh" backgroundColor="blackAlpha.50">
-      <Box backgroundColor="white">
-        <Box mx="auto" maxW={970}>
-          <Header />
-        </Box>
-      </Box>
+      <Header />
       {children}
       <Box mx="auto" maxW={970}>
         <Footer />
@@ -30,14 +24,6 @@ export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
     </Box>
   );
 };
-
-// const HeaderLayout: FC<LayoutProps> = ({ children }) => {
-//   return (
-//     <Box backgroundColor="white">
-//       <Box maxW={970}>{children}</Box>
-//     </Box>
-//   );
-// };
 
 const ContentLayout: FC<LayoutProps> = ({ children }) => {
   const [showTopIcon, setShowTopIcon] = useBoolean(true);
@@ -50,7 +36,7 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
 
   useEffect(() => {
     const changeShow = () => {
-      if (window.pageYOffset > 200) {
+      if (window.pageYOffset > 600) {
         setShowTopIcon.on();
       } else {
         setShowTopIcon.off();
@@ -88,5 +74,4 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
   );
 };
 
-// Layout.Header = HeaderLayout;
 Layout.Content = ContentLayout;
