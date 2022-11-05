@@ -66,9 +66,18 @@ export const Header = () => {
                     transition="color 0.2s"
                     _hover={{ color: "activeColor" }}
                   >
+                    Home
+                  </Text>
+                </Link>
+                <Link href="">
+                  <Text
+                    transition="color 0.2s"
+                    _hover={{ color: "activeColor" }}
+                  >
                     Engineer
                   </Text>
                 </Link>
+
                 <Link href="">
                   <Text
                     transition="color 0.2s"
