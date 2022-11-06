@@ -6,20 +6,16 @@ import { Grid } from "@chakra-ui/react";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { StrapiListResponse } from "libs/strapi/types";
 import { Article } from "libs/strapi/models/article";
+import { strapiClient } from "libs/strapi/api/axios";
 
 export const getStaticProps: GetStaticProps<{
   articles: StrapiListResponse<Article>;
 }> = async () => {
-  const res = await fetch("http://localhost:1337/api/articles", {
-    headers: new Headers({
-      Authorization: `Bearer ${process.env.STRAPI_TOKEN}`,
-    }),
-  });
-  const articles = await res.json();
+  const res = await strapiClient.get("articles");
 
   return {
     props: {
-      articles,
+      articles: res.data,
     },
   };
 };
@@ -27,7 +23,7 @@ export const getStaticProps: GetStaticProps<{
 const Home: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ articles }) => {
-  const { data, meta } = articles;
+  const { data } = articles;
   return (
     <Layout.Content>
       <Grid templateColumns="repeat(3, 1fr)" gap={10}>
