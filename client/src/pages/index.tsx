@@ -7,11 +7,16 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { StrapiListResponse } from "libs/strapi/types";
 import { Article } from "libs/strapi/models/article";
 import { strapiClient } from "libs/strapi/api/axios";
+import qs from "qs";
 
 export const getStaticProps: GetStaticProps<{
   articles: StrapiListResponse<Article>;
 }> = async () => {
-  const res = await strapiClient.get("articles");
+  const query = qs.stringify(
+    { populate: ["thumbnail"] },
+    { encodeValuesOnly: true }
+  );
+  const res = await strapiClient.get(`articles?${query}`);
 
   return {
     props: {

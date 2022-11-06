@@ -13,7 +13,14 @@ type ArticleCardProps = { articleId: number; article: Article };
 export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
   return (
     <Box backgroundColor="white" as="article">
-      <Image alt="" src={BlogTest} width={300} height={200} />
+      <Image
+        alt=""
+        src={`${process.env.NEXT_PUBLIC_STRAPI_URI}${
+          article.thumbnail?.data?.attributes.url ?? ""
+        }`}
+        width={300}
+        height={200}
+      />
       <VStack gap={4} p={7} align="left">
         <Text fontSize="sm" color="subInfoText" fontWeight="bold">
           {dayjs(article.publishedAt).format("YYYY-MM-DD")}

@@ -6,6 +6,7 @@ import { StrapiGetResponse, StrapiListResponse } from "libs/strapi/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextPageWithLayout } from "pages/_app";
 import { ReactElement } from "react";
+import qs from "qs";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await strapiClient.get<StrapiListResponse>("articles");
@@ -21,7 +22,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<
   StrapiGetResponse<Article>
 > = async (context) => {
-  const res = await strapiClient.get(`articles/${context.params?.id}`);
+  const query = qs.stringify({ populate: "*" }, { encodeValuesOnly: true });
+  const res = await strapiClient.get(`articles/${context.params?.id}?${query}`);
 
   return {
     props: res.data,
