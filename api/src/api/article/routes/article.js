@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * programming router
+ * article router
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::programming.programming');
+module.exports = createCoreRouter('api::article.article');

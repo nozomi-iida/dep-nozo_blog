@@ -7,7 +7,8 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "generate": "strapi ts:generate-types -o ../client/src/libs/strapi"
   },
   "devDependencies": {},
   "dependencies": {

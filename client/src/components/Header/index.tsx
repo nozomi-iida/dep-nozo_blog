@@ -28,7 +28,7 @@ export const Header = () => {
 
   useEffect(() => {
     const addShadow = () => {
-      if (window.pageYOffset === 0) {
+      if (window.pageYOffset < 100) {
         setShowShadow.off();
       } else {
         setShowShadow.on();
