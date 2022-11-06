@@ -47,9 +47,10 @@ export const Header = () => {
       top={0}
       transition="all .2s"
       boxShadow={showShadow ? "md" : undefined}
+      as="header"
     >
       <Box maxW={970} mx="auto">
-        <Flex margin="auto" px={15} justify="space-between" as="header">
+        <Flex margin="auto" px={15} justify="space-between">
           <Link href="">
             <Heading
               lineHeight={showShadow ? "70px" : "100px"}

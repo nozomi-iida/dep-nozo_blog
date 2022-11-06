@@ -6,10 +6,11 @@ import BlogTest from "../../../public/blog_test.jpeg";
 import { Article } from "libs/strapi/models/article";
 import { FC } from "react";
 import dayjs from "dayjs";
+import { pagesPath } from "libs/pathpida/$path";
 
-type ArticleCardProps = { article: Article };
+type ArticleCardProps = { articleId: number; article: Article };
 
-export const ArticleCard: FC<ArticleCardProps> = ({ article }) => {
+export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
   return (
     <Box backgroundColor="white" as="article">
       <Image alt="" src={BlogTest} width={300} height={200} />
@@ -17,7 +18,7 @@ export const ArticleCard: FC<ArticleCardProps> = ({ article }) => {
         <Text fontSize="sm" color="subInfoText" fontWeight="bold">
           {dayjs(article.publishedAt).format("YYYY-MM-DD")}
         </Text>
-        <Link href="">
+        <Link href={pagesPath.articles._id(articleId).$url()}>
           <Heading size="lg" _hover={{ textDecoration: "underline" }}>
             {article.title}
           </Heading>

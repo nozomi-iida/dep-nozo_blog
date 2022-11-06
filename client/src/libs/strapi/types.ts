@@ -1,4 +1,4 @@
-export type StrapiListResponse<T> = {
+export type StrapiListResponse<T = unknown> = {
   data: {
     id: number;
     attributes: T;
@@ -11,4 +11,12 @@ export type StrapiListResponse<T> = {
       total: number;
     };
   };
+};
+
+export type StrapiGetResponse<T = unknown> = {
+  data: {
+    id: number;
+    attributes: T;
+  };
+  meta: {};
 };

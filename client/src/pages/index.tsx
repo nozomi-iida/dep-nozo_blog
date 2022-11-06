@@ -24,20 +24,23 @@ const Home: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ articles }) => {
   const { data } = articles;
+
   return (
-    <Layout.Content>
-      <Grid templateColumns="repeat(3, 1fr)" gap={10}>
-        {data.map((el) => (
-          <ArticleCard key={el.id} article={el.attributes} />
-        ))}
-      </Grid>
-    </Layout.Content>
+    <Grid templateColumns="repeat(3, 1fr)" gap={10}>
+      {data.map((el) => (
+        <ArticleCard key={el.id} articleId={el.id} article={el.attributes} />
+      ))}
+    </Grid>
   );
 };
 
 // TODO: Layoutの状態が保持されているかの確認をする
 Home.getLayout = (page: ReactElement) => {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout>
+      <Layout.Content>{page}</Layout.Content>
+    </Layout>
+  );
 };
 
 export default Home;

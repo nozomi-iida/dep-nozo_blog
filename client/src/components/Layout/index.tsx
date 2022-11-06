@@ -15,7 +15,7 @@ type LayoutSubComponent = {
 
 export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
   return (
-    <Box minH="100vh" backgroundColor="blackAlpha.50">
+    <Box backgroundColor="blackAlpha.50">
       <Header />
       {children}
       <Box mx="auto" maxW={970}>
@@ -49,7 +49,7 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
   }, [setShowTopIcon]);
 
   return (
-    <Box mx="auto" maxW={970} py={14}>
+    <Box mx="auto" maxW={970} py={14} as="main" minH="100vh">
       {children}
       <Box
         as="button"
