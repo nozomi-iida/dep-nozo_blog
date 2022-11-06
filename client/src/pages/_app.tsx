@@ -10,12 +10,15 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-export const App = ({ Component, pageProps }: AppProps) => {
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export const App = ({ Component, pageProps }: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout || ((page) => page);
   return (
     <ChakraProvider theme={chakraTheme}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      {getLayout(<Component {...pageProps} />)}
     </ChakraProvider>
   );
 };
