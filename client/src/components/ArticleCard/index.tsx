@@ -2,7 +2,6 @@ import { HiHeart } from "react-icons/hi";
 import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
-import BlogTest from "../../../public/blog_test.jpeg";
 import { Article } from "libs/strapi/models/article";
 import { FC } from "react";
 import dayjs from "dayjs";

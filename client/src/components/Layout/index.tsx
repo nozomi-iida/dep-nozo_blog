@@ -15,7 +15,7 @@ type LayoutSubComponent = {
 
 export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
   return (
-    <Box backgroundColor="blackAlpha.50">
+    <Box backgroundColor="blackAlpha.50" minH="100vh">
       <Header />
       {children}
       <Box mx="auto" maxW={970}>
@@ -36,7 +36,7 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
 
   useEffect(() => {
     const changeShow = () => {
-      if (window.pageYOffset > 600) {
+      if (window.pageYOffset > 100) {
         setShowTopIcon.on();
       } else {
         setShowTopIcon.off();
@@ -49,7 +49,7 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
   }, [setShowTopIcon]);
 
   return (
-    <Box mx="auto" maxW={970} py={14} as="main" minH="100vh">
+    <Box mx="auto" maxW={970} py={14} as="main">
       {children}
       <Box
         as="button"

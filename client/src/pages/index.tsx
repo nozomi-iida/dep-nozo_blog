@@ -9,6 +9,7 @@ import { Article } from "libs/strapi/models/article";
 import { strapiClient } from "libs/strapi/api/axios";
 import qs from "qs";
 
+// FIXME: ヘッダーとトップに戻るアイコンカクツク部分がある
 export const getStaticProps: GetStaticProps<{
   articles: StrapiListResponse<Article>;
 }> = async () => {
