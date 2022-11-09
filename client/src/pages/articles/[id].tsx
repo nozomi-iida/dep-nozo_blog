@@ -71,6 +71,7 @@ const Article: NextPageWithLayout<
           )}
         </HStack>
         <Heading>{data.attributes.title}</Heading>
+        {/* TODO: 画像は横幅いっぱいに表示したい */}
         <ReactMarkdown
           rehypePlugins={[rehypeRaw]}
           remarkPlugins={[gfm]}
@@ -122,6 +123,7 @@ const Article: NextPageWithLayout<
         <Divider borderColor="borderColor" />
         {/* TODO: 次と前の記事のタイトルを取得し、表示したい */}
         <HStack justify="space-between">
+          {/* TODO: Linkのコンポーネントを作る */}
           <NextLink href={pagesPath.articles._id(data.id).$url()}>
             <VStack>
               <Text
