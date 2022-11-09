@@ -1,5 +1,4 @@
-import { HiHeart } from "react-icons/hi";
-import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
+import { Box, Heading, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Article } from "libs/strapi/models/article";
@@ -9,6 +8,7 @@ import { pagesPath } from "libs/pathpida/$path";
 
 type ArticleCardProps = { articleId: number; article: Article };
 
+// TODO: 説明部分にマークダウンが表示されるから表示しない方が良いかも
 export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
   return (
     <Box backgroundColor="white" as="article">
@@ -47,11 +47,6 @@ export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
             </Text>
           </Link>
         </Box>
-        {/* FIXME: ハートが揃ってない */}
-        <Flex justify="right" color="subInfoText">
-          <HiHeart />
-          <Text fontSize="sm">100</Text>
-        </Flex>
       </VStack>
     </Box>
   );

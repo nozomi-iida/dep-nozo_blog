@@ -1,3 +1,4 @@
+import { FileType, RelationDataType, RelationManyDataType } from "../types";
 import { Tag } from "./tag";
 import { Topic } from "./topic";
 
@@ -6,15 +7,6 @@ export type Article = {
   content: string;
   thumbnail?: FileType;
   publishedAt?: string;
-  topic?: Topic;
-  tags?: Tag[];
-};
-
-// TODO: 必要に応じて追加
-type FileType = {
-  data?: {
-    attributes: {
-      url: string;
-    };
-  };
+  topic?: RelationDataType<Topic>;
+  tags?: RelationManyDataType<Tag>;
 };

@@ -1,4 +1,12 @@
-import { Box, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Divider,
+  Heading,
+  HStack,
+  Link,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { Image } from "components/Image";
 import { Layout } from "components/Layout";
 import dayjs from "dayjs";
@@ -11,6 +19,10 @@ import qs from "qs";
 import { ReactElement } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import gfm from "remark-gfm";
+import NextLink from "next/link";
+import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
+import { pagesPath } from "libs/pathpida/$path";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await strapiClient.get<StrapiListResponse>("articles");
@@ -47,23 +59,23 @@ const Article: NextPageWithLayout<
           h="100%"
         />
       )}
-      <VStack gap={4} align="left">
+      <VStack gap={4} align="left" backgroundColor="white" p={8}>
         <HStack gap={2}>
           <Text fontSize="sm" color="subInfoText" fontWeight="bold">
             {dayjs(data.attributes.publishedAt).format("YYYY-MM-DD")}
           </Text>
-          {data.attributes.topic?.name && (
+          {data.attributes.topic?.data.attributes.name && (
             <Text fontSize="sm" color="subInfoText" fontWeight="bold">
-              {data.attributes.topic.name}
+              {data.attributes.topic?.data.attributes.name}
             </Text>
           )}
         </HStack>
         <Heading>{data.attributes.title}</Heading>
-        {/* TODO: underlineが未実装 */}
         <ReactMarkdown
           rehypePlugins={[rehypeRaw]}
+          remarkPlugins={[gfm]}
           components={{
-            h1({ children, ...props }) {
+            h1({ children }) {
               return <Heading fontSize="3xl">{children}</Heading>;
             },
             h2({ children }) {
@@ -75,10 +87,68 @@ const Article: NextPageWithLayout<
             h4({ children }) {
               return <Heading fontSize="lg">{children}</Heading>;
             },
+            a({ children }) {
+              return (
+                <Link
+                  isExternal
+                  display="block"
+                  href={children.toString()}
+                  _hover={{ color: "activeColor", textDecoration: "underline" }}
+                >
+                  {children}
+                </Link>
+              );
+            },
           }}
         >
           {data.attributes.content}
         </ReactMarkdown>
+        {data.attributes.tags?.data.length && (
+          <Text>
+            Tags:{" "}
+            {data.attributes.tags.data.map((tag) => (
+              // TODO: hrefを設置
+              <NextLink key={tag.id} href="">
+                <Text
+                  display="inline"
+                  _hover={{ color: "activeColor", textDecoration: "underline" }}
+                >
+                  #{tag.attributes.name}
+                </Text>
+              </NextLink>
+            ))}
+          </Text>
+        )}
+        <Divider borderColor="borderColor" />
+        {/* TODO: 次と前の記事のタイトルを取得し、表示したい */}
+        <HStack justify="space-between">
+          <NextLink href={pagesPath.articles._id(data.id).$url()}>
+            <VStack>
+              <Text
+                fontSize="sm"
+                color="subInfoText"
+                fontWeight="bold"
+                display="flex"
+                alignItems="center"
+              >
+                <AiFillCaretLeft /> 前のページ
+              </Text>
+            </VStack>
+          </NextLink>
+          <NextLink href={pagesPath.articles._id(data.id).$url()}>
+            <VStack>
+              <Text
+                fontSize="sm"
+                color="subInfoText"
+                fontWeight="bold"
+                display="flex"
+                alignItems="center"
+              >
+                次のページ <AiFillCaretRight />
+              </Text>
+            </VStack>
+          </NextLink>
+        </HStack>
       </VStack>
     </Box>
   );

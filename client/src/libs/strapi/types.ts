@@ -20,3 +20,26 @@ export type StrapiGetResponse<T = unknown> = {
   };
   meta: {};
 };
+
+// TODO: 必要に応じて追加
+export type FileType = {
+  data?: {
+    attributes: {
+      url: string;
+    };
+  };
+};
+
+export type RelationDataType<T> = {
+  data: {
+    id: number;
+    attributes: T;
+  };
+};
+
+export type RelationManyDataType<T> = {
+  data: {
+    id: number;
+    attributes: T;
+  }[];
+};

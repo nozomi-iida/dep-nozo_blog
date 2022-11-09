@@ -17,6 +17,7 @@ import {
   Text,
   useBoolean,
 } from "@chakra-ui/react";
+import { pagesPath } from "libs/pathpida/$path";
 import Link from "next/link";
 import { useEffect } from "react";
 
@@ -51,7 +52,7 @@ export const Header = () => {
     >
       <Box maxW={970} mx="auto">
         <Flex margin="auto" px={15} justify="space-between">
-          <Link href="">
+          <Link href={pagesPath.$url()}>
             <Heading
               lineHeight={showShadow ? "70px" : "100px"}
               transition="line-height .2s ease"
@@ -62,7 +63,7 @@ export const Header = () => {
           <Flex gap={10}>
             <SlideFade in={isMenuOpen} offsetX={5} offsetY={0}>
               <Flex align="center" fontWeight="bold" h="full" gap={5}>
-                <Link href="">
+                <Link href={pagesPath.$url()}>
                   <Text
                     transition="color 0.2s"
                     _hover={{ color: "activeColor" }}
