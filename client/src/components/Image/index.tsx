@@ -1,14 +1,17 @@
 import { Box, BoxProps } from "@chakra-ui/react";
+import { staticPath } from "libs/pathpida/$path";
 import NextImage, { ImageProps as NextImageProps } from "next/image";
 import { FC } from "react";
 
-type ImageProps = Pick<NextImageProps, "alt" | "src"> &
-  Omit<BoxProps, "position">;
+type ImageProps = Omit<BoxProps, "position"> & {
+  src?: string;
+  alt: string;
+};
 
 export const Image: FC<ImageProps> = ({ src, alt, ...props }) => {
   return (
     <Box position="relative" {...props}>
-      <NextImage fill src={src} alt={alt} />
+      <NextImage fill src={src ?? staticPath.blog_test_jpeg} alt={alt} />
     </Box>
   );
 };

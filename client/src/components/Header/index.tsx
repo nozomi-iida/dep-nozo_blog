@@ -49,6 +49,7 @@ export const Header = () => {
       transition="all .2s"
       boxShadow={showShadow ? "md" : undefined}
       as="header"
+      zIndex="docked"
     >
       <Box maxW={970} mx="auto">
         <Flex margin="auto" px={15} justify="space-between">

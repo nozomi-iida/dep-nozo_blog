@@ -23,6 +23,7 @@ import gfm from "remark-gfm";
 import NextLink from "next/link";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import { pagesPath } from "libs/pathpida/$path";
+import { Sidebar } from "components/Sidebar";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await strapiClient.get<StrapiListResponse>("articles");
@@ -64,7 +65,7 @@ const Article: NextPageWithLayout<
           <Text fontSize="sm" color="subInfoText" fontWeight="bold">
             {dayjs(data.attributes.publishedAt).format("YYYY-MM-DD")}
           </Text>
-          {data.attributes.topic?.data.attributes.name && (
+          {data.attributes.topic?.data && (
             <Text fontSize="sm" color="subInfoText" fontWeight="bold">
               {data.attributes.topic?.data.attributes.name}
             </Text>
@@ -105,11 +106,11 @@ const Article: NextPageWithLayout<
           {data.attributes.content}
         </ReactMarkdown>
         {data.attributes.tags?.data.length && (
-          <Text>
-            Tags:{" "}
+          <HStack gap={0.5}>
+            <Text>Tags:</Text>
             {data.attributes.tags.data.map((tag) => (
               // TODO: hrefを設置
-              <NextLink key={tag.id} href="">
+              <NextLink key={tag.id} href={pagesPath.$url()}>
                 <Text
                   display="inline"
                   _hover={{ color: "activeColor", textDecoration: "underline" }}
@@ -118,7 +119,7 @@ const Article: NextPageWithLayout<
                 </Text>
               </NextLink>
             ))}
-          </Text>
+          </HStack>
         )}
         <Divider borderColor="borderColor" />
         {/* TODO: 次と前の記事のタイトルを取得し、表示したい */}
@@ -160,6 +161,9 @@ Article.getLayout = (page: ReactElement) => {
   return (
     <Layout>
       <Layout.Content>{page}</Layout.Content>
+      <Layout.Sidebar>
+        <Sidebar />
+      </Layout.Sidebar>
     </Layout>
   );
 };

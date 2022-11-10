@@ -1,4 +1,4 @@
-import { Box, useBoolean } from "@chakra-ui/react";
+import { Box, Flex, useBoolean } from "@chakra-ui/react";
 import { Footer } from "components/Footer";
 import { FC, ReactNode } from "react";
 import { Header } from "../Header";
@@ -11,18 +11,25 @@ type LayoutProps = {
 
 type LayoutSubComponent = {
   Content: FC<LayoutProps>;
+  Sidebar: FC<LayoutProps>;
 };
 
 export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
   return (
     <Box backgroundColor="blackAlpha.50" minH="100vh">
       <Header />
-      {children}
+      <Flex mx="auto" maxW={970} py={14}>
+        {children}
+      </Flex>
       <Box mx="auto" maxW={970}>
         <Footer />
       </Box>
     </Box>
   );
+};
+
+export const SidebarLayout: FC<LayoutProps> = ({ children }) => {
+  return <Box px={4}>{children}</Box>;
 };
 
 const ContentLayout: FC<LayoutProps> = ({ children }) => {
@@ -49,7 +56,7 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
   }, [setShowTopIcon]);
 
   return (
-    <Box mx="auto" maxW={970} py={14} as="main">
+    <Box px={4} as="main">
       {children}
       <Box
         as="button"
@@ -75,3 +82,4 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
 };
 
 Layout.Content = ContentLayout;
+Layout.Sidebar = SidebarLayout;

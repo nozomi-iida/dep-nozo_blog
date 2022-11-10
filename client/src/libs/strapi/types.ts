@@ -31,7 +31,7 @@ export type FileType = {
 };
 
 export type RelationDataType<T> = {
-  data: {
+  data?: {
     id: number;
     attributes: T;
   };
