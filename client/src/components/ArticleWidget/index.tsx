@@ -40,7 +40,7 @@ export const ArticleWidget: FC<ArticleWidgetProps> = ({ id, article }) => {
           }
           w={300}
           h={200}
-          alt="hoge"
+          alt={article.title}
         />
         <Box
           position="absolute"

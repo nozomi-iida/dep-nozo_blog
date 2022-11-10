@@ -5,6 +5,7 @@ import { Article } from "libs/strapi/models/article";
 import { StrapiListResponse } from "libs/strapi/types";
 import { useEffect, useState } from "react";
 import qs from "qs";
+import { ArticleMedia } from "components/ ArticleMedia";
 
 export const Sidebar = () => {
   const [articles, setArticles] = useState<StrapiListResponse<Article>>();
@@ -43,9 +44,14 @@ export const Sidebar = () => {
           </Text>
         </Box>
         {articles && (
-          <VStack gap={4}>
-            {articles.data.map((el) => (
-              <ArticleWidget key={el.id} id={el.id} article={el.attributes} />
+          <VStack gap={4} align="normal">
+            {articles.data.map((el, idx) => (
+              <ArticleMedia
+                key={el.id}
+                id={el.id}
+                article={el.attributes}
+                popularNum={idx + 1}
+              />
             ))}
           </VStack>
         )}

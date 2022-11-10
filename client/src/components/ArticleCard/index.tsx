@@ -33,7 +33,7 @@ export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
           <Text
             fontSize="md"
             overflow="hidden"
-            style={{
+            sx={{
               WebkitLineClamp: 6,
               WebkitBoxOrient: "vertical",
               display: "-webkit-box",

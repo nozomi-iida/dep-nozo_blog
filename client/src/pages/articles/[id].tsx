@@ -56,8 +56,8 @@ const Article: NextPageWithLayout<
         <Image
           src={`${process.env.NEXT_PUBLIC_STRAPI_URI}${data.attributes.thumbnail.data.attributes.url}`}
           alt={data.id.toString()}
-          w="100%"
-          h="100%"
+          w="full"
+          h={430}
         />
       )}
       <VStack gap={4} align="left" backgroundColor="white" p={8}>
