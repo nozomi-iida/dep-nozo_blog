@@ -61,12 +61,9 @@ export const ArticleMedia: FC<ArticleMediaProps> = ({
             position="absolute"
             top={0}
             left={0}
-            backgroundColor="black"
             w="full"
             h="full"
-            _hover={{ opacity: 0.35 }}
-            opacity={0.15}
-            transition="opacity 0.2s"
+            _hover={{ opacity: 0.2, backgroundColor: "black" }}
           />
         </Box>
         <VStack justify="left">

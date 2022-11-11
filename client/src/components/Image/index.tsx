@@ -11,7 +11,12 @@ type ImageProps = Omit<BoxProps, "position"> & {
 export const Image: FC<ImageProps> = ({ src, alt, ...props }) => {
   return (
     <Box position="relative" {...props}>
-      <NextImage fill src={src ?? staticPath.blog_test_jpeg} alt={alt} />
+      <NextImage
+        objectFit="contain"
+        fill
+        src={src ?? staticPath.blog_test_jpeg}
+        alt={alt}
+      />
     </Box>
   );
 };

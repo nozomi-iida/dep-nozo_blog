@@ -7,6 +7,7 @@ export type Article = {
   content: string;
   thumbnail?: FileType;
   publishedAt?: string;
+  likeCount: string;
   topic?: RelationDataType<Topic>;
   tags?: RelationManyDataType<Tag>;
 };

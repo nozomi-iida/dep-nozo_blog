@@ -41,6 +41,12 @@
       "relation": "manyToMany",
       "target": "api::tag.tag",
       "inversedBy": "articles"
+    },
+    "likeCount": {
+      "type": "biginteger",
+      "default": "0",
+      "required": true,
+      "min": "0"
     }
   }
 }

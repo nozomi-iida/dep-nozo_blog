@@ -16,7 +16,7 @@ import { StrapiGetResponse, StrapiListResponse } from "libs/strapi/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextPageWithLayout } from "pages/_app";
 import qs from "qs";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import gfm from "remark-gfm";
@@ -51,12 +51,22 @@ export const getStaticProps: GetStaticProps<
 const Article: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ data }) => {
+  const [likeCount, setLikeCount] = useState(Number(data.attributes.likeCount));
+
   const controls = useAnimationControls();
-  const onClickClap = () => {
+  const onClickClap = async () => {
     controls.start({ scale: 1.3 });
     setTimeout(() => {
       controls.start({ scale: 1.0 });
     }, 100);
+    const newLikeCount = likeCount + 1;
+    strapiClient
+      .put(`articles/${data.id}`, {
+        data: { likeCount: newLikeCount },
+      })
+      .then(() => {
+        setLikeCount(newLikeCount);
+      });
   };
   return (
     <Box>
@@ -114,40 +124,43 @@ const Article: NextPageWithLayout<
           {data.attributes.content}
         </ReactMarkdown>
         {/* TODO: 共有機能をつけたい */}
-        <HStack>
+        <HStack gap={8} w="full" justify="space-between">
           {data.attributes.tags?.data.length && (
-            <HStack gap={8} w="full" justify="space-between">
-              <HStack gap={0.5}>
-                <Text>Tags:</Text>
-                {data.attributes.tags.data.map((tag) => (
-                  // TODO: hrefを設置
-                  <NextLink key={tag.id} href={pagesPath.$url()}>
-                    <Text
-                      display="inline"
-                      _hover={{
-                        color: "activeColor",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      #{tag.attributes.name}
-                    </Text>
-                  </NextLink>
-                ))}
-              </HStack>
-
-              <HStack cursor="pointer" onClick={onClickClap} userSelect="none">
-                <motion.button animate={controls}>
-                  <Image
-                    alt={data.attributes.title}
-                    src={staticPath.applause_png}
-                    h={6}
-                    w={6}
-                  />
-                </motion.button>
-                <Text fontSize="sm">1,333</Text>
-              </HStack>
+            <HStack gap={0.5}>
+              <Text>Tags:</Text>
+              {data.attributes.tags.data.map((tag) => (
+                // TODO: hrefを設置
+                <NextLink key={tag.id} href={pagesPath.$url()}>
+                  <Text
+                    display="inline"
+                    _hover={{
+                      color: "activeColor",
+                      textDecoration: "underline",
+                    }}
+                  >
+                    #{tag.attributes.name}
+                  </Text>
+                </NextLink>
+              ))}
             </HStack>
           )}
+          <HStack
+            w="full"
+            justify="right"
+            cursor="pointer"
+            onClick={onClickClap}
+            userSelect="none"
+          >
+            <motion.button animate={controls}>
+              <Image
+                alt={data.attributes.title}
+                src={staticPath.applause_png}
+                h={6}
+                w={6}
+              />
+            </motion.button>
+            <Text fontSize="sm">{likeCount}</Text>
+          </HStack>
         </HStack>
         <Divider borderColor="borderColor" />
         {/* TODO: 次と前の記事のタイトルを取得し、表示したい */}
