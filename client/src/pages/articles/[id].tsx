@@ -52,8 +52,8 @@ const Article: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ data }) => {
   const controls = useAnimationControls();
-  const onClickApplause = () => {
-    controls.start({ scale: 1.2 });
+  const onClickClap = () => {
+    controls.start({ scale: 1.3 });
     setTimeout(() => {
       controls.start({ scale: 1.0 });
     }, 100);
@@ -116,7 +116,7 @@ const Article: NextPageWithLayout<
         {/* TODO: 共有機能をつけたい */}
         <HStack>
           {data.attributes.tags?.data.length && (
-            <HStack gap={8} justify="space-between">
+            <HStack gap={8} w="full" justify="space-between">
               <HStack gap={0.5}>
                 <Text>Tags:</Text>
                 {data.attributes.tags.data.map((tag) => (
@@ -135,11 +135,7 @@ const Article: NextPageWithLayout<
                 ))}
               </HStack>
 
-              <HStack
-                cursor="pointer"
-                onClick={onClickApplause}
-                userSelect="none"
-              >
+              <HStack cursor="pointer" onClick={onClickClap} userSelect="none">
                 <motion.button animate={controls}>
                   <Image
                     alt={data.attributes.title}
