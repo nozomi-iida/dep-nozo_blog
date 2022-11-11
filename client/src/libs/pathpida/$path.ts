@@ -10,6 +10,7 @@ export const pagesPath = {
 export type PagesPath = typeof pagesPath
 
 export const staticPath = {
+  applause_png: '/applause.png',
   blog_test_jpeg: '/blog_test.jpeg',
   favicon_ico: '/favicon.ico',
   vercel_svg: '/vercel.svg'

@@ -22,8 +22,9 @@ import rehypeRaw from "rehype-raw";
 import gfm from "remark-gfm";
 import NextLink from "next/link";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
-import { pagesPath } from "libs/pathpida/$path";
+import { pagesPath, staticPath } from "libs/pathpida/$path";
 import { Sidebar } from "components/Sidebar";
+import { motion, useAnimationControls } from "framer-motion";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await strapiClient.get<StrapiListResponse>("articles");
@@ -50,6 +51,13 @@ export const getStaticProps: GetStaticProps<
 const Article: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ data }) => {
+  const controls = useAnimationControls();
+  const onClickApplause = () => {
+    controls.start({ scale: 1.2 });
+    setTimeout(() => {
+      controls.start({ scale: 1.0 });
+    }, 100);
+  };
   return (
     <Box>
       {data.attributes.thumbnail?.data?.attributes.url && (
@@ -105,22 +113,46 @@ const Article: NextPageWithLayout<
         >
           {data.attributes.content}
         </ReactMarkdown>
-        {data.attributes.tags?.data.length && (
-          <HStack gap={0.5}>
-            <Text>Tags:</Text>
-            {data.attributes.tags.data.map((tag) => (
-              // TODO: hrefを設置
-              <NextLink key={tag.id} href={pagesPath.$url()}>
-                <Text
-                  display="inline"
-                  _hover={{ color: "activeColor", textDecoration: "underline" }}
-                >
-                  #{tag.attributes.name}
-                </Text>
-              </NextLink>
-            ))}
-          </HStack>
-        )}
+        {/* TODO: 共有機能をつけたい */}
+        <HStack>
+          {data.attributes.tags?.data.length && (
+            <HStack gap={8} justify="space-between">
+              <HStack gap={0.5}>
+                <Text>Tags:</Text>
+                {data.attributes.tags.data.map((tag) => (
+                  // TODO: hrefを設置
+                  <NextLink key={tag.id} href={pagesPath.$url()}>
+                    <Text
+                      display="inline"
+                      _hover={{
+                        color: "activeColor",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      #{tag.attributes.name}
+                    </Text>
+                  </NextLink>
+                ))}
+              </HStack>
+
+              <HStack
+                cursor="pointer"
+                onClick={onClickApplause}
+                userSelect="none"
+              >
+                <motion.button animate={controls}>
+                  <Image
+                    alt={data.attributes.title}
+                    src={staticPath.applause_png}
+                    h={6}
+                    w={6}
+                  />
+                </motion.button>
+                <Text fontSize="sm">1,333</Text>
+              </HStack>
+            </HStack>
+          )}
+        </HStack>
         <Divider borderColor="borderColor" />
         {/* TODO: 次と前の記事のタイトルを取得し、表示したい */}
         <HStack justify="space-between">
