@@ -16,7 +16,7 @@ type LayoutSubComponent = {
 
 export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
   return (
-    <Box backgroundColor="blackAlpha.50" minH="100vh">
+    <Box backgroundColor="blackAlpha.50" pt="100px" minH="100vh">
       <Header />
       <Flex mx="auto" maxW={970} py={14}>
         {children}

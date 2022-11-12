@@ -55,9 +55,10 @@ export const Header = () => {
   return (
     <Box
       backgroundColor="white"
-      position="sticky"
+      position="fixed"
+      w="full"
       top={0}
-      transition="all .2s"
+      transition="box-shadow .2s"
       boxShadow={showShadow ? "md" : undefined}
       as="header"
       zIndex="sticky"
