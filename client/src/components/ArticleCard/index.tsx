@@ -1,23 +1,23 @@
 import { Box, Heading, Text, VStack } from "@chakra-ui/react";
-import Image from "next/image";
 import Link from "next/link";
 import { Article } from "libs/strapi/models/article";
 import { FC } from "react";
 import dayjs from "dayjs";
 import { pagesPath } from "libs/pathpida/$path";
+import { Image } from "components/Image";
 
 type ArticleCardProps = { articleId: number; article: Article };
 
-// TODO: 説明部分にマークダウンが表示されるから表示しない方が良いかも
+// TODO: カードのデザイン変えたほうが良いかも
 export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
   return (
     <Box backgroundColor="white" as="article">
       <Image
-        alt=""
+        alt={article.title}
         src={`${process.env.NEXT_PUBLIC_STRAPI_URI}${
           article.thumbnail?.data?.attributes.url ?? ""
         }`}
-        width={300}
+        width="full"
         height={200}
       />
       <VStack gap={4} p={7} align="left">
@@ -25,28 +25,25 @@ export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
           {dayjs(article.publishedAt).format("YYYY-MM-DD")}
         </Text>
         <Link href={pagesPath.articles._id(articleId).$url()}>
-          <Heading size="lg" _hover={{ textDecoration: "underline" }}>
-            {article.title}
-          </Heading>
-        </Link>
-        <Box>
-          <Text
-            fontSize="md"
+          <Heading
+            fontSize="2xl"
+            size="lg"
+            _hover={{ textDecoration: "underline" }}
             overflow="hidden"
             sx={{
-              WebkitLineClamp: 6,
+              WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
               display: "-webkit-box",
             }}
           >
-            {article.content}
+            {article.title}
+          </Heading>
+        </Link>
+        <Link href={pagesPath.articles._id(articleId).$url()}>
+          <Text fontSize="md" as="u" _hover={{ color: "activeColor" }}>
+            Read more
           </Text>
-          <Link href="">
-            <Text fontSize="md" as="u" _hover={{ color: "activeColor" }}>
-              Read more
-            </Text>
-          </Link>
-        </Box>
+        </Link>
       </VStack>
     </Box>
   );
