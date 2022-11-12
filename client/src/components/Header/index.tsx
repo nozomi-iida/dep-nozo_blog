@@ -18,14 +18,18 @@ import {
   useBoolean,
 } from "@chakra-ui/react";
 import { pagesPath } from "libs/pathpida/$path";
+import { strapiClient } from "libs/strapi/api/axios";
+import { Topic } from "libs/strapi/models/topic";
+import { StrapiListResponse } from "libs/strapi/types";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const Header = () => {
   const [isMenuOpen, setMenuOpen] = useBoolean(true);
   const [isSearchOpen, setSearchOpen] = useBoolean();
   const [isDarkTheme, setDarkTheme] = useBoolean();
   const [showShadow, setShowShadow] = useBoolean();
+  const [topics, setTopics] = useState<string[]>([]);
 
   useEffect(() => {
     const addShadow = () => {
@@ -40,6 +44,13 @@ export const Header = () => {
 
     return () => window.removeEventListener("scroll", addShadow);
   }, [setShowShadow]);
+
+  useEffect(() => {
+    strapiClient.get<StrapiListResponse<Topic>>("topics").then((res) => {
+      const topics = res.data.data.map((el) => el.attributes.name);
+      setTopics(topics);
+    });
+  }, []);
 
   return (
     <Box
@@ -72,31 +83,19 @@ export const Header = () => {
                     Home
                   </Text>
                 </Link>
-                <Link href="">
-                  <Text
-                    transition="color 0.2s"
-                    _hover={{ color: "activeColor" }}
+                {topics.map((topic) => (
+                  <Link
+                    key={topic}
+                    href={pagesPath.topics._topic(topic).$url()}
                   >
-                    Engineer
-                  </Text>
-                </Link>
-
-                <Link href="">
-                  <Text
-                    transition="color 0.2s"
-                    _hover={{ color: "activeColor" }}
-                  >
-                    Life
-                  </Text>
-                </Link>
-                <Link href="">
-                  <Text
-                    transition="color 0.2s"
-                    _hover={{ color: "activeColor" }}
-                  >
-                    About
-                  </Text>
-                </Link>
+                    <Text
+                      transition="color 0.2s"
+                      _hover={{ color: "activeColor" }}
+                    >
+                      {topic}
+                    </Text>
+                  </Link>
+                ))}
               </Flex>
             </SlideFade>
             <Flex>
