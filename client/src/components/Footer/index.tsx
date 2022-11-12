@@ -27,10 +27,18 @@ export const Footer = () => {
           </Text>
         </Text>
         <HStack>
-          <Link _hover={{ color: "activeColor" }}>
+          <Link
+            _hover={{ color: "activeColor" }}
+            href="https://twitter.com/nozo_i0106"
+            isExternal
+          >
             <SiTwitter size={14} />
           </Link>
-          <Link _hover={{ color: "activeColor" }}>
+          <Link
+            _hover={{ color: "activeColor" }}
+            href="https://zenn.dev/nozomi_iida"
+            isExternal
+          >
             <SiZenn size={14} />
           </Link>
         </HStack>
