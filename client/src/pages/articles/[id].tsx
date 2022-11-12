@@ -16,7 +16,7 @@ import { StrapiGetResponse, StrapiListResponse } from "libs/strapi/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextPageWithLayout } from "pages/_app";
 import qs from "qs";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import gfm from "remark-gfm";
@@ -51,7 +51,7 @@ export const getStaticProps: GetStaticProps<
 const Article: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ data }) => {
-  const [likeCount, setLikeCount] = useState(Number(data.attributes.likeCount));
+  const [likeCount, setLikeCount] = useState(0);
 
   const controls = useAnimationControls();
   const onClickClap = async () => {
@@ -68,6 +68,11 @@ const Article: NextPageWithLayout<
         setLikeCount(newLikeCount);
       });
   };
+
+  useEffect(() => {
+    setLikeCount(Number(data.attributes.likeCount));
+  }, [data]);
+
   return (
     <Box>
       {data.attributes.thumbnail?.data?.attributes.url && (
