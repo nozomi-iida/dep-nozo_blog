@@ -9,17 +9,31 @@ import { ArticleMedia } from "components/ ArticleMedia";
 
 export const Sidebar = () => {
   const [articles, setArticles] = useState<StrapiListResponse<Article>>();
+  const [popularArticles, setPopularArticles] =
+    useState<StrapiListResponse<Article>>();
 
   useEffect(() => {
     const query = qs.stringify(
       { populate: ["thumbnail", "topic"], pagination: { pageSize: 5 } },
       { encodeValuesOnly: true }
     );
+    const popularQuery = qs.stringify(
+      {
+        populate: ["thumbnail", "topic"],
+        pagination: { pageSize: 5 },
+        sort: ["likeCount:desc"],
+      },
+      { encodeValuesOnly: true }
+    );
 
     strapiClient.get(`articles?${query}`).then((res) => {
       setArticles(res.data);
     });
+    strapiClient.get(`articles?${popularQuery}`).then((res) => {
+      setPopularArticles(res.data);
+    });
   }, []);
+  console.log(popularArticles);
 
   return (
     <VStack as="aside" gap={10}>
@@ -43,9 +57,9 @@ export const Sidebar = () => {
             人気の記事
           </Text>
         </Box>
-        {articles && (
+        {popularArticles && (
           <VStack gap={4} align="normal">
-            {articles.data.map((el, idx) => (
+            {popularArticles.data.map((el, idx) => (
               <ArticleMedia
                 key={el.id}
                 id={el.id}

@@ -33,7 +33,7 @@ export const Header = () => {
 
   useEffect(() => {
     const addShadow = () => {
-      if (window.pageYOffset < 100) {
+      if (window.pageYOffset === 0) {
         setShowShadow.off();
       } else {
         setShowShadow.on();
@@ -60,7 +60,7 @@ export const Header = () => {
       transition="all .2s"
       boxShadow={showShadow ? "md" : undefined}
       as="header"
-      zIndex="docked"
+      zIndex="sticky"
     >
       <Box maxW={970} mx="auto">
         <Flex margin="auto" px={15} justify="space-between">
@@ -101,8 +101,7 @@ export const Header = () => {
             <Flex>
               <Center
                 w={12}
-                as="a"
-                href="#"
+                as="button"
                 transition="color 0.2s"
                 _hover={{ color: "activeColor" }}
                 color={isMenuOpen ? "activeColor" : undefined}
@@ -139,8 +138,7 @@ export const Header = () => {
               </Center>
               <Center
                 w={12}
-                as="a"
-                href="#"
+                as="button"
                 transition="color 0.2s"
                 _hover={{ color: "activeColor" }}
                 onClick={setDarkTheme.toggle}
@@ -157,8 +155,7 @@ export const Header = () => {
                 <PopoverTrigger>
                   <Center
                     w={12}
-                    as="a"
-                    href="#"
+                    as="button"
                     transition="color 0.2s"
                     color={isSearchOpen ? "activeColor" : undefined}
                     _hover={{ color: "activeColor" }}

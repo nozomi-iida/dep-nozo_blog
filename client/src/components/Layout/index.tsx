@@ -43,10 +43,10 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
 
   useEffect(() => {
     const changeShow = () => {
-      if (window.pageYOffset > 100) {
-        setShowTopIcon.on();
-      } else {
+      if (window.pageYOffset === 0) {
         setShowTopIcon.off();
+      } else {
+        setShowTopIcon.on();
       }
     };
 
