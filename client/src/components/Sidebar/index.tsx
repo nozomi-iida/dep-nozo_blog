@@ -14,7 +14,11 @@ export const Sidebar = () => {
 
   useEffect(() => {
     const query = qs.stringify(
-      { populate: ["thumbnail", "topic"], pagination: { pageSize: 5 } },
+      {
+        populate: ["thumbnail", "topic"],
+        pagination: { pageSize: 5 },
+        sort: ["publishedAt:desc"],
+      },
       { encodeValuesOnly: true }
     );
     const popularQuery = qs.stringify(
@@ -33,14 +37,13 @@ export const Sidebar = () => {
       setPopularArticles(res.data);
     });
   }, []);
-  console.log(popularArticles);
 
   return (
     <VStack as="aside" gap={10}>
       <VStack gap={4}>
         <Box w="full" p={4} backgroundColor="white">
           <Text fontSize="lg" fontWeight="bold">
-            記事一覧
+            最新の記事一覧
           </Text>
         </Box>
         {articles && (
