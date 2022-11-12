@@ -63,7 +63,7 @@ export const Header = () => {
       zIndex="sticky"
     >
       <Box maxW={970} mx="auto">
-        <Flex margin="auto" px={15} justify="space-between">
+        <Flex margin="auto" px={4} justify="space-between">
           <Link href={pagesPath.$url()}>
             <Heading
               lineHeight={showShadow ? "70px" : "100px"}
