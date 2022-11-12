@@ -199,12 +199,17 @@ export const Header = () => {
                         <Input
                           variant="flushed"
                           placeholder="Enter your search query..."
+                          autoFocus
                           _focusVisible={{ borderColor: "gray.200" }}
                           value={keyword}
                           onChange={(e) => setKeyword(e.target.value)}
                         />
                         <InputRightElement>
-                          <Button type="submit" backgroundColor="transparent">
+                          <Button
+                            type="submit"
+                            backgroundColor="transparent"
+                            _hover={{ backgroundColor: "transparent" }}
+                          >
                             <SearchIcon />
                           </Button>
                         </InputRightElement>
