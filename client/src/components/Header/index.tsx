@@ -1,6 +1,7 @@
 import { CloseIcon, MoonIcon, SearchIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Center,
   Fade,
   Flex,
@@ -22,7 +23,8 @@ import { strapiClient } from "libs/strapi/api/axios";
 import { Topic } from "libs/strapi/models/topic";
 import { StrapiListResponse } from "libs/strapi/types";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
 
 export const Header = () => {
   const [isMenuOpen, setMenuOpen] = useBoolean(true);
@@ -30,6 +32,17 @@ export const Header = () => {
   const [isDarkTheme, setDarkTheme] = useBoolean();
   const [showShadow, setShowShadow] = useBoolean();
   const [topics, setTopics] = useState<string[]>([]);
+  const [keyword, setKeyword] = useState("");
+  const router = useRouter();
+
+  const onSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push(`${pagesPath.search.$url().pathname}?keyword=${keyword}`);
+    setSearchOpen.off();
+    setTimeout(() => {
+      setKeyword("");
+    }, 100);
+  };
 
   useEffect(() => {
     const addShadow = () => {
@@ -41,7 +54,6 @@ export const Header = () => {
     };
 
     window.addEventListener("scroll", addShadow);
-
     return () => window.removeEventListener("scroll", addShadow);
   }, [setShowShadow]);
 
@@ -181,17 +193,23 @@ export const Header = () => {
                 >
                   <PopoverArrow backgroundColor="black" />
                   <PopoverBody>
-                    <InputGroup>
-                      {/* autoFocusできるようにしたい */}
-                      <Input
-                        variant="flushed"
-                        placeholder="Enter your search query..."
-                        _focusVisible={{ borderColor: "gray.200" }}
-                      />
-                      <InputRightElement>
-                        <SearchIcon />
-                      </InputRightElement>
-                    </InputGroup>
+                    <form onSubmit={onSearch}>
+                      <InputGroup>
+                        {/* autoFocusできるようにしたい */}
+                        <Input
+                          variant="flushed"
+                          placeholder="Enter your search query..."
+                          _focusVisible={{ borderColor: "gray.200" }}
+                          value={keyword}
+                          onChange={(e) => setKeyword(e.target.value)}
+                        />
+                        <InputRightElement>
+                          <Button type="submit" backgroundColor="transparent">
+                            <SearchIcon />
+                          </Button>
+                        </InputRightElement>
+                      </InputGroup>
+                    </form>
                   </PopoverBody>
                 </PopoverContent>
               </Popover>

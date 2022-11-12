@@ -1,12 +1,11 @@
 import { Box, Grid, Heading } from "@chakra-ui/react";
 import { Layout } from "components/Layout";
 import { strapiClient } from "libs/strapi/api/axios";
-import { Article } from "libs/strapi/models/article";
 import { Topic, Topic as TopicType } from "libs/strapi/models/topic";
 import { StrapiGetResponse, StrapiListResponse } from "libs/strapi/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextPageWithLayout } from "pages/_app";
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import qs from "qs";
 import { ArticleCard } from "components/ArticleCard";
 
