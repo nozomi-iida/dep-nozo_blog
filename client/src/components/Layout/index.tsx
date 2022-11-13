@@ -4,6 +4,7 @@ import { FC, ReactNode } from "react";
 import { Header } from "../Header";
 import { AiFillCaretUp } from "react-icons/ai";
 import { useEffect } from "react";
+import { useThemeColor } from "libs/chakra/theme";
 
 type LayoutProps = {
   children: ReactNode;
@@ -39,6 +40,7 @@ export const SidebarLayout: FC<LayoutProps> = ({ children }) => {
 
 const ContentLayout: FC<LayoutProps> = ({ children }) => {
   const [showTopIcon, setShowTopIcon] = useBoolean(true);
+  const { bgColor } = useThemeColor();
   const onClickTop = () => {
     window.scrollTo({
       top: 0,
@@ -76,6 +78,7 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
         textAlign="center"
         transition="all .2s"
         opacity={showTopIcon ? 1 : 0}
+        backgroundColor={bgColor}
         visibility={showTopIcon ? "visible" : "hidden"}
         _hover={{ backgroundColor: "activeColor", color: "white" }}
         onClick={onClickTop}
