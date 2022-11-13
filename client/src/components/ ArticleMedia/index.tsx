@@ -1,5 +1,6 @@
 import { Box, HStack, Text, textDecoration, VStack } from "@chakra-ui/react";
 import { Image } from "components/Image";
+import { useThemeColor } from "libs/chakra/theme";
 import { pagesPath } from "libs/pathpida/$path";
 import { Article } from "libs/strapi/models/article";
 import Link from "next/link";
@@ -16,6 +17,8 @@ export const ArticleMedia: FC<ArticleMediaProps> = ({
   article,
   popularNum,
 }) => {
+  const { bgColor } = useThemeColor();
+
   return (
     <Link href={pagesPath.articles._id(id).$url()}>
       <HStack
@@ -40,7 +43,7 @@ export const ArticleMedia: FC<ArticleMediaProps> = ({
             borderRadius="full"
             textAlign="center"
             zIndex="docked"
-            backgroundColor="white"
+            backgroundColor={bgColor}
             className="article_media_num"
           >
             <Text fontSize="sm" fontWeight="bold">

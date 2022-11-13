@@ -1,17 +1,26 @@
-import { Box, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react";
 import Link from "next/link";
 import { Article } from "libs/strapi/models/article";
 import { FC } from "react";
 import dayjs from "dayjs";
 import { pagesPath } from "libs/pathpida/$path";
 import { Image } from "components/Image";
+import { useThemeColor } from "libs/chakra/theme";
 
 type ArticleCardProps = { articleId: number; article: Article };
 
 // TODO: カードのデザイン変えたほうが良いかも
 export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
+  const { bgColor } = useThemeColor();
+
   return (
-    <Box backgroundColor="white" as="article">
+    <Box backgroundColor={bgColor} as="article">
       <Image
         alt={article.title}
         src={`${process.env.NEXT_PUBLIC_STRAPI_URI}${

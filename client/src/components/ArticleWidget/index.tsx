@@ -5,6 +5,7 @@ import { Article } from "libs/strapi/models/article";
 import Link from "next/link";
 import { FC } from "react";
 import { pagesPath } from "libs/pathpida/$path";
+import { useThemeColor } from "libs/chakra/theme";
 
 type ArticleWidgetProps = {
   id: number;
@@ -12,6 +13,8 @@ type ArticleWidgetProps = {
 };
 
 export const ArticleWidget: FC<ArticleWidgetProps> = ({ id, article }) => {
+  const { bgColor } = useThemeColor();
+
   return (
     <Link href={pagesPath.articles._id(id).$url()}>
       <Box
@@ -55,7 +58,7 @@ export const ArticleWidget: FC<ArticleWidgetProps> = ({ id, article }) => {
         />
         <Box
           p={4}
-          backgroundColor="white"
+          backgroundColor={bgColor}
           boxShadow="2xl"
           position="absolute"
           bottom={5}

@@ -17,6 +17,8 @@ import {
   SlideFade,
   Text,
   useBoolean,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { pagesPath } from "libs/pathpida/$path";
 import { strapiClient } from "libs/strapi/api/axios";
@@ -29,11 +31,12 @@ import { FormEvent, useEffect, useState } from "react";
 export const Header = () => {
   const [isMenuOpen, setMenuOpen] = useBoolean(true);
   const [isSearchOpen, setSearchOpen] = useBoolean();
-  const [isDarkTheme, setDarkTheme] = useBoolean();
   const [showShadow, setShowShadow] = useBoolean();
   const [topics, setTopics] = useState<string[]>([]);
   const [keyword, setKeyword] = useState("");
+  const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
+  const color = useColorModeValue("white", "#18191b");
 
   const onSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,7 +69,7 @@ export const Header = () => {
 
   return (
     <Box
-      backgroundColor="white"
+      backgroundColor={color}
       position="fixed"
       w="full"
       top={0}
@@ -90,6 +93,7 @@ export const Header = () => {
               <Flex align="center" fontWeight="bold" h="full" gap={5}>
                 <Link href={pagesPath.$url()}>
                   <Text
+                    fontSize="sm"
                     transition="color 0.2s"
                     _hover={{ color: "activeColor" }}
                   >
@@ -102,6 +106,7 @@ export const Header = () => {
                     href={pagesPath.topics._topic(topic).$url()}
                   >
                     <Text
+                      fontSize="sm"
                       transition="color 0.2s"
                       _hover={{ color: "activeColor" }}
                     >
@@ -154,13 +159,13 @@ export const Header = () => {
                 as="button"
                 transition="color 0.2s"
                 _hover={{ color: "activeColor" }}
-                onClick={setDarkTheme.toggle}
+                onClick={toggleColorMode}
               >
-                <Fade in={isDarkTheme} hidden={!isDarkTheme}>
+                <Fade in={colorMode === "dark"} hidden={colorMode === "light"}>
                   <SunIcon w={17} h={17} />
                 </Fade>
 
-                <Fade in={!isDarkTheme} hidden={isDarkTheme}>
+                <Fade in={colorMode === "light"} hidden={colorMode === "dark"}>
                   <MoonIcon w={17} h={17} />
                 </Fade>
               </Center>
@@ -195,7 +200,7 @@ export const Header = () => {
                   <PopoverBody>
                     <form onSubmit={onSearch}>
                       <InputGroup>
-                        {/* autoFocusできるようにしたい */}
+                        {/* TODO: autoFocusできるようにしたい */}
                         <Input
                           variant="flushed"
                           placeholder="Enter your search query..."

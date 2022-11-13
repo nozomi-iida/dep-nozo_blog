@@ -1,4 +1,14 @@
-import { extendTheme } from "@chakra-ui/react";
+import {
+  extendTheme,
+  StyleFunctionProps,
+  useColorModeValue,
+} from "@chakra-ui/react";
+
+export const useThemeColor = () => {
+  const bgColor = useColorModeValue("white", "#18191b");
+
+  return { bgColor };
+};
 
 const chakraTheme = extendTheme({
   colors: {
@@ -10,15 +20,19 @@ const chakraTheme = extendTheme({
   },
   components: {
     Text: {
-      baseStyle: {
-        color: "#574F53",
-      },
+      baseStyle: (props: StyleFunctionProps) => ({
+        color: props.colorMode === "light" ? "#2f3235" : "#eaedf1",
+      }),
     },
     Heading: {
-      baseStyle: {
-        color: "#2f3235",
-      },
+      baseStyle: (props: StyleFunctionProps) => ({
+        color: props.colorMode === "light" ? "#2f3235" : "#eaedf1",
+      }),
     },
+  },
+  config: {
+    initialColorMode: "light",
+    useSystemColorMode: false,
   },
 });
 

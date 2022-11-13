@@ -12,7 +12,7 @@ export const Image: FC<ImageProps> = ({ src, alt, ...props }) => {
   return (
     <Box position="relative" {...props}>
       <NextImage
-        objectFit="contain"
+        objectFit="cover"
         fill
         src={src ?? staticPath.blog_test_jpeg}
         alt={alt}

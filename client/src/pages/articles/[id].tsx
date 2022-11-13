@@ -5,6 +5,7 @@ import {
   HStack,
   Link,
   Text,
+  useColorMode,
   VStack,
 } from "@chakra-ui/react";
 import { Image } from "components/Image";
@@ -25,6 +26,7 @@ import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import { pagesPath, staticPath } from "libs/pathpida/$path";
 import { Sidebar } from "components/Sidebar";
 import { motion, useAnimationControls } from "framer-motion";
+import { useThemeColor } from "libs/chakra/theme";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await strapiClient.get<StrapiListResponse>("articles");
@@ -52,6 +54,8 @@ const Article: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ data }) => {
   const [likeCount, setLikeCount] = useState(0);
+  const { bgColor } = useThemeColor();
+  const { colorMode } = useColorMode();
 
   const controls = useAnimationControls();
   const onClickClap = async () => {
@@ -83,7 +87,7 @@ const Article: NextPageWithLayout<
           h={430}
         />
       )}
-      <VStack gap={4} align="left" backgroundColor="white" p={8}>
+      <VStack gap={4} align="left" backgroundColor={bgColor} p={8}>
         <HStack gap={2}>
           <Text fontSize="sm" color="subInfoText" fontWeight="bold">
             {dayjs(data.attributes.publishedAt).format("YYYY-MM-DD")}
@@ -159,7 +163,12 @@ const Article: NextPageWithLayout<
             <motion.button animate={controls}>
               <Image
                 alt={data.attributes.title}
-                src={staticPath.applause_png}
+                // src={staticPath.applause_png}
+                src={
+                  colorMode === "light"
+                    ? staticPath.clap_png
+                    : staticPath.clap_dark_png
+                }
                 h={6}
                 w={6}
               />

@@ -18,8 +18,9 @@ export const pagesPath = {
 export type PagesPath = typeof pagesPath
 
 export const staticPath = {
-  applause_png: '/applause.png',
   blog_test_jpeg: '/blog_test.jpeg',
+  clap_png: '/clap.png',
+  clap_dark_png: '/clap_dark.png',
   favicon_ico: '/favicon.ico',
   vercel_svg: '/vercel.svg'
 } as const

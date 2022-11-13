@@ -6,9 +6,11 @@ import { StrapiListResponse } from "libs/strapi/types";
 import { useEffect, useState } from "react";
 import qs from "qs";
 import { ArticleMedia } from "components/ ArticleMedia";
+import { useThemeColor } from "libs/chakra/theme";
 
 export const Sidebar = () => {
   const [articles, setArticles] = useState<StrapiListResponse<Article>>();
+  const { bgColor } = useThemeColor();
   const [popularArticles, setPopularArticles] =
     useState<StrapiListResponse<Article>>();
 
@@ -39,9 +41,9 @@ export const Sidebar = () => {
   }, []);
 
   return (
-    <VStack as="aside" gap={10}>
+    <VStack gap={10}>
       <VStack gap={4}>
-        <Box w="full" p={4} backgroundColor="white">
+        <Box w="full" p={4} backgroundColor={bgColor}>
           <Text fontSize="lg" fontWeight="bold">
             最新の記事一覧
           </Text>
@@ -55,7 +57,7 @@ export const Sidebar = () => {
         )}
       </VStack>
       <VStack gap={4}>
-        <Box w="full" p={4} backgroundColor="white">
+        <Box w="full" p={4} backgroundColor={bgColor}>
           <Text fontSize="lg" fontWeight="bold">
             人気の記事
           </Text>
