@@ -72,7 +72,7 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
         lineHeight={0}
         position="fixed"
         right="30px"
-        bottom="30px"
+        bottom="10px"
         boxShadow="xl"
         borderRadius="50%"
         textAlign="center"
@@ -82,6 +82,7 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
         visibility={showTopIcon ? "visible" : "hidden"}
         _hover={{ backgroundColor: "activeColor", color: "white" }}
         onClick={onClickTop}
+        zIndex="docked"
       >
         <AiFillCaretUp style={{ display: "inline" }} />
       </Box>
