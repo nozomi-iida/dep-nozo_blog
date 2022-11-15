@@ -19,10 +19,6 @@ export const App = ({ Component, pageProps }: AppPropsWithLayout) => {
     <div>
       <Head>
         <title>Nozo Blog</title>
-        <meta
-          http-equiv="Content-Security-Policy"
-          content="upgrade-insecure-requests"
-        />
       </Head>
       <ChakraProvider theme={chakraTheme}>
         <ColorModeScript initialColorMode={chakraTheme.config.theme} />
