@@ -53,7 +53,7 @@ export const ArticleMedia: FC<ArticleMediaProps> = ({
           <Image
             src={
               article.thumbnail?.data
-                ? `${process.env.NEXT_PUBLIC_STRAPI_URI}${article.thumbnail.data.attributes.url}`
+                ? article.thumbnail.data.attributes.url
                 : undefined
             }
             alt={article.title}

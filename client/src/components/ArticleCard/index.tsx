@@ -23,9 +23,11 @@ export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
     <Box backgroundColor={bgColor} as="article">
       <Image
         alt={article.title}
-        src={`${process.env.NEXT_PUBLIC_STRAPI_URI}${
-          article.thumbnail?.data?.attributes.url ?? ""
-        }`}
+        src={
+          article.thumbnail?.data
+            ? article.thumbnail.data.attributes.url
+            : undefined
+        }
         width="full"
         height={200}
       />

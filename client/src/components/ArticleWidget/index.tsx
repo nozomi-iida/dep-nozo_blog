@@ -38,7 +38,7 @@ export const ArticleWidget: FC<ArticleWidgetProps> = ({ id, article }) => {
         <Image
           src={
             article.thumbnail?.data
-              ? `${process.env.NEXT_PUBLIC_STRAPI_URI}${article.thumbnail?.data?.attributes.url}`
+              ? article.thumbnail?.data?.attributes.url
               : undefined
           }
           w={300}

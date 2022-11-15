@@ -81,7 +81,7 @@ const Article: NextPageWithLayout<
     <Box>
       {data.attributes.thumbnail?.data?.attributes.url && (
         <Image
-          src={`${process.env.NEXT_PUBLIC_STRAPI_URI}${data.attributes.thumbnail.data.attributes.url}`}
+          src={data.attributes.thumbnail.data.attributes.url}
           alt={data.id.toString()}
           w="full"
           h={430}
@@ -163,7 +163,6 @@ const Article: NextPageWithLayout<
             <motion.button animate={controls}>
               <Image
                 alt={data.attributes.title}
-                // src={staticPath.applause_png}
                 src={
                   colorMode === "light"
                     ? staticPath.clap_png
