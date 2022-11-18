@@ -42,7 +42,7 @@ export const Sidebar = () => {
 
   return (
     <VStack gap={10}>
-      <VStack gap={4}>
+      <VStack gap={4} w="full">
         <Box w="full" p={4} backgroundColor={bgColor}>
           <Text fontSize="lg" fontWeight="bold">
             最新の記事一覧
@@ -56,7 +56,7 @@ export const Sidebar = () => {
           </VStack>
         )}
       </VStack>
-      <VStack gap={4}>
+      <VStack gap={4} w="full">
         <Box w="full" p={4} backgroundColor={bgColor}>
           <Text fontSize="lg" fontWeight="bold">
             人気の記事

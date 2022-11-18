@@ -32,7 +32,13 @@ export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
 
 export const SidebarLayout: FC<LayoutProps> = ({ children }) => {
   return (
-    <Box px={4} as="aside">
+    <Box
+      px={4}
+      as="aside"
+      minW={300}
+      boxSizing="content-box"
+      display={{ sm: "none", md: "block" }}
+    >
       {children}
     </Box>
   );
@@ -63,7 +69,7 @@ const ContentLayout: FC<LayoutProps> = ({ children }) => {
   }, [setShowTopIcon]);
 
   return (
-    <Box px={4} as="main">
+    <Box px={4} as="main" w="full">
       {children}
       <Box
         as="button"

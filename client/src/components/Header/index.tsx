@@ -9,6 +9,8 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Menu,
+  MenuItem,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -84,13 +86,20 @@ export const Header = () => {
             <Heading
               lineHeight={showShadow ? "70px" : "100px"}
               transition="line-height .2s ease"
+              whiteSpace="nowrap"
             >
               Nozo blog
             </Heading>
           </Link>
           <Flex gap={10}>
             <SlideFade in={isMenuOpen} offsetX={5} offsetY={0}>
-              <Flex align="center" fontWeight="bold" h="full" gap={5}>
+              <Flex
+                align="center"
+                fontWeight="bold"
+                h="full"
+                gap={5}
+                display={{ sm: "none", md: "flex" }}
+              >
                 <Link href={pagesPath.$url()}>
                   <Text
                     fontSize="sm"
