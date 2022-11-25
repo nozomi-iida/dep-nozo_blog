@@ -3,42 +3,52 @@ import { ArticleWidget } from "components/ArticleWidget";
 import { strapiClient } from "libs/strapi/api/axios";
 import { Article } from "libs/strapi/models/article";
 import { StrapiListResponse } from "libs/strapi/types";
-import { useEffect, useState } from "react";
 import qs from "qs";
 import { ArticleMedia } from "components/ ArticleMedia";
 import { useThemeColor } from "libs/chakra/theme";
+import useSWR from "swr";
 
 export const Sidebar = () => {
-  const [articles, setArticles] = useState<StrapiListResponse<Article>>();
   const { bgColor } = useThemeColor();
-  const [popularArticles, setPopularArticles] =
-    useState<StrapiListResponse<Article>>();
+  const query = qs.stringify(
+    {
+      populate: ["thumbnail", "topic"],
+      pagination: { pageSize: 5 },
+      sort: ["publishedAt:desc"],
+    },
+    { encodeValuesOnly: true }
+  );
+  const popularQuery = qs.stringify(
+    {
+      populate: ["thumbnail", "topic"],
+      pagination: { pageSize: 5 },
+      sort: ["likeCount:desc"],
+    },
+    { encodeValuesOnly: true }
+  );
 
-  useEffect(() => {
-    const query = qs.stringify(
-      {
-        populate: ["thumbnail", "topic"],
-        pagination: { pageSize: 5 },
-        sort: ["publishedAt:desc"],
-      },
-      { encodeValuesOnly: true }
-    );
-    const popularQuery = qs.stringify(
-      {
-        populate: ["thumbnail", "topic"],
-        pagination: { pageSize: 5 },
-        sort: ["likeCount:desc"],
-      },
-      { encodeValuesOnly: true }
-    );
+  const latestArticlesFetcher = () =>
+    strapiClient
+      .get<StrapiListResponse<Article>>(`articles?${query}`)
+      .then((res) => {
+        return res.data;
+      });
 
-    strapiClient.get(`articles?${query}`).then((res) => {
-      setArticles(res.data);
-    });
-    strapiClient.get(`articles?${popularQuery}`).then((res) => {
-      setPopularArticles(res.data);
-    });
-  }, []);
+  const popularArticlesFetcher = () =>
+    strapiClient
+      .get<StrapiListResponse<Article>>(`articles?${popularQuery}`)
+      .then((res) => {
+        return res.data;
+      });
+
+  const { data: latestArticlesData } = useSWR(
+    "latestArticles",
+    latestArticlesFetcher
+  );
+  const { data: popularArticlesData } = useSWR(
+    "latestArticles",
+    popularArticlesFetcher
+  );
 
   return (
     <VStack gap={10}>
@@ -48,9 +58,9 @@ export const Sidebar = () => {
             最新の記事一覧
           </Text>
         </Box>
-        {articles && (
+        {latestArticlesData && (
           <VStack gap={4}>
-            {articles.data.map((el) => (
+            {latestArticlesData.data.map((el) => (
               <ArticleWidget key={el.id} id={el.id} article={el.attributes} />
             ))}
           </VStack>
@@ -62,9 +72,9 @@ export const Sidebar = () => {
             人気の記事
           </Text>
         </Box>
-        {popularArticles && (
+        {popularArticlesData && (
           <VStack gap={4} align="normal">
-            {popularArticles.data.map((el, idx) => (
+            {popularArticlesData.data.map((el, idx) => (
               <ArticleMedia
                 key={el.id}
                 id={el.id}

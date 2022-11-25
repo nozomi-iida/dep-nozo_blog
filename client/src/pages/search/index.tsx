@@ -6,31 +6,29 @@ import { Article } from "libs/strapi/models/article";
 import { StrapiListResponse } from "libs/strapi/types";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "pages/_app";
-import { useEffect, useState } from "react";
 import { ReactElement } from "react-markdown/lib/react-markdown";
 import qs from "qs";
+import useSWR from "swr";
 
 const Search: NextPageWithLayout = () => {
   const router = useRouter();
   const keyword = router.query.keyword;
-  const [articles, setArticles] = useState<StrapiListResponse<Article>["data"]>(
-    []
+  const query = qs.stringify(
+    {
+      populate: "*",
+      filters: { title: { $contains: keyword } },
+    },
+    { encodeValuesOnly: true }
   );
-
-  useEffect(() => {
-    const query = qs.stringify(
-      {
-        populate: "*",
-        filters: { title: { $contains: keyword } },
-      },
-      { encodeValuesOnly: true }
-    );
+  const searchArticlesFetcher = () =>
     strapiClient
       .get<StrapiListResponse<Article>>(`articles?${query}`)
-      .then((res) => {
-        setArticles(res.data.data);
-      });
-  }, [keyword]);
+      .then((res) => res.data.data);
+
+  const { data: searchArticlesData } = useSWR(
+    `articles?${query}`,
+    searchArticlesFetcher
+  );
 
   return (
     <Box>
@@ -38,7 +36,7 @@ const Search: NextPageWithLayout = () => {
         検索ワード: {keyword}
       </Heading>
       <Grid templateColumns="repeat(3, 1fr)" gap={10}>
-        {articles?.map((article) => (
+        {searchArticlesData?.map((article) => (
           <ArticleCard
             key={article.id}
             article={article.attributes}

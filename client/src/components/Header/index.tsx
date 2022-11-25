@@ -9,8 +9,6 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Menu,
-  MenuItem,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -29,16 +27,22 @@ import { StrapiListResponse } from "libs/strapi/types";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
+import useSWR from "swr";
 
 export const Header = () => {
   const [isMenuOpen, setMenuOpen] = useBoolean(true);
   const [isSearchOpen, setSearchOpen] = useBoolean();
   const [showShadow, setShowShadow] = useBoolean();
-  const [topics, setTopics] = useState<string[]>([]);
   const [keyword, setKeyword] = useState("");
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
   const color = useColorModeValue("white", "#18191b");
+  const fetchTopics = () => {
+    return strapiClient
+      .get<StrapiListResponse<Topic>>("topics")
+      .then((res) => res.data.data.map((el) => el.attributes.name));
+  };
+  const { data: topics } = useSWR("topics", fetchTopics);
 
   const onSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,13 +65,6 @@ export const Header = () => {
     window.addEventListener("scroll", addShadow);
     return () => window.removeEventListener("scroll", addShadow);
   }, [setShowShadow]);
-
-  useEffect(() => {
-    strapiClient.get<StrapiListResponse<Topic>>("topics").then((res) => {
-      const topics = res.data.data.map((el) => el.attributes.name);
-      setTopics(topics);
-    });
-  }, []);
 
   return (
     <Box
@@ -109,7 +106,7 @@ export const Header = () => {
                     Home
                   </Text>
                 </Link>
-                {topics.map((topic) => (
+                {topics?.map((topic) => (
                   <Link
                     key={topic}
                     href={pagesPath.topics._topic(topic).$url()}
