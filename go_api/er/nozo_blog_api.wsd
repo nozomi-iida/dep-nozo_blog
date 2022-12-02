@@ -1,0 +1,58 @@
+@startuml slack
+
+entity users {
+  *id(pk)
+  --
+  first_name
+  last_name
+  email
+}
+
+entity article_type_enum {
+  *value(pk)
+  --
+  comment
+}
+
+entity articles {
+  *id(pk)
+  --
+  title
+  content
+  published_at
+  external_url
+  type
+  writor_id
+}
+
+entity topics {
+  *id(pk)
+  --
+  name
+  description
+  account_id
+}
+
+entity tags {
+  *id(pk)
+  --
+  name
+  account_id
+}
+
+entity article_tags {
+  *id(pk)
+  --
+  article_id
+  tag_id
+}
+
+users o--o{ articles
+users o--o{ tags 
+users o--o{ topics 
+topics -- article_type_enum
+topics o--o{ articles
+articles o--o{ article_tags
+tags o--o{ article_tags
+
+@enduml
