@@ -25,6 +25,7 @@ import {
   useBreakpointValue,
   useColorMode,
   useColorModeValue,
+  VStack,
 } from "@chakra-ui/react";
 import { pagesPath } from "libs/pathpida/$path";
 import { strapiClient } from "libs/strapi/api/axios";
@@ -253,7 +254,28 @@ export const Header = () => {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerBody>
-            <Heading>Hoge</Heading>
+            <VStack gap="md">
+              <Link href={pagesPath.$url()}>
+                <Text
+                  transition="color 0.2s"
+                  fontWeight="bold"
+                  _hover={{ color: "activeColor" }}
+                >
+                  Home
+                </Text>
+              </Link>
+              {topics?.map((topic) => (
+                <Link key={topic} href={pagesPath.topics._topic(topic).$url()}>
+                  <Text
+                    transition="color 0.2s"
+                    fontWeight="bold"
+                    _hover={{ color: "activeColor" }}
+                  >
+                    {topic}
+                  </Text>
+                </Link>
+              ))}
+            </VStack>
           </DrawerBody>
         </DrawerContent>
       </Drawer>
