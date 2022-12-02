@@ -8,6 +8,9 @@ import { NextPageWithLayout } from "pages/_app";
 import { ReactElement } from "react";
 import qs from "qs";
 import { ArticleCard } from "components/ArticleCard";
+import { useRouter } from "next/router";
+import { NextHead } from "components/NextHead";
+import { pagesPath } from "libs/pathpida/$path";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await strapiClient.get<StrapiListResponse<TopicType>>("topics");
@@ -43,9 +46,15 @@ const Topic: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ data }) => {
   const articles = data.attributes.articles?.data;
+  const router = useRouter();
+  const topic = router.query.topic as string;
 
   return (
     <Box>
+      <NextHead
+        title={topic}
+        url={pagesPath.topics._topic(topic).$url().pathname}
+      />
       <Heading fontSize="2xl" mb={4}>
         Topic: {data.attributes.name}
       </Heading>

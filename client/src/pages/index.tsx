@@ -2,12 +2,14 @@ import { ReactElement } from "react";
 import { ArticleCard } from "components/ArticleCard";
 import { Layout } from "components/Layout";
 import { NextPageWithLayout } from "./_app";
-import { Grid } from "@chakra-ui/react";
+import { Box, Grid } from "@chakra-ui/react";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { StrapiListResponse } from "libs/strapi/types";
 import { Article } from "libs/strapi/models/article";
 import { strapiClient } from "libs/strapi/api/axios";
 import qs from "qs";
+import { NextHead } from "components/NextHead";
+import { pagesPath } from "libs/pathpida/$path";
 
 export const getStaticProps: GetStaticProps<{
   articles: StrapiListResponse<Article>;
@@ -31,18 +33,21 @@ const Home: NextPageWithLayout<
   const { data } = articles;
 
   return (
-    <Grid
-      templateColumns={{
-        sm: "repeat(1, 1fr)",
-        md: "repeat(2, 1fr)",
-        lg: "repeat(3, 1fr)",
-      }}
-      gap={10}
-    >
-      {data.map((el) => (
-        <ArticleCard key={el.id} articleId={el.id} article={el.attributes} />
-      ))}
-    </Grid>
+    <Box>
+      <NextHead title="Nozo Blog" url={pagesPath.$url().pathname} />
+      <Grid
+        templateColumns={{
+          sm: "repeat(1, 1fr)",
+          md: "repeat(2, 1fr)",
+          lg: "repeat(3, 1fr)",
+        }}
+        gap={10}
+      >
+        {data.map((el) => (
+          <ArticleCard key={el.id} articleId={el.id} article={el.attributes} />
+        ))}
+      </Grid>
+    </Box>
   );
 };
 

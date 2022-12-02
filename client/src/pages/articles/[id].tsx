@@ -27,6 +27,7 @@ import { pagesPath, staticPath } from "libs/pathpida/$path";
 import { Sidebar } from "components/Sidebar";
 import { motion, useAnimationControls } from "framer-motion";
 import { useThemeColor } from "libs/chakra/theme";
+import { NextHead } from "components/NextHead";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await strapiClient.get<StrapiListResponse>("articles");
@@ -79,6 +80,10 @@ const Article: NextPageWithLayout<
 
   return (
     <Box>
+      <NextHead
+        title={data.attributes.title}
+        url={pagesPath.articles._id(data.id).$url().pathname}
+      />
       {data.attributes.thumbnail?.data?.attributes.url && (
         <Image
           src={data.attributes.thumbnail.data.attributes.url}

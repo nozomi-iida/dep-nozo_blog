@@ -9,10 +9,12 @@ import { NextPageWithLayout } from "pages/_app";
 import { ReactElement } from "react-markdown/lib/react-markdown";
 import qs from "qs";
 import useSWR from "swr";
+import { NextHead } from "components/NextHead";
+import { pagesPath } from "libs/pathpida/$path";
 
 const Search: NextPageWithLayout = () => {
   const router = useRouter();
-  const keyword = router.query.keyword;
+  const keyword = (router.query.keyword ?? "") as string;
   const query = qs.stringify(
     {
       populate: "*",
@@ -32,6 +34,7 @@ const Search: NextPageWithLayout = () => {
 
   return (
     <Box>
+      <NextHead title={keyword} url={pagesPath.search.$url().pathname} />
       <Heading fontSize="2xl" mb={4}>
         検索ワード: {keyword}
       </Heading>
