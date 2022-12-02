@@ -82,6 +82,7 @@ const Article: NextPageWithLayout<
     <Box>
       <NextHead
         title={data.attributes.title}
+        imageUrl={data.attributes.thumbnail?.data?.attributes.url}
         url={pagesPath.articles._id(data.id).$url().pathname}
       />
       {data.attributes.thumbnail?.data?.attributes.url && (

@@ -1,4 +1,5 @@
 import Head from "next/head";
+import path from "path";
 import { FC } from "react";
 
 type NextHeadProps = {
@@ -13,7 +14,7 @@ export const NextHead: FC<NextHeadProps> = ({
   title = "Nozo Blog",
   description,
   url,
-  imageUrl = "public/nozomi_work.png",
+  imageUrl = path.resolve("public/nozomi_work.jpeg"),
   type = "blog",
 }) => {
   return (
