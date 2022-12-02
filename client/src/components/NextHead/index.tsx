@@ -1,6 +1,5 @@
-import { pagesPath, staticPath } from "libs/pathpida/$path";
+import { staticPath } from "libs/pathpida/$path";
 import Head from "next/head";
-import path from "path";
 import { FC } from "react";
 
 type NextHeadProps = {
