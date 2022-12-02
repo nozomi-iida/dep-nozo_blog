@@ -35,7 +35,14 @@ const Search: NextPageWithLayout = () => {
       <Heading fontSize="2xl" mb={4}>
         検索ワード: {keyword}
       </Heading>
-      <Grid templateColumns="repeat(3, 1fr)" gap={10}>
+      <Grid
+        templateColumns={{
+          sm: "repeat(1, 1fr)",
+          md: "repeat(2, 1fr)",
+          lg: "repeat(3, 1fr)",
+        }}
+        gap={10}
+      >
         {searchArticlesData?.map((article) => (
           <ArticleCard
             key={article.id}

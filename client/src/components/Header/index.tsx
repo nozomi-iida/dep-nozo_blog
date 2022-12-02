@@ -41,7 +41,7 @@ import useSWR from "swr";
 export const Header = () => {
   const responsiveIsMenuOpen = useBreakpointValue({
     base: false,
-    lg: true,
+    md: true,
   });
   const [isMenuOpen, setMenuOpen] = useBoolean();
   const [isSearchOpen, setSearchOpen] = useBoolean();

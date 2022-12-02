@@ -49,7 +49,14 @@ const Topic: NextPageWithLayout<
       <Heading fontSize="2xl" mb={4}>
         Topic: {data.attributes.name}
       </Heading>
-      <Grid templateColumns="repeat(3, 1fr)" gap={10}>
+      <Grid
+        templateColumns={{
+          sm: "repeat(1, 1fr)",
+          md: "repeat(2, 1fr)",
+          lg: "repeat(3, 1fr)",
+        }}
+        gap={10}
+      >
         {articles?.map((article) => (
           <ArticleCard
             key={article.id}
