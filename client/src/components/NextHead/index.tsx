@@ -1,3 +1,4 @@
+import { pagesPath, staticPath } from "libs/pathpida/$path";
 import Head from "next/head";
 import path from "path";
 import { FC } from "react";
@@ -14,7 +15,7 @@ export const NextHead: FC<NextHeadProps> = ({
   title = "Nozo Blog",
   description,
   url,
-  imageUrl = path.resolve("public/nozomi_work.jpeg"),
+  imageUrl = staticPath.nozomi_work_jpeg,
   type = "blog",
 }) => {
   return (
@@ -27,6 +28,8 @@ export const NextHead: FC<NextHeadProps> = ({
       <meta property="og:description" content={description} />
       <meta property="og:image" content={imageUrl} />
       <meta property="og:url" content={url} />
+      <meta property="twitter:card" content="summary_large_imagerl" />
+      <meta property="twitter:site" content="@nozo_i0106" />
     </Head>
   );
 };

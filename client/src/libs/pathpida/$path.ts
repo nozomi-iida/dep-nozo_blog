@@ -22,6 +22,8 @@ export const staticPath = {
   clap_png: '/clap.png',
   clap_dark_png: '/clap_dark.png',
   favicon_ico: '/favicon.ico',
+  nozomi_private_png: '/nozomi_private.png',
+  nozomi_work_jpeg: '/nozomi_work.jpeg',
   vercel_svg: '/vercel.svg'
 } as const
 
