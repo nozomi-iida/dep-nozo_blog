@@ -261,8 +261,11 @@ export const Header = () => {
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerBody>
-              <VStack gap="md">
-                <Link href={pagesPath.$url()}>
+              <VStack gap="md" onClick={setMenuOpen.off}>
+                <Link
+                  href={pagesPath.$url()}
+                  style={{ width: "100%", textAlign: "center" }}
+                >
                   <Text
                     transition="color 0.2s"
                     fontWeight="bold"
@@ -275,6 +278,7 @@ export const Header = () => {
                   <Link
                     key={topic}
                     href={pagesPath.topics._topic(topic).$url()}
+                    style={{ width: "100%", textAlign: "center" }}
                   >
                     <Text
                       transition="color 0.2s"
