@@ -24,6 +24,7 @@ import {
   SlideFade,
   Text,
   useBoolean,
+  useBreakpointValue,
   useColorMode,
   useColorModeValue,
   VStack,
@@ -38,7 +39,11 @@ import { FormEvent, useEffect, useState } from "react";
 import useSWR from "swr";
 
 export const Header = () => {
-  const [isMenuOpen, setMenuOpen] = useBoolean(true);
+  const responsiveIsMenuOpen = useBreakpointValue({
+    base: false,
+    lg: true,
+  });
+  const [isMenuOpen, setMenuOpen] = useBoolean();
   const [isSearchOpen, setSearchOpen] = useBoolean();
   const [showShadow, setShowShadow] = useBoolean();
   const [keyword, setKeyword] = useState("");
@@ -74,6 +79,14 @@ export const Header = () => {
     window.addEventListener("scroll", addShadow);
     return () => window.removeEventListener("scroll", addShadow);
   }, [setShowShadow]);
+
+  useEffect(() => {
+    if (responsiveIsMenuOpen) {
+      setMenuOpen.on();
+    } else {
+      setMenuOpen.off();
+    }
+  }, [setMenuOpen, responsiveIsMenuOpen]);
 
   return (
     <Box
