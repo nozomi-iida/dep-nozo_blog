@@ -31,7 +31,6 @@ export const ArticleMedia: FC<ArticleMediaProps> = ({
           },
         }}
       >
-        {/* TODO: 画像を正方形にできない場合がある */}
         <Box position="relative">
           <Box
             position="absolute"
@@ -57,8 +56,6 @@ export const ArticleMedia: FC<ArticleMediaProps> = ({
                 : undefined
             }
             alt={article.title}
-            w={100}
-            h={100}
           />
           <Box
             position="absolute"

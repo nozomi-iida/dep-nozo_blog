@@ -11,6 +11,7 @@ import {
   Fade,
   Flex,
   Heading,
+  Hide,
   Input,
   InputGroup,
   InputRightElement,
@@ -19,10 +20,10 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Show,
   SlideFade,
   Text,
   useBoolean,
-  useBreakpointValue,
   useColorMode,
   useColorModeValue,
   VStack,
@@ -43,10 +44,6 @@ export const Header = () => {
   const [keyword, setKeyword] = useState("");
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
-  const drawerIsOpen = useBreakpointValue({
-    sm: isMenuOpen,
-    md: false,
-  });
 
   const color = useColorModeValue("white", "#18191b");
   const fetchTopics = () => {
@@ -101,41 +98,37 @@ export const Header = () => {
             </Heading>
           </Link>
           <Flex gap={10}>
-            <SlideFade in={isMenuOpen} offsetX={5} offsetY={0}>
-              <Flex
-                align="center"
-                fontWeight="bold"
-                h="full"
-                gap={5}
-                display={{ sm: "none", md: "flex" }}
-              >
-                <Link href={pagesPath.$url()}>
-                  <Text
-                    lineHeight={showShadow ? "70px" : "100px"}
-                    transition="color 0.2s, line-height .2s ease"
-                    fontSize="sm"
-                    _hover={{ color: "activeColor" }}
-                  >
-                    Home
-                  </Text>
-                </Link>
-                {topics?.map((topic) => (
-                  <Link
-                    key={topic}
-                    href={pagesPath.topics._topic(topic).$url()}
-                  >
+            <Hide below="md">
+              <SlideFade in={isMenuOpen} offsetX={5} offsetY={0}>
+                <Flex align="center" fontWeight="bold" h="full" gap={5}>
+                  <Link href={pagesPath.$url()}>
                     <Text
                       lineHeight={showShadow ? "70px" : "100px"}
                       transition="color 0.2s, line-height .2s ease"
                       fontSize="sm"
                       _hover={{ color: "activeColor" }}
                     >
-                      {topic}
+                      Home
                     </Text>
                   </Link>
-                ))}
-              </Flex>
-            </SlideFade>
+                  {topics?.map((topic) => (
+                    <Link
+                      key={topic}
+                      href={pagesPath.topics._topic(topic).$url()}
+                    >
+                      <Text
+                        lineHeight={showShadow ? "70px" : "100px"}
+                        transition="color 0.2s, line-height .2s ease"
+                        fontSize="sm"
+                        _hover={{ color: "activeColor" }}
+                      >
+                        {topic}
+                      </Text>
+                    </Link>
+                  ))}
+                </Flex>
+              </SlideFade>
+            </Hide>
             <Flex>
               <Center
                 w={12}
@@ -249,36 +242,41 @@ export const Header = () => {
           </Flex>
         </Flex>
       </Box>
-      <Drawer isOpen={drawerIsOpen ?? false} onClose={setMenuOpen.off}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerBody>
-            <VStack gap="md">
-              <Link href={pagesPath.$url()}>
-                <Text
-                  transition="color 0.2s"
-                  fontWeight="bold"
-                  _hover={{ color: "activeColor" }}
-                >
-                  Home
-                </Text>
-              </Link>
-              {topics?.map((topic) => (
-                <Link key={topic} href={pagesPath.topics._topic(topic).$url()}>
+      <Show below="md">
+        <Drawer isOpen={isMenuOpen} onClose={setMenuOpen.off}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerBody>
+              <VStack gap="md">
+                <Link href={pagesPath.$url()}>
                   <Text
                     transition="color 0.2s"
                     fontWeight="bold"
                     _hover={{ color: "activeColor" }}
                   >
-                    {topic}
+                    Home
                   </Text>
                 </Link>
-              ))}
-            </VStack>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
+                {topics?.map((topic) => (
+                  <Link
+                    key={topic}
+                    href={pagesPath.topics._topic(topic).$url()}
+                  >
+                    <Text
+                      transition="color 0.2s"
+                      fontWeight="bold"
+                      _hover={{ color: "activeColor" }}
+                    >
+                      {topic}
+                    </Text>
+                  </Link>
+                ))}
+              </VStack>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </Show>
     </Box>
   );
 };

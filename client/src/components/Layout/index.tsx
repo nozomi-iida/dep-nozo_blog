@@ -1,4 +1,10 @@
-import { Box, Flex, useBoolean, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Hide,
+  useBoolean,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { Footer } from "components/Footer";
 import { FC, ReactNode } from "react";
 import { Header } from "../Header";
@@ -32,15 +38,11 @@ export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
 
 export const SidebarLayout: FC<LayoutProps> = ({ children }) => {
   return (
-    <Box
-      px={4}
-      as="aside"
-      minW={300}
-      boxSizing="content-box"
-      display={{ sm: "none", md: "block" }}
-    >
-      {children}
-    </Box>
+    <Hide below="md">
+      <Box px={4} as="aside" minW={300} boxSizing="content-box">
+        {children}
+      </Box>
+    </Hide>
   );
 };
 
