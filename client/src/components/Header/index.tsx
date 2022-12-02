@@ -3,6 +3,11 @@ import {
   Box,
   Button,
   Center,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerOverlay,
   Fade,
   Flex,
   Heading,
@@ -17,6 +22,7 @@ import {
   SlideFade,
   Text,
   useBoolean,
+  useBreakpointValue,
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -36,6 +42,11 @@ export const Header = () => {
   const [keyword, setKeyword] = useState("");
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
+  const drawerIsOpen = useBreakpointValue({
+    sm: isMenuOpen,
+    md: false,
+  });
+
   const color = useColorModeValue("white", "#18191b");
   const fetchTopics = () => {
     return strapiClient
@@ -99,8 +110,9 @@ export const Header = () => {
               >
                 <Link href={pagesPath.$url()}>
                   <Text
+                    lineHeight={showShadow ? "70px" : "100px"}
+                    transition="color 0.2s, line-height .2s ease"
                     fontSize="sm"
-                    transition="color 0.2s"
                     _hover={{ color: "activeColor" }}
                   >
                     Home
@@ -112,8 +124,9 @@ export const Header = () => {
                     href={pagesPath.topics._topic(topic).$url()}
                   >
                     <Text
+                      lineHeight={showShadow ? "70px" : "100px"}
+                      transition="color 0.2s, line-height .2s ease"
                       fontSize="sm"
-                      transition="color 0.2s"
                       _hover={{ color: "activeColor" }}
                     >
                       {topic}
@@ -129,7 +142,9 @@ export const Header = () => {
                 transition="color 0.2s"
                 _hover={{ color: "activeColor" }}
                 color={isMenuOpen ? "activeColor" : undefined}
-                onClick={setMenuOpen.toggle}
+                onClick={() => {
+                  setMenuOpen.toggle();
+                }}
               >
                 <Box
                   w={4}
@@ -233,6 +248,15 @@ export const Header = () => {
           </Flex>
         </Flex>
       </Box>
+      <Drawer isOpen={drawerIsOpen ?? false} onClose={setMenuOpen.off}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerBody>
+            <Heading>Hoge</Heading>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Box>
   );
 };
