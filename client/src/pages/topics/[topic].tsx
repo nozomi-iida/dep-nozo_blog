@@ -1,4 +1,4 @@
-import { Box, Grid, Heading } from "@chakra-ui/react";
+import { Box, Heading, SimpleGrid } from "@chakra-ui/react";
 import { Layout } from "components/Layout";
 import { strapiClient } from "libs/strapi/api/axios";
 import { Topic, Topic as TopicType } from "libs/strapi/models/topic";
@@ -58,14 +58,8 @@ const Topic: NextPageWithLayout<
       <Heading fontSize="2xl" mb={4}>
         Topic: {data.attributes.name}
       </Heading>
-      <Grid
-        templateColumns={{
-          sm: "repeat(1, 1fr)",
-          md: "repeat(2, 1fr)",
-          lg: "repeat(3, 1fr)",
-        }}
-        gap={10}
-      >
+
+      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={10}>
         {articles?.map((article) => (
           <ArticleCard
             key={article.id}
@@ -73,7 +67,7 @@ const Topic: NextPageWithLayout<
             articleId={article.id}
           />
         ))}
-      </Grid>
+      </SimpleGrid>
     </Box>
   );
 };

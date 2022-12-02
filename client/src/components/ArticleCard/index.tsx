@@ -6,11 +6,13 @@ import dayjs from "dayjs";
 import { pagesPath } from "libs/pathpida/$path";
 import { Image } from "components/Image";
 import { useThemeColor } from "libs/chakra/theme";
+import { markdown2content } from "utils/helpers";
 
 type ArticleCardProps = { articleId: number; article: Article };
 
 export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
   const { bgColor } = useThemeColor();
+  const normalContent = markdown2content(article.content);
 
   return (
     <Box backgroundColor={bgColor} as="article">
@@ -43,6 +45,16 @@ export const ArticleCard: FC<ArticleCardProps> = ({ articleId, article }) => {
             {article.title}
           </Heading>
         </Link>
+        <Text
+          overflow="hidden"
+          sx={{
+            WebkitLineClamp: 6,
+            WebkitBoxOrient: "vertical",
+            display: "-webkit-box",
+          }}
+        >
+          {normalContent}
+        </Text>
         <Link href={pagesPath.articles._id(articleId).$url()}>
           <Text fontSize="md" as="u" _hover={{ color: "activeColor" }}>
             Read more

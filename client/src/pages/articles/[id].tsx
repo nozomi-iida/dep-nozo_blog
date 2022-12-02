@@ -28,6 +28,7 @@ import { Sidebar } from "components/Sidebar";
 import { motion, useAnimationControls } from "framer-motion";
 import { useThemeColor } from "libs/chakra/theme";
 import { NextHead } from "components/NextHead";
+import { markdown2content } from "utils/helpers";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await strapiClient.get<StrapiListResponse>("articles");
@@ -84,6 +85,7 @@ const Article: NextPageWithLayout<
         title={data.attributes.title}
         imageUrl={data.attributes.thumbnail?.data?.attributes.url}
         url={pagesPath.articles._id(data.id).$url().pathname}
+        description={markdown2content(data.attributes.content)}
       />
       {data.attributes.thumbnail?.data?.attributes.url && (
         <Image

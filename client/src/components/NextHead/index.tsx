@@ -28,6 +28,7 @@ export const NextHead: FC<NextHeadProps> = ({
       <meta property="og:image" content={imageUrl} />
       <meta property="og:url" content={url} />
       <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:description" content={description} />
       <meta property="twitter:site" content="@nozo_i0106" />
     </Head>
   );

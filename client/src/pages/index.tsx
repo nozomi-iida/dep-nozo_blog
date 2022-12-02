@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { ArticleCard } from "components/ArticleCard";
 import { Layout } from "components/Layout";
 import { NextPageWithLayout } from "./_app";
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { StrapiListResponse } from "libs/strapi/types";
 import { Article } from "libs/strapi/models/article";
@@ -35,18 +35,11 @@ const Home: NextPageWithLayout<
   return (
     <Box>
       <NextHead title="Nozo Blog" url={pagesPath.$url().pathname} />
-      <Grid
-        templateColumns={{
-          sm: "repeat(1, 1fr)",
-          md: "repeat(2, 1fr)",
-          lg: "repeat(3, 1fr)",
-        }}
-        gap={10}
-      >
+      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={10}>
         {data.map((el) => (
           <ArticleCard key={el.id} articleId={el.id} article={el.attributes} />
         ))}
-      </Grid>
+      </SimpleGrid>
     </Box>
   );
 };
