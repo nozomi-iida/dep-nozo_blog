@@ -14,7 +14,9 @@ entity articles {
   content
   published_at
   external_url
+  tags
   author_id
+  topic_id
 }
 
 entity topics {
