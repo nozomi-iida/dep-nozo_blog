@@ -1,0 +1,14 @@
+version: "3"
+
+volumes:
+  ignore_dir:
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/app
+      - ignore_dir:/app/tmp/main
