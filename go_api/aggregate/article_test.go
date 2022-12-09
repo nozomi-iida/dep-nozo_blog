@@ -18,7 +18,7 @@ func TestArticle_NewArticle(t *testing.T) {
 		expectedErr error
 	}
 
-	user, _ := entity.NewUser("Nozomi", "nozomi@test.com")
+	user, _ := entity.NewUser("Nozomi")
 
 	testCases := []testCase{
 		{
