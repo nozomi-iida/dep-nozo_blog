@@ -1,7 +1,9 @@
 package entity
 
+import "github.com/google/uuid"
+
 type Topic struct {
-	ID int
+	ID uuid.UUID
 	Name string
 	Description string
 }

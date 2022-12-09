@@ -3,6 +3,8 @@ package entity
 import (
 	"errors"
 	"regexp"
+
+	"github.com/google/uuid"
 )
 
 var (
@@ -16,7 +18,7 @@ func isValidEmailFormat(email string) bool {
 }
 
 type User struct {
-	ID int
+	ID uuid.UUID
 	Username string
 	Email string
 }
@@ -34,4 +36,12 @@ func NewUser(username string, email string) (User, error)  {
 		Username: username,
 		Email: email,
 	}, nil
+}
+
+func (u *User) SetID(id uuid.UUID)  {
+	u.ID = id
+}
+
+func (u *User) SetUsername(username string)  {
+	u.Username = username
 }

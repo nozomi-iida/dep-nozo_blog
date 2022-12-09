@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/entity"
 )
 
@@ -14,7 +15,7 @@ var (
 )
 
 type Article struct {
-	ID int
+	ID uuid.UUID
 	Title string
 	Content string
 	PublishedAt *time.Time
@@ -23,7 +24,6 @@ type Article struct {
 	Tags *[]string
 }
 
-// TODO: ここで別のチャネルでtagをDBに保存するか否かの処理をしても良いかも
 func NewArticle(title string, content string, tags []string, author entity.User, topic *entity.Topic) (Article, error)  {
 	if title == "" || content == "" {
 		return Article{}, ErrInvalidArticle
