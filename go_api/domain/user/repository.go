@@ -17,4 +17,3 @@ type UserRepository interface {
 	Create(entity.User) error
 	Update(entity.User) error
 }
-
