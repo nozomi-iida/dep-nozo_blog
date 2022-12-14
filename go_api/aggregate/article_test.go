@@ -5,6 +5,7 @@ import (
 
 	"github.com/nozomi-iida/nozo_blog/aggregate"
 	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog/valueobject"
 )
 
 func TestArticle_NewArticle(t *testing.T) {
@@ -18,7 +19,7 @@ func TestArticle_NewArticle(t *testing.T) {
 		expectedErr error
 	}
 
-	user, _ := entity.NewUser("Nozomi")
+	user, _ := entity.NewUser("Nozomi", valueobject.Password{})
 
 	testCases := []testCase{
 		{

@@ -5,10 +5,13 @@ import (
 	"regexp"
 
 	"github.com/google/uuid"
+	"github.com/nozomi-iida/nozo_blog/valueobject"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
 	ErrInvalidUser = errors.New("A User has to have an a valid user")
+	ErrTooShortPassword = errors.New("Password is too short")
 )
 
 func isValidEmailFormat(email string) bool {
@@ -19,16 +22,28 @@ func isValidEmailFormat(email string) bool {
 type User struct {
 	ID uuid.UUID
 	Username string
+	Password valueobject.Password
 }
 
-func NewUser(username string) (User, error)  {
+func NewUser(username string, password string) (User, error)  {
 	if username == "" {
 		return User{}, ErrInvalidUser
 	}
-
+	
+	p, err := valueobject.NewPassword(password)
+	if err != nil {
+		return User{}, err
+	}
+	
 	return User{
+		ID: uuid.New(),
 		Username: username,
+		Password: p,
 	}, nil
+}
+
+func (u *User) GetID() uuid.UUID  {
+	return u.ID
 }
 
 func (u *User) SetID(id uuid.UUID)  {

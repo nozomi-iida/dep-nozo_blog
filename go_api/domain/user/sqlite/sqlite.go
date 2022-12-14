@@ -2,14 +2,19 @@ package sqlite
 
 import (
 	"database/sql"
+	"fmt"
+	"image/color/palette"
 
 	"github.com/google/uuid"
 	"github.com/mattn/go-sqlite3"
+	"github.com/nozomi-iida/nozo_blog/domain/user"
 	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog/valueobject"
 )
 
 type SqliteRepository struct {
 	db *sql.DB
+	users map[uuid.UUID]entity.User
 }
 
 type sqliteUser struct {
@@ -35,14 +40,40 @@ func New(fileString string) (*SqliteRepository, error)  {
 
 	return &SqliteRepository{
 		db,
+		make(map[uuid.UUID]entity.User),
 	}, err
 }
 
-func (sr *SqliteRepository) Create(u entity.User) error {
-		_, err := sr.db.Exec("INSERT INTO user(username) VALUES (?)", u.Username)
-		if err != nil {
-			return err
-		}
+func (sr *SqliteRepository) FindAll() ([]entity.User, error) {
+	return nil, user.ErrFailedToFindAllUser
+}
 
-		return nil
+func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error) {
+	return entity.User{}, user.ErrUserNotFound
+}
+
+func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
+	if sr.users == nil {
+		sr.users = make(map[uuid.UUID]entity.User)
+	}
+	// このハンドリング方法あってるのかな？
+	if _, ok := sr.users[u.GetID()] {
+		return fmt.Errorf("user already exists: %w", user.ErrFailedToCreateUser)
+	}
+
+	encryptedPassword, err := u.Password.Encrypt()
+	if err := nil {
+		return u, err
+	}
+
+	_, err := sr.db.Exec("INSERT INTO user(id, username, password) VALUES (?, ?, ?)", u.ID, u.Username, encryptedPassword)
+	if err != nil {
+		return u, err
+	}
+
+	return u, nil
+}
+
+func (sr *SqliteRepository) Update(user entity.User) (entity.User, error) {
+	return nil
 }
