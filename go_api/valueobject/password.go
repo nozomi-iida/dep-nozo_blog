@@ -45,8 +45,8 @@ func NewPassword(plainText string) (Password, error) {
 	return Password{Value: plainText}, nil
 }
 
-func (p *Password)Encrypt(password string) (Password, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+func (p *Password)Encrypt() (Password, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(p.Value), bcrypt.DefaultCost)
 	if err != nil {
 		return Password{}, err
 	}
