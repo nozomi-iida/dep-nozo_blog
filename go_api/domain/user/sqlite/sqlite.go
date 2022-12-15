@@ -51,14 +51,13 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 		return entity.User{},fmt.Errorf("user already exists: %w", user.ErrFailedToCreateUser)
 	}
 
-	encryptedPassword, errEncrypt := u.Password.Encrypt()
-	if errEncrypt != nil {
-		return u, errEncrypt
+	encryptedPassword, err := u.Password.Encrypt()
+	if err != nil {
+		return entity.User{}, err 
 	}
 
-	_, err := sr.db.Exec("INSERT INTO user(id, username, password) VALUES (?, ?, ?)", u.ID, u.Username, encryptedPassword)
-	if err != nil {
-		return u, err
+	if _, err := sr.db.Exec("INSERT INTO user(id, username, password) VALUES (?, ?, ?)", u.ID, u.Username, encryptedPassword); err != nil {
+		return entity.User{}, err
 	}
 
 	return u, nil
