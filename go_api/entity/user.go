@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/valueobject"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var (
