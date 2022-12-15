@@ -58,6 +58,12 @@ func (as *AuthService) SignUp(username string, password string) (AuthResponse, e
 	if err != nil {
 		return AuthResponse{}, err
 	}
+
+	tokenString, _ := valueobject.NewJwtToken(user.ID)
+	token, err := tokenString.Encode();
+	if err != nil {
+		return AuthResponse{}, err
+	}
 	
-	return AuthResponse{user: user, token: ""}, nil
+	return AuthResponse{user: user, token: token}, nil
 }

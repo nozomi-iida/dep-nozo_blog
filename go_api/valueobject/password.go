@@ -21,10 +21,27 @@ func NewPassword(plainText string) (Password, error) {
 		return Password{}, ErrTooShortPassword 
 	}
 
-	re := regexp.MustCompile(`^[a-zA-Z0-9]+$`)
-	if(!re.MatchString(plainText)) {
-		return Password{}, ErrInvalidPassword 
+	// reString := regexp.MustCompile(`^[a-zA-Z]+$`)
+	// fmt.Printf("reString: %v", reString.MatchString(plainText))
+	// if(!reString.MatchString(plainText)) {
+	// 	return Password{}, ErrInvalidPassword 
+	// }
+
+	// reNumber := regexp.MustCompile(`^[0-9]+$`)
+	// fmt.Printf("reNumber: %v", reNumber.MatchString(plainText))
+	// if(!reNumber.MatchString(plainText)) {
+	// 	return Password{}, ErrInvalidPassword 
+	// }
+
+	regString := regexp.MustCompile(`[a-zA-Z]`).Match([]byte(plainText))
+	if !regString {
+		return Password{}, ErrInvalidPassword
 	}
+	regInt := regexp.MustCompile(`[0-9]`).Match([]byte(plainText))
+	if !regInt {
+		return Password{}, ErrInvalidPassword
+	}
+
 	return Password{Value: plainText}, nil
 }
 

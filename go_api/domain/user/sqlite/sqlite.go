@@ -44,14 +44,6 @@ func New(fileString string) (*SqliteRepository, error)  {
 	}, err
 }
 
-func (sr *SqliteRepository) FindAll() ([]entity.User, error) {
-	return nil, user.ErrFailedToFindAllUser
-}
-
-func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error) {
-	return entity.User{}, user.ErrUserNotFound
-}
-
 func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 	if sr.users == nil {
 		sr.users = make(map[uuid.UUID]entity.User)
@@ -72,8 +64,4 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 	}
 
 	return u, nil
-}
-
-func (sr *SqliteRepository) Update(user entity.User) (entity.User, error) {
-	return nil
 }
