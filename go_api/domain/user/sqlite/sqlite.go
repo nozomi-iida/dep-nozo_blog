@@ -56,7 +56,7 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 		return entity.User{}, err 
 	}
 
-	if _, err := sr.db.Exec("INSERT INTO user(id, username, password) VALUES (?, ?, ?)", u.ID, u.Username, encryptedPassword); err != nil {
+	if _, err := sr.db.Exec("INSERT INTO users(id, username, password) VALUES (?, ?, ?)", u.ID, u.Username, encryptedPassword.Value); err != nil {
 		return entity.User{}, err
 	}
 
