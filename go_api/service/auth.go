@@ -49,7 +49,8 @@ func WithSqliteUserRepository(fileString string) AuthConfiguration  {
 }
 
 func (as *AuthService) SignUp(username string, password string) (AuthResponse, error)  {
-		u, err := entity.NewUser(username, password)
+	ps, err := valueobject.NewPassword(password)
+	u, err := entity.NewUser(username, ps)
 	if err != nil {
 		return AuthResponse{}, err
 	}

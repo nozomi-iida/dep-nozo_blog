@@ -21,18 +21,6 @@ func NewPassword(plainText string) (Password, error) {
 		return Password{}, ErrTooShortPassword 
 	}
 
-	// reString := regexp.MustCompile(`^[a-zA-Z]+$`)
-	// fmt.Printf("reString: %v", reString.MatchString(plainText))
-	// if(!reString.MatchString(plainText)) {
-	// 	return Password{}, ErrInvalidPassword 
-	// }
-
-	// reNumber := regexp.MustCompile(`^[0-9]+$`)
-	// fmt.Printf("reNumber: %v", reNumber.MatchString(plainText))
-	// if(!reNumber.MatchString(plainText)) {
-	// 	return Password{}, ErrInvalidPassword 
-	// }
-
 	regString := regexp.MustCompile(`[a-zA-Z]`).Match([]byte(plainText))
 	if !regString {
 		return Password{}, ErrInvalidPassword
@@ -45,13 +33,13 @@ func NewPassword(plainText string) (Password, error) {
 	return Password{Value: plainText}, nil
 }
 
-func (p *Password)Encrypt() (Password, error) {
+func (p *Password)Encrypt() (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(p.Value), bcrypt.DefaultCost)
 	if err != nil {
-		return Password{}, err
+		return "", err
 	}
 
-	return Password{Value: string(hash)}, nil
+	return string(hash), nil
 }
 
 func (p *Password) IsMatchPassword(password string) bool {

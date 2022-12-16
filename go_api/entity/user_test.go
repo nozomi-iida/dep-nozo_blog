@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog/valueobject"
 )
 
 func TestUser_NewUser(t *testing.T) {
@@ -31,7 +32,8 @@ func TestUser_NewUser(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			_, err := entity.NewUser(tc.username, tc.password)
+			ps, err := valueobject.NewPassword(tc.password)
+			_, err = entity.NewUser(tc.username, ps)
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}

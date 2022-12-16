@@ -7,6 +7,7 @@ import (
 	"github.com/nozomi-iida/nozo_blog/domain/user/sqlite"
 	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/test"
+	"github.com/nozomi-iida/nozo_blog/valueobject"
 )
 
 func TestUserSqlite_Create(t *testing.T) {
@@ -16,7 +17,8 @@ func TestUserSqlite_Create(t *testing.T) {
 	if err != nil {
 		t.Error("sqlite new err:", err)
 	}	
-	us, err := entity.NewUser("nozomi", "password123")
+	ps, err := valueobject.NewPassword("password123")
+	us, err := entity.NewUser("nozomi", ps)
 	if err != nil {
 		t.Error("newUser err:", err)
 	}	

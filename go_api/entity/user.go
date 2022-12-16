@@ -21,15 +21,15 @@ func isValidEmailFormat(email string) bool {
 type User struct {
 	ID uuid.UUID
 	Username string
-	Password valueobject.Password
+	Password string
 }
 
-func NewUser(username string, password string) (User, error)  {
+func NewUser(username string, password valueobject.Password) (User, error)  {
 	if username == "" {
 		return User{}, ErrInvalidUser
 	}
 	
-	p, err := valueobject.NewPassword(password)
+	encryptedPassword, err := password.Encrypt()
 	if err != nil {
 		return User{}, err
 	}
@@ -37,7 +37,7 @@ func NewUser(username string, password string) (User, error)  {
 	return User{
 		ID: uuid.New(),
 		Username: username,
-		Password: p,
+		Password: encryptedPassword,
 	}, nil
 }
 
