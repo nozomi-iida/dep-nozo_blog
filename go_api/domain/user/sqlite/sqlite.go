@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+		_ "github.com/mattn/go-sqlite3"
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/user"
 	"github.com/nozomi-iida/nozo_blog/entity"
@@ -11,19 +12,18 @@ import (
 
 type SqliteRepository struct {
 	db *sql.DB
-	users map[uuid.UUID]entity.User
 }
 
 type sqliteUser struct {
-	ID uuid.UUID `json:"id"`
-	Username string `json:"username"`
+	id uuid.UUID `db:"id"`
+	username string `db:"username"`
 }
 
 func (sc sqliteUser) ToEntity() entity.User  {
 	u := entity.User{}	
 
-	u.SetID(sc.ID)
-	u.SetUsername(sc.Username)
+	u.SetID(sc.id)
+	u.SetUsername(sc.username)
 
 	return u
 }
@@ -37,23 +37,48 @@ func New(fileString string) (*SqliteRepository, error)  {
 
 	return &SqliteRepository{
 		db,
-		make(map[uuid.UUID]entity.User),
 	}, err
 }
 
-func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
-	if sr.users == nil {
-		sr.users = make(map[uuid.UUID]entity.User)
+func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
+	if id.String() == "" {
+		return entity.User{}, user.ErrUserNotFound
 	}
+
+	rows, err := sr.db.Query("SELECT id, username FROM users WHERE users.id == ?", id)
+	var su sqliteUser
+	for rows.Next() {
+		err := rows.Scan(&su.id, &su.username)
+		if err != nil {
+			return entity.User{}, user.ErrUserNotFound
+		}
+	}
+	if err != nil {
+		return entity.User{}, user.ErrUserNotFound
+	}
+	defer rows.Close()
+	rows.Scan(su)
+
+	u := su.ToEntity()
+
+	return u, nil
+}
+
+func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 	// このハンドリング方法あってるのかな？
-	_, ok := sr.users[u.GetID()]
-	if ok {
+	if sr.exist(u) {
 		return entity.User{},fmt.Errorf("user already exists: %w", user.ErrFailedToCreateUser)
 	}
 
-	if _, err := sr.db.Exec("INSERT INTO users(id, username, password) VALUES (?, ?, ?)", u.ID, u.Username, u.Password); err != nil {
+	_, err := sr.db.Exec("INSERT INTO users(id, username, password) VALUES (?, ?, ?)", u.GetID(), u.GetUsername(), u.GetPassword()); 
+	if err != nil {
 		return entity.User{}, err
 	}
 
 	return u, nil
+}
+
+func (sr *SqliteRepository)exist(user entity.User) bool  {
+	// sr.FindAll()
+	return false
 }

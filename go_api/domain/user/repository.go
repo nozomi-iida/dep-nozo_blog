@@ -3,6 +3,7 @@ package user
 import (
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/entity"
 )
 
@@ -14,5 +15,6 @@ var (
 )
 
 type UserRepository interface {
+	FindById(id uuid.UUID) (entity.User, error)
 	Create(user entity.User) (entity.User, error)
 }
