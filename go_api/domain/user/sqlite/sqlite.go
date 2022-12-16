@@ -16,6 +16,7 @@ type SqliteRepository struct {
 type sqliteUser struct {
 	id uuid.UUID `db:"id"`
 	username string `db:"username"`
+	password string `db:"username"`
 }
 
 func (sc sqliteUser) ToEntity() entity.User  {
@@ -23,6 +24,10 @@ func (sc sqliteUser) ToEntity() entity.User  {
 
 	u.SetID(sc.id)
 	u.SetUsername(sc.username)
+
+	if sc.password != "" {
+		u.SetPassword(sc.password)
+	}
 
 	return u
 }
@@ -72,7 +77,7 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 	return u, nil
 }
 
-func (sr *SqliteRepository) findByUsername(username string) (entity.User, error)  {
+func (sr *SqliteRepository) FindByUsername(username string) (entity.User, error)  {
 	var su sqliteUser
 	err := sr.db.QueryRow("SELECT id, username FROM users WHERE users.username == ?", username).Scan(&su.id, &su.username)
 	if err != nil {
@@ -84,7 +89,7 @@ func (sr *SqliteRepository) findByUsername(username string) (entity.User, error)
 }
 
 func (sr *SqliteRepository)exist(username string) bool  {
-	_, err := sr.findByUsername(username)
+	_, err := sr.FindByUsername(username)
 	if err != nil {
 		return false
 	} else {

@@ -16,5 +16,6 @@ var (
 
 type UserRepository interface {
 	FindById(id uuid.UUID) (entity.User, error)
+	FindByUsername(username string) (entity.User, error)
 	Create(user entity.User) (entity.User, error)
 }

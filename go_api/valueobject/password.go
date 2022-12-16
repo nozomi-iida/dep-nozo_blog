@@ -41,8 +41,3 @@ func (p *Password)Encrypt() (string, error) {
 
 	return string(hash), nil
 }
-
-func (p *Password) IsMatchPassword(password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(p.Value), []byte(password))	
-	return err != bcrypt.ErrMismatchedHashAndPassword
-}

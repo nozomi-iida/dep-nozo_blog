@@ -11,6 +11,7 @@ import (
 
 var (
 	ErrDuplicateUsername = errors.New("Duplicate username")
+	ErrUnmatchPassword = errors.New("Unmatch password")
 )
 
 type AuthConfiguration func(as *AuthService) error
@@ -67,4 +68,22 @@ func (as *AuthService) SignUp(username string, password string) (AuthResponse, e
 	}
 	
 	return AuthResponse{user: user, token: token}, nil
+}
+
+func (as *AuthService) SignIn(username string, password string) (AuthResponse, error)  {
+	us, err := as.users.FindByUsername(username)	
+	if err != nil {
+		return AuthResponse{}, err
+	}
+
+	if !us.IsMatchPassword(password) {
+		return AuthResponse{}, ErrUnmatchPassword
+	}
+	tokenString, _ := valueobject.NewJwtToken(us.GetID())
+	token, err := tokenString.Encode();
+	if err != nil {
+		return AuthResponse{}, err
+	}
+
+	return AuthResponse{user: us, token: token}, nil
 }
