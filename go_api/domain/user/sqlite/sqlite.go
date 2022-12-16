@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
-		_ "github.com/mattn/go-sqlite3"
 	"github.com/google/uuid"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/nozomi-iida/nozo_blog/domain/user"
 	"github.com/nozomi-iida/nozo_blog/entity"
 )
@@ -41,10 +41,6 @@ func New(fileString string) (*SqliteRepository, error)  {
 }
 
 func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
-	if id.String() == "" {
-		return entity.User{}, user.ErrUserNotFound
-	}
-
 	rows, err := sr.db.Query("SELECT id, username FROM users WHERE users.id == ?", id)
 	var su sqliteUser
 	for rows.Next() {
@@ -65,9 +61,8 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
 }
 
 func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
-	// このハンドリング方法あってるのかな？
 	if sr.exist(u) {
-		return entity.User{},fmt.Errorf("user already exists: %w", user.ErrFailedToCreateUser)
+		return entity.User{}, user.ErrUserNotFound
 	}
 
 	_, err := sr.db.Exec("INSERT INTO users(id, username, password) VALUES (?, ?, ?)", u.GetID(), u.GetUsername(), u.GetPassword()); 
@@ -78,7 +73,23 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 	return u, nil
 }
 
+func (sr *SqliteRepository) findByUsername(username string) (entity.User, error)  {
+	var su sqliteUser
+	err := sr.db.QueryRow("SELECT id, username FROM users WHERE users.username == ?", username).Scan(&su.id, &su.username)
+	if err != nil {
+		return entity.User{}, user.ErrUserNotFound
+	}
+	u := su.ToEntity()
+
+	return u, nil
+}
+
 func (sr *SqliteRepository)exist(user entity.User) bool  {
-	// sr.FindAll()
-	return false
+	us, err := sr.findByUsername(user.GetUsername())
+	fmt.Printf("get user %v, error: %v \n", us, err)
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
 }
