@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
@@ -61,7 +60,7 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
 }
 
 func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
-	if sr.exist(u) {
+	if sr.exist(u.GetUsername()) {
 		return entity.User{}, user.ErrUserNotFound
 	}
 
@@ -84,9 +83,8 @@ func (sr *SqliteRepository) findByUsername(username string) (entity.User, error)
 	return u, nil
 }
 
-func (sr *SqliteRepository)exist(user entity.User) bool  {
-	us, err := sr.findByUsername(user.GetUsername())
-	fmt.Printf("get user %v, error: %v \n", us, err)
+func (sr *SqliteRepository)exist(username string) bool  {
+	_, err := sr.findByUsername(username)
 	if err != nil {
 		return false
 	} else {
