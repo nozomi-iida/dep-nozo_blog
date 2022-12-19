@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	ErrDuplicateUsername = errors.New("Duplicate username")
 	ErrUnmatchPassword = errors.New("Unmatch password")
 )
 

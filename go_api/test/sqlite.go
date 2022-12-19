@@ -23,10 +23,12 @@ func ConnectDB(t *testing.T) TestSqlite {
 	db, err := sql.Open("sqlite3", filename)
 	if err != nil {
 		t.Fatal("sql open error:", err)
-	}	
+	}
+	
 	migrations := &migrate.FileMigrationSource{
 		// TODO: 絶対パスにしたい
 		Dir: "../../../db/migrations",
+		// Dir: "github.com/nozomi-iida/nozo_blog/db/migrations",
 	}
 	_, err = migrate.Exec(db, "sqlite3", migrations, migrate.Up)
 	if err != nil {
