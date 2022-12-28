@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/valueobject"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -59,4 +60,13 @@ func (u *User) SetUsername(username string) {
 
 func (u *User) GetPassword() string {
 	return u.password
+}
+
+func (u *User) SetPassword(password string) {
+	u.password = password
+}
+
+func (u *User) IsMatchPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.password), []byte(password))	
+	return err != bcrypt.ErrMismatchedHashAndPassword
 }

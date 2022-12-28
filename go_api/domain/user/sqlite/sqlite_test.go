@@ -9,6 +9,7 @@ import (
 	"github.com/nozomi-iida/nozo_blog/valueobject"
 )
 
+// TODO: testCaseを増やす
 func TestUserSqlite_FindById(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
@@ -21,7 +22,24 @@ func TestUserSqlite_FindById(t *testing.T) {
 	}	
 	rs, err := sq.FindById(us.GetID())
 	if rs.GetID() != us.GetID() {
-		t.Error("find by id error", err)
+		t.Error("find by username error", err)
+	}
+}
+
+func TestUserSqlite_FindByUsername(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	ps, err := valueobject.NewPassword("password123")
+	un := "nozomi"
+	sq, err := sqlite.New(ts.Filename)
+	us, err := entity.NewUser(un, ps)
+	_, err = sq.Create(us)
+	if err != nil {
+		t.Error("create user err:", err)
+	}	
+	rs, err := sq.FindByUsername(un)
+	if rs.GetUsername() != us.GetUsername() {
+		t.Error("find by username error", err)
 	}
 }
 

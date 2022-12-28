@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/user"
 	"github.com/nozomi-iida/nozo_blog/domain/user/sqlite"
 	"github.com/nozomi-iida/nozo_blog/entity"
@@ -11,6 +12,7 @@ import (
 
 var (
 	ErrDuplicateUsername = errors.New("Duplicate username")
+	ErrUnMatchPassword = errors.New("Un match password")
 )
 
 type AuthConfiguration func(as *AuthService) error
@@ -60,11 +62,35 @@ func (as *AuthService) SignUp(username string, password string) (AuthResponse, e
 		return AuthResponse{}, err
 	}
 
-	tokenString, _ := valueobject.NewJwtToken(user.GetID())
-	token, err := tokenString.Encode();
+	token, err := generateToken(user.GetID());
 	if err != nil {
 		return AuthResponse{}, err
 	}
 	
 	return AuthResponse{user: user, token: token}, nil
+}
+
+func (as *AuthService) SignIn(username string, password string) (AuthResponse, error)  {
+	user, err := as.users.FindByUsername(username)	
+	if err != nil {
+		return AuthResponse{}, err
+	}
+	if !user.IsMatchPassword(password) {
+		return AuthResponse{}, ErrUnMatchPassword
+	}
+	token, err := generateToken(user.GetID());
+	if err != nil {
+		return AuthResponse{}, err
+	}
+
+	return AuthResponse{user: user, token: token}, nil
+}
+
+func generateToken(id uuid.UUID) (string, error)  {
+	tokenString, _ := valueobject.NewJwtToken(id)
+	token, err := tokenString.Encode();
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }

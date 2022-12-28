@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
-		_ "github.com/mattn/go-sqlite3"
 	"github.com/google/uuid"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/nozomi-iida/nozo_blog/domain/user"
 	"github.com/nozomi-iida/nozo_blog/entity"
 )
@@ -17,9 +17,19 @@ type SqliteRepository struct {
 type sqliteUser struct {
 	id uuid.UUID `db:"id"`
 	username string `db:"username"`
+	password string `db:"password"`
 }
 
 func (sc sqliteUser) ToEntity() entity.User  {
+	u := entity.User{}	
+
+	u.SetID(sc.id)
+	u.SetUsername(sc.username)
+
+	return u
+}
+
+func (sc sqliteUser) toEntityUsername() entity.User  {
 	u := entity.User{}	
 
 	u.SetID(sc.id)
@@ -57,11 +67,28 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
 		return entity.User{}, user.ErrUserNotFound
 	}
 	defer rows.Close()
-	rows.Scan(su)
 
 	u := su.ToEntity()
 
 	return u, nil
+}
+
+func (sr *SqliteRepository) FindByUsername(username string) (entity.User, error)  {
+	rows, err := sr.db.Query("SELECT id, username, password FROM users WHERE users.username == ?", username)
+	var su sqliteUser
+	for rows.Next() {
+		err := rows.Scan(&su.id, &su.username, &su.password)
+		if err != nil {
+			return entity.User{}, user.ErrUserNotFound
+		}
+	}
+	if err != nil {
+		return entity.User{}, user.ErrUserNotFound
+	}
+	defer rows.Close()
+	u := su.ToEntity()
+	u.SetPassword(su.password)
+	return u, nil	
 }
 
 func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
