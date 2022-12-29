@@ -12,7 +12,7 @@ import (
 
 var (
 	ErrDuplicateUsername = errors.New("Duplicate username")
-	ErrUnMatchPassword = errors.New("Un match password")
+	ErrUnMatchPassword = errors.New("Unmatch password")
 )
 
 type AuthConfiguration func(as *AuthService) error

@@ -30,14 +30,43 @@ func TestUserSqlite_FindById(t *testing.T) {
 func TestUserSqlite_FindByUsername(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
-	user := test.CreateUser(t, ts.Filename)
+	username := "hoge"
+	us := test.CreateUser(t, ts.Filename, test.SetUsername(username))
 	sq, err := sqlite.New(ts.Filename)
 	if err != nil {
-		t.Error("create user err:", err)
-	}	
-	rs, err := sq.FindByUsername(user.GetUsername())
-	if rs.GetUsername() != user.GetUsername() {
-		t.Error("find by username error", err)
+		t.Error("sqlite new err:", err)
+	}
+
+	type testCase struct {
+		test string
+		name string
+		expectedErr error
+	}
+	
+	testCases := []testCase{
+		{
+			test: "Success to get user",	
+			name: username,
+			expectedErr: nil,
+		},
+		{
+			test: "Failed to get user",	
+			name: "fuga",
+			expectedErr: user.ErrUserNotFound,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			rs, err := sq.FindByUsername(tc.name)
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+
+			if err ==nil && rs.GetUsername() != us.GetUsername() {
+				t.Error("find by username error", err)
+			}
+		})
 	}
 }
 

@@ -35,6 +35,7 @@ func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) 
 	ur, err := ac.as.SignUp(authRequest.Username, authRequest.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
@@ -54,6 +55,7 @@ func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request) 
 	ur, err := ac.as.SignIn(authRequest.Username, authRequest.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
 		return
 	}
 

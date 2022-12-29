@@ -2,6 +2,7 @@ package test
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -51,14 +52,25 @@ func ConnectDB(t *testing.T) TestSqlite {
 	}}
 }
 
-func CreateUser(t *testing.T, fileName string) entity.User  {
-	sq, err := sqlite.New(fileName)
+type UserOption func(*entity.User)
+func SetUsername(username string) UserOption {
+	return func(user *entity.User) {
+		user.Username = username
+	}
+}
+
+func CreateUser(t *testing.T, fileName string, options ...UserOption) entity.User  {
 	ps, err := valueobject.NewPassword("password123")
-	us, err := entity.NewUser("nozomi", ps)
-	_, err = sq.Create(us)
+	user, err := entity.NewUser("nozomi", ps)
+	for _, option := range options {
+		option(&user)
+	} 
+	fmt.Printf("username: %v\n", user.Username)
+	sq, err := sqlite.New(fileName)
+	_, err = sq.Create(user)
 	if err != nil {
 		t.Error("create user err:", err)
 	}
 
-	return us
+	return user
 }

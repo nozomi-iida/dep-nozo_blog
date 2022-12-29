@@ -77,8 +77,11 @@ func (sr *SqliteRepository) FindByUsername(username string) (entity.User, error)
 	}
 	defer rows.Close()
 	u := su.ToEntity()
+	if u.GetUsername() == "" {
+		return entity.User{}, user.ErrUserNotFound
+	}
 	u.SetPassword(su.password)
-	return u, nil	
+	return u, nil
 }
 
 func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
