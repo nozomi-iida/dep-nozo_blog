@@ -1,16 +1,15 @@
 package main
 
 import (
-	"io"
 	"log"
 	"net/http"
+
+	"github.com/nozomi-iida/nozo_blog/router"
 )
 
-func main()  {
-	helloHandler := func(w http.ResponseWriter, req *http.Request)  {
-		io.WriteString(w, "Hello, World!\n")	
-	}	
+var ar, _ = router.NewRouter("./tmp/data.db")
 
-	http.HandleFunc("/hello", helloHandler)
+func main()  {
+	http.HandleFunc("/sign_up", ar.HandleSignUpRequest)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
