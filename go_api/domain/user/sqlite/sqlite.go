@@ -32,15 +32,6 @@ func (sc sqliteUser) ToEntity() entity.User  {
 	return u
 }
 
-func (sc sqliteUser) toEntityUsername() entity.User  {
-	u := entity.User{}	
-
-	u.SetID(sc.id)
-	u.SetUsername(sc.username)
-
-	return u
-}
-
 func New(fileString string) (*SqliteRepository, error)  {
 	db, err := sql.Open("sqlite3", fileString)
 	
@@ -92,7 +83,7 @@ func (sr *SqliteRepository) FindByUsername(username string) (entity.User, error)
 
 func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 	if sr.exist(u.GetUsername()) {
-		return entity.User{}, user.ErrUserNotFound
+		return entity.User{}, user.ErrUserAlreadyExist
 	}
 
 	_, err := sr.db.Exec("INSERT INTO users(id, username, password) VALUES (?, ?, ?)", u.GetID(), u.GetUsername(), u.GetPassword()); 
@@ -104,10 +95,6 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 }
 
 func (sr *SqliteRepository)exist(username string) bool  {
-	_, err := sr.FindByUsername(username)
-	if err != nil {
-		return false
-	} else {
-		return true
-	}
+	us, _ := sr.FindByUsername(username)
+	return us.GetUsername() != ""
 }

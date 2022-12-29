@@ -9,6 +9,7 @@ import (
 
 var (
 	ErrUserNotFound = errors.New("the user was not found in the repository")
+	ErrUserAlreadyExist = errors.New("user already exits")
 	ErrFailedToFindAllUser = errors.New("failed to findAll the user to the repository")
 	ErrFailedToCreateUser = errors.New("failed to create the user to the repository")
 	ErrFailedToUpdateUser = errors.New("failed to update the user to the repository")

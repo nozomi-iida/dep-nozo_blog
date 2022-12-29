@@ -22,8 +22,8 @@ type AuthService struct {
 }
 
 type AuthResponse struct {
-	user entity.User
-	token string
+	User entity.User
+	Token string
 }
 
 func NewAuthService(cfgs ...AuthConfiguration) (*AuthService, error)  {
@@ -67,7 +67,7 @@ func (as *AuthService) SignUp(username string, password string) (AuthResponse, e
 		return AuthResponse{}, err
 	}
 	
-	return AuthResponse{user: user, token: token}, nil
+	return AuthResponse{User: user, Token: token}, nil
 }
 
 func (as *AuthService) SignIn(username string, password string) (AuthResponse, error)  {
@@ -83,7 +83,7 @@ func (as *AuthService) SignIn(username string, password string) (AuthResponse, e
 		return AuthResponse{}, err
 	}
 
-	return AuthResponse{user: user, token: token}, nil
+	return AuthResponse{User: user, Token: token}, nil
 }
 
 func generateToken(id uuid.UUID) (string, error)  {

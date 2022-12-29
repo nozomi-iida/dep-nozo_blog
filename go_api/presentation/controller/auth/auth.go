@@ -34,13 +34,13 @@ func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) 
 
 	ur, err := ac.as.SignUp(authRequest.Username, authRequest.Password)
 	if err != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	output, _ := json.MarshalIndent(ur, "", "\t\t")
+	output, _ := json.MarshalIndent(ur, "", "\t")
 
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }
@@ -53,13 +53,13 @@ func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request) 
 
 	ur, err := ac.as.SignIn(authRequest.Username, authRequest.Password)
 	if err != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	output, _ := json.MarshalIndent(ur, "", "\t\t")
+	output, _ := json.MarshalIndent(ur, "", "\t")
 
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }

@@ -20,8 +20,8 @@ func isValidEmailFormat(email string) bool {
 }
 
 type User struct {
-	id uuid.UUID
-	username string
+	Id uuid.UUID
+	Username string
 	password string
 }
 
@@ -36,26 +36,26 @@ func NewUser(username string, password valueobject.Password) (User, error)  {
 	}
 	
 	return User{
-		id: uuid.New(),
-		username: username,
+		Id: uuid.New(),
+		Username: username,
 		password: encryptedPassword,
 	}, nil
 }
 
 func (u *User) GetID() uuid.UUID {
-	return u.id
+	return u.Id
 }
 
 func (u *User) SetID(id uuid.UUID) {
-	u.id = id
+	u.Id = id
 }
 
 func (u *User) GetUsername() string {
-	return u.username
+	return u.Username
 }
 
 func (u *User) SetUsername(username string) {
-	u.username = username
+	u.Username = username
 }
 
 func (u *User) SetPassword(password string) {

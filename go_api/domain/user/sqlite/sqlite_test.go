@@ -68,7 +68,7 @@ func TestUserSqlite_Create(t *testing.T) {
 		{
 			test: "Failed to create user",
 			user: us,
-			expectedErr: user.ErrUserNotFound,
+			expectedErr: user.ErrUserAlreadyExist,
 		},
 	}
 
