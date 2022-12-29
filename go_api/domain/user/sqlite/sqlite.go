@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
@@ -25,6 +24,10 @@ func (sc sqliteUser) ToEntity() entity.User  {
 
 	u.SetID(sc.id)
 	u.SetUsername(sc.username)
+
+	if sc.password != "" {
+		u.SetPassword(sc.password)
+	}
 
 	return u
 }
@@ -51,10 +54,6 @@ func New(fileString string) (*SqliteRepository, error)  {
 }
 
 func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
-	if id.String() == "" {
-		return entity.User{}, user.ErrUserNotFound
-	}
-
 	rows, err := sr.db.Query("SELECT id, username FROM users WHERE users.id == ?", id)
 	var su sqliteUser
 	for rows.Next() {
@@ -92,8 +91,8 @@ func (sr *SqliteRepository) FindByUsername(username string) (entity.User, error)
 }
 
 func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
-	if sr.exist(u) {
-		return entity.User{}, fmt.Errorf("user already exists")
+	if sr.exist(u.GetUsername()) {
+		return entity.User{}, user.ErrUserNotFound
 	}
 
 	_, err := sr.db.Exec("INSERT INTO users(id, username, password) VALUES (?, ?, ?)", u.GetID(), u.GetUsername(), u.GetPassword()); 
@@ -104,7 +103,11 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 	return u, nil
 }
 
-func (sr *SqliteRepository)exist(user entity.User) bool  {
-	us, _ := sr.FindByUsername(user.GetUsername())
-	return us.GetUsername() != ""
+func (sr *SqliteRepository)exist(username string) bool  {
+	_, err := sr.FindByUsername(username)
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
 }

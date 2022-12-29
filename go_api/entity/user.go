@@ -58,12 +58,12 @@ func (u *User) SetUsername(username string) {
 	u.username = username
 }
 
-func (u *User) GetPassword() string {
-	return u.password
-}
-
 func (u *User) SetPassword(password string) {
 	u.password = password
+}
+
+func (u *User) GetPassword() string {
+	return u.password
 }
 
 func (u *User) IsMatchPassword(password string) bool {
