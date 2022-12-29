@@ -92,9 +92,8 @@ func (sr *SqliteRepository) FindByUsername(username string) (entity.User, error)
 }
 
 func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
-	// このハンドリング方法あってるのかな？
 	if sr.exist(u) {
-		return entity.User{},fmt.Errorf("user already exists: %w", user.ErrFailedToCreateUser)
+		return entity.User{}, fmt.Errorf("user already exists")
 	}
 
 	_, err := sr.db.Exec("INSERT INTO users(id, username, password) VALUES (?, ?, ?)", u.GetID(), u.GetUsername(), u.GetPassword()); 
@@ -106,6 +105,6 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 }
 
 func (sr *SqliteRepository)exist(user entity.User) bool  {
-	// sr.FindAll()
-	return false
+	us, _ := sr.FindByUsername(user.GetUsername())
+	return us.GetUsername() != ""
 }

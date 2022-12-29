@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/nozomi-iida/nozo_blog/service"
@@ -34,6 +35,7 @@ func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) 
 
 	ur, err := ac.as.SignUp(signUpRequest.Username, signUpRequest.Password)
 	if err != nil {
+		fmt.Printf("SignUp error: %v", err)
 		w.WriteHeader(500)
 		return
 	}

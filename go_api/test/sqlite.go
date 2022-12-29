@@ -3,6 +3,8 @@ package test
 import (
 	"database/sql"
 	"os"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	migrate "github.com/rubenv/sql-migrate"
@@ -24,9 +26,11 @@ func ConnectDB(t *testing.T) TestSqlite {
 	if err != nil {
 		t.Fatal("sql open error:", err)
 	}	
+	// リファクタの余地あり
+	_, b, _, _ := runtime.Caller(0)
+  root := filepath.Join(filepath.Dir(b), "../../../")
 	migrations := &migrate.FileMigrationSource{
-		// TODO: 絶対パスにしたい
-		Dir: "../../../db/migrations",
+		Dir: root + "/nozo_blog/go_api/db/migrations",
 	}
 	_, err = migrate.Exec(db, "sqlite3", migrations, migrate.Up)
 	if err != nil {
