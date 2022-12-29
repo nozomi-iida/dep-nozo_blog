@@ -26,3 +26,12 @@ func (ar *authRouter) HandleSignUpRequest(w http.ResponseWriter, r *http.Request
 		w.WriteHeader(405)
 	}
 }
+
+func (ar *authRouter) HandleSignInRequest(w http.ResponseWriter, r *http.Request)  {
+	switch r.Method {
+	case "POST":
+		ar.ac.SignInRequest(w, r)
+	default:
+		w.WriteHeader(405)
+	}
+}

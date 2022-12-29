@@ -11,5 +11,6 @@ var ar, _ = router.NewRouter("./tmp/data.db")
 
 func main()  {
 	http.HandleFunc("/sign_up", ar.HandleSignUpRequest)
+	http.HandleFunc("/sign_in", ar.HandleSignInRequest)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -7,6 +7,9 @@ import (
 	"runtime"
 	"testing"
 
+	"github.com/nozomi-iida/nozo_blog/domain/user/sqlite"
+	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog/valueobject"
 	migrate "github.com/rubenv/sql-migrate"
 )
 
@@ -46,4 +49,16 @@ func ConnectDB(t *testing.T) TestSqlite {
 	return TestSqlite{Filename: filename, Remove: func() error {
 		return os.Remove(filename)
 	}}
+}
+
+func CreateUser(t *testing.T, fileName string) entity.User  {
+	sq, err := sqlite.New(fileName)
+	ps, err := valueobject.NewPassword("password123")
+	us, err := entity.NewUser("nozomi", ps)
+	_, err = sq.Create(us)
+	if err != nil {
+		t.Error("create user err:", err)
+	}
+
+	return us
 }

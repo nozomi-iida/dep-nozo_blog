@@ -2,7 +2,6 @@ package auth
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/nozomi-iida/nozo_blog/service"
@@ -12,7 +11,7 @@ type AuthController struct {
 	as *service.AuthService
 }
 
-type SignUpRequest struct {
+type AuthRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
@@ -30,12 +29,30 @@ func NewAuthController(fileString string) (AuthController, error)  {
 func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
-	var signUpRequest SignUpRequest
-	json.Unmarshal(body, &signUpRequest)
+	var authRequest AuthRequest
+	json.Unmarshal(body, &authRequest)
 
-	ur, err := ac.as.SignUp(signUpRequest.Username, signUpRequest.Password)
+	ur, err := ac.as.SignUp(authRequest.Username, authRequest.Password)
 	if err != nil {
-		fmt.Printf("SignUp error: %v", err)
+		w.WriteHeader(500)
+		return
+	}
+
+	output, _ := json.MarshalIndent(ur, "", "\t\t")
+
+	w.WriteHeader(200)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(output)
+}
+
+func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request)  {
+	body := make([]byte, r.ContentLength)
+	r.Body.Read(body)
+	var authRequest AuthRequest
+	json.Unmarshal(body, &authRequest)
+
+	ur, err := ac.as.SignIn(authRequest.Username, authRequest.Password)
+	if err != nil {
 		w.WriteHeader(500)
 		return
 	}

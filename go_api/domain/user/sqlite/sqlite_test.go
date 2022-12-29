@@ -29,16 +29,13 @@ func TestUserSqlite_FindById(t *testing.T) {
 func TestUserSqlite_FindByUsername(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
-	ps, err := valueobject.NewPassword("password123")
-	un := "nozomi"
+	user := test.CreateUser(t, ts.Filename)
 	sq, err := sqlite.New(ts.Filename)
-	us, err := entity.NewUser(un, ps)
-	_, err = sq.Create(us)
 	if err != nil {
 		t.Error("create user err:", err)
 	}	
-	rs, err := sq.FindByUsername(un)
-	if rs.GetUsername() != us.GetUsername() {
+	rs, err := sq.FindByUsername(user.GetUsername())
+	if rs.GetUsername() != user.GetUsername() {
 		t.Error("find by username error", err)
 	}
 }
