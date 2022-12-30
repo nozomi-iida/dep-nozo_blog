@@ -22,8 +22,8 @@ type AuthService struct {
 }
 
 type AuthResponse struct {
-	User entity.User
-	Token string
+	User entity.User `json:"user"`
+	Token string `json:"token"`
 }
 
 func NewAuthService(cfgs ...AuthConfiguration) (*AuthService, error)  {

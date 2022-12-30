@@ -32,6 +32,6 @@ func (ar *authRouter) HandleSignInRequest(w http.ResponseWriter, r *http.Request
 	case "POST":
 		ar.ac.SignInRequest(w, r)
 	default:
-		w.WriteHeader(405)
+		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }

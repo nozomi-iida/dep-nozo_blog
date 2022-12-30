@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/nozomi-iida/nozo_blog/presentation"
 	"github.com/nozomi-iida/nozo_blog/service"
 )
 
@@ -34,9 +35,10 @@ func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) 
 
 	ur, err := ac.as.SignUp(authRequest.Username, authRequest.Password)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
+		eh := presentation.ErrorHandler(err)
+		w.WriteHeader(eh.Code)
+		w.Write([]byte(eh.Message))
+		return	
 	}
 
 	output, _ := json.MarshalIndent(ur, "", "\t")
@@ -54,8 +56,9 @@ func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request) 
 
 	ur, err := ac.as.SignIn(authRequest.Username, authRequest.Password)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		eh := presentation.ErrorHandler(err)
+		w.WriteHeader(eh.Code)
+		w.Write([]byte(eh.Message))
 		return
 	}
 

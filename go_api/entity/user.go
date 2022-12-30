@@ -20,8 +20,8 @@ func isValidEmailFormat(email string) bool {
 }
 
 type User struct {
-	Id uuid.UUID
-	Username string
+	Id uuid.UUID `json:"id"`
+	Username string `json:"username"`
 	password string
 }
 
