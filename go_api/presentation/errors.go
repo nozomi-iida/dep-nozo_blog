@@ -16,32 +16,28 @@ type ErrorPresentation struct {
 type errMessage struct {
 	Message string `json:"message"`
 	Code int `json:"code"`
+	Type string `json:"type"`
+}
+
+func newErrMsg(message string, code int) ErrorPresentation  {
+	return ErrorPresentation{
+		Error: errMessage{
+			Message: message,
+			Code: code,
+			Type: http.StatusText(code),
+		},
+	}
 }
 
 func NewErrorPresentation(err error) ErrorPresentation  {
 	switch err {
 	case user.ErrUserNotFound:
-		return ErrorPresentation{
-			Error: errMessage{
-				Message: user.ErrUserNotFound.Error(),
-				Code: http.StatusNotFound,
-			},
-		}
-		case service.ErrUnMatchPassword:
-			return ErrorPresentation{
-				Error: errMessage{
-					Message: user.ErrUserNotFound.Error(),
-					Code: http.StatusUnauthorized,
-				},
-			} 
+		return newErrMsg(user.ErrUserNotFound.Error(), http.StatusNotFound)
+	case service.ErrUnMatchPassword:
+		return newErrMsg(service.ErrUnMatchPassword.Error(), http.StatusUnauthorized)
 	default:
 		se := errors.New("server error")
-		return ErrorPresentation{
-			Error: errMessage{
-				Message: se.Error(),
-				Code: http.StatusInternalServerError,
-			},
-		}
+		return newErrMsg(se.Error(), http.StatusInternalServerError)
 	}
 }
 
