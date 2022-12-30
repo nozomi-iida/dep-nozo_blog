@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 
+	"github.com/nozomi-iida/nozo_blog/presentation"
 	"github.com/nozomi-iida/nozo_blog/presentation/controller/auth"
 )
 
@@ -23,7 +24,7 @@ func (ar *authRouter) HandleSignUpRequest(w http.ResponseWriter, r *http.Request
 	case "POST":
 		ar.ac.SignUpRequest(w, r)
 	default:
-		w.WriteHeader(405)
+		presentation.ErrorHandler(w, presentation.ErrStatusMethodNotAllowed)
 	}
 }
 
@@ -32,6 +33,6 @@ func (ar *authRouter) HandleSignInRequest(w http.ResponseWriter, r *http.Request
 	case "POST":
 		ar.ac.SignInRequest(w, r)
 	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		presentation.ErrorHandler(w, presentation.ErrStatusMethodNotAllowed)
 	}
 }

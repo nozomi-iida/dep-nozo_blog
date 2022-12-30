@@ -13,6 +13,7 @@ import (
 
 var (
 	ErrBadRequest = errors.New("Bad Request")
+	ErrStatusMethodNotAllowed = errors.New(http.StatusText(http.StatusMethodNotAllowed))
 )
 
 type ErrorPresentation struct {
@@ -41,6 +42,8 @@ func NewErrorPresentation(err error) ErrorPresentation  {
 		return newErrMsg(user.ErrUserNotFound.Error(), http.StatusNotFound)
 	case service.ErrUnMatchPassword:
 		return newErrMsg(service.ErrUnMatchPassword.Error(), http.StatusUnauthorized)
+	case ErrStatusMethodNotAllowed:
+		return newErrMsg("method not allowed", http.StatusMethodNotAllowed)
 	default:
 		se := errors.New("server error")
 		return newErrMsg(se.Error(), http.StatusInternalServerError)
@@ -55,6 +58,7 @@ func ErrorHandler(w http.ResponseWriter, err error)  {
 	w.Write(output)
 }
 
+// 少し冗長な気がする
 func IsValid(w http.ResponseWriter, s interface{}) bool {
 	var vl = validator.New()
 	err := vl.Struct(s)	
