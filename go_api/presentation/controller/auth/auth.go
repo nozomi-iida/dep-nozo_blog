@@ -13,8 +13,8 @@ type AuthController struct {
 }
 
 type AuthRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 func NewAuthController(fileString string) (AuthController, error)  {
@@ -51,7 +51,10 @@ func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request) 
 	r.Body.Read(body)
 	var authRequest AuthRequest
 	json.Unmarshal(body, &authRequest)
-
+	if !presentation.IsValid(w, authRequest) {
+		return
+	}
+	
 	ur, err := ac.as.SignIn(authRequest.Username, authRequest.Password)
 	if err != nil {
 		presentation.ErrorHandler(w, err)
