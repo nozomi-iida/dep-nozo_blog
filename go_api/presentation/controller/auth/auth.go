@@ -35,9 +35,7 @@ func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) 
 
 	ur, err := ac.as.SignUp(authRequest.Username, authRequest.Password)
 	if err != nil {
-		eh := presentation.ErrorHandler(err)
-		w.WriteHeader(eh.Code)
-		w.Write([]byte(eh.Message))
+		presentation.ErrorHandler(w, err)
 		return	
 	}
 
@@ -56,9 +54,7 @@ func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request) 
 
 	ur, err := ac.as.SignIn(authRequest.Username, authRequest.Password)
 	if err != nil {
-		eh := presentation.ErrorHandler(err)
-		w.WriteHeader(eh.Code)
-		w.Write([]byte(eh.Message))
+		presentation.ErrorHandler(w, err)
 		return
 	}
 
