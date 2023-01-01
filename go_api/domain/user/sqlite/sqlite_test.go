@@ -14,16 +14,14 @@ import (
 func TestUserSqlite_FindById(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
+	us := test.CreateUser(t, ts.Filename)
 	sq, err := sqlite.New(ts.Filename)
-	ps, err := valueobject.NewPassword("password123")
-	us, err := entity.NewUser("nozomi", ps)
-	_, err = sq.Create(us)
 	if err != nil {
 		t.Error("create user err:", err)
 	}	
 	rs, err := sq.FindById(us.GetID())
 	if rs.GetID() != us.GetID() {
-		t.Error("find by username error", err)
+		t.Errorf("expected err %v, got %v", rs.GetID(), us.GetID())
 	}
 }
 
@@ -103,7 +101,7 @@ func TestUserSqlite_Create(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			_, err = sq.Create(us)
+			_, err = sq.Create(tc.user)
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}

@@ -24,3 +24,20 @@ func TestAuth_SignUp(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestAuth_SignIn(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	us := test.CreateUser(t, ts.Filename)
+	as, err := service.NewAuthService(
+		service.WithSqliteUserRepository(ts.Filename),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = as.SignIn(us.GetUsername(), "password123")
+	if err != nil {
+		t.Fatal(err)
+	}
+}

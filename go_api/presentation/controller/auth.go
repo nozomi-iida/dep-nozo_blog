@@ -1,10 +1,10 @@
-package auth
+package controller
 
 import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/nozomi-iida/nozo_blog/presentation"
+	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
 	"github.com/nozomi-iida/nozo_blog/service"
 )
 
@@ -35,7 +35,7 @@ func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) 
 
 	ur, err := ac.as.SignUp(authRequest.Username, authRequest.Password)
 	if err != nil {
-		presentation.ErrorHandler(w, err)
+		helpers.ErrorHandler(w, err)
 		return	
 	}
 
@@ -51,13 +51,13 @@ func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request) 
 	r.Body.Read(body)
 	var authRequest AuthRequest
 	json.Unmarshal(body, &authRequest)
-	if !presentation.IsValid(w, authRequest) {
+	if !helpers.IsValid(w, authRequest) {
 		return
 	}
 	
 	ur, err := ac.as.SignIn(authRequest.Username, authRequest.Password)
 	if err != nil {
-		presentation.ErrorHandler(w, err)
+		helpers.ErrorHandler(w, err)
 		return
 	}
 

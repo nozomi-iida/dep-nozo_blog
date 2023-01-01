@@ -3,26 +3,29 @@ package router
 import (
 	"net/http"
 
+	"github.com/nozomi-iida/nozo_blog/middleware"
 	"github.com/nozomi-iida/nozo_blog/presentation"
-	"github.com/nozomi-iida/nozo_blog/presentation/controller/auth"
+	"github.com/nozomi-iida/nozo_blog/presentation/controller"
 )
 
 type authRouter struct {
-	ac auth.AuthController
+	atc controller.AuthController
+	ac controller.ArticleController
 }
 
 func NewRouter(fileString string) (authRouter, error)  {
-	ac, err := auth.NewAuthController(fileString)
+	atc, err := controller.NewAuthController(fileString)
+	ac, err := controller.NewArticleController(fileString)
 	if err != nil {
 		return authRouter{}, err
 	}
-	return authRouter{ac: ac}, nil
+	return authRouter{atc: atc, ac: ac}, nil
 }
 
 func (ar *authRouter) HandleSignUpRequest(w http.ResponseWriter, r *http.Request)  {
 	switch r.Method {
 	case "POST":
-		ar.ac.SignUpRequest(w, r)
+		ar.atc.SignUpRequest(w, r)
 	default:
 		presentation.ErrorHandler(w, presentation.ErrStatusMethodNotAllowed)
 	}
@@ -31,7 +34,16 @@ func (ar *authRouter) HandleSignUpRequest(w http.ResponseWriter, r *http.Request
 func (ar *authRouter) HandleSignInRequest(w http.ResponseWriter, r *http.Request)  {
 	switch r.Method {
 	case "POST":
-		ar.ac.SignInRequest(w, r)
+		ar.atc.SignInRequest(w, r)
+	default:
+		presentation.ErrorHandler(w, presentation.ErrStatusMethodNotAllowed)
+	}
+}
+
+func (ar *authRouter) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  {
+	switch r.Method {
+	case http.MethodPost:
+		middleware.AuthMiddleware(http.HandlerFunc(ar.ac.PostRequest))	
 	default:
 		presentation.ErrorHandler(w, presentation.ErrStatusMethodNotAllowed)
 	}

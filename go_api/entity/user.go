@@ -20,7 +20,7 @@ func isValidEmailFormat(email string) bool {
 }
 
 type User struct {
-	Id uuid.UUID `json:"id"`
+	UserId valueobject.JwtToken `json:"userId"`
 	Username string `json:"username"`
 	password string
 }
@@ -34,20 +34,28 @@ func NewUser(username string, password valueobject.Password) (User, error)  {
 	if err != nil {
 		return User{}, err
 	}
+	jt, err := valueobject.NewJwtToken(uuid.New())
+	if err != nil {
+		return User{}, err
+	}
 	
 	return User{
-		Id: uuid.New(),
+		UserId: jt,
 		Username: username,
 		password: encryptedPassword,
 	}, nil
 }
 
 func (u *User) GetID() uuid.UUID {
-	return u.Id
+	return u.UserId.ID
 }
 
 func (u *User) SetID(id uuid.UUID) {
-	u.Id = id
+	jw, err := valueobject.NewJwtToken(id)
+	if err != nil {
+		return
+	}
+	u.UserId = jw
 }
 
 func (u *User) GetUsername() string {

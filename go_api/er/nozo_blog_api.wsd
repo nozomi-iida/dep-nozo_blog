@@ -1,14 +1,14 @@
-@startuml slack
+@startuml nozo_blog
 
 entity users {
-  *id(pk)
+  *user_id(pk)
   --
   username
   email
 }
 
 entity articles {
-  *id(pk)
+  *article_id(pk)
   --
   title
   content
@@ -20,35 +20,24 @@ entity articles {
 }
 
 entity topics {
-  *id(pk)
+  *topic_id(pk)
   --
   name
   description
 }
 
-entity tags {
-  *id(pk)
-  --
-  name
-}
-
 entity article_tags {
-  *id(pk)
-  --
-  article_id
-  tag_id
+  article_id(pk)
+  name(pk)
 }
 
-entity external_services {
-  *id(pk)
-  --
+entity tags {
+  tag_id(pk)
   name
-  rss
 }
 
 users o--o{ articles
 topics o--o{ articles
 articles o--o{ article_tags
-tags o--o{ article_tags
 
 @enduml

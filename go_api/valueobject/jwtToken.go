@@ -13,7 +13,7 @@ var (
 )
 
 type JwtToken struct {
-	UserId uuid.UUID
+	ID uuid.UUID
 }
 
 type CustomClaims struct {
@@ -24,26 +24,13 @@ type CustomClaims struct {
 // TODO: keyを正しく設定する
 var mySigningKey = []byte("AllYourBase")
 
-
-func NewJwtToken(userId uuid.UUID) (JwtToken, error)  {
-	return JwtToken{UserId: userId}, nil	
-}
-
-func (jt *JwtToken)Decode(tokenString string) (CustomClaims, error)  {
-	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(t *jwt.Token) (interface{}, error) {
-		return mySigningKey, nil
-	})
-
-	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
-		return *claims, nil	
-	} else {
-		return CustomClaims{}, err
-	}
+func NewJwtToken(id uuid.UUID) (JwtToken, error)  {
+	return JwtToken{ID: id}, nil	
 }
 
 func (jt *JwtToken) Encode() (string, error)  {
 	claims := CustomClaims{
-		jt.UserId,
+		jt.ID,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -56,4 +43,16 @@ func (jt *JwtToken) Encode() (string, error)  {
 		return "", err
 	}
 	return tokenString, nil	
+}
+
+func Decode(tokenString string) (CustomClaims, error)  {
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(t *jwt.Token) (interface{}, error) {
+		return mySigningKey, nil
+	})
+
+	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+		return *claims, nil	
+	} else {
+		return CustomClaims{}, err
+	}
 }
