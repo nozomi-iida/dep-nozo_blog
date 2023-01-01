@@ -2,7 +2,6 @@ package test
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -65,7 +64,6 @@ func CreateUser(t *testing.T, fileName string, options ...UserOption) entity.Use
 	for _, option := range options {
 		option(&user)
 	} 
-	fmt.Printf("username: %v\n", user.Username)
 	sq, err := sqlite.New(fileName)
 	_, err = sq.Create(user)
 	if err != nil {

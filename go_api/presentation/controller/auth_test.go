@@ -1,11 +1,11 @@
-package auth_test
+package controller_test
 
 import (
 	"net/http/httptest"
 	"strings"
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/presentation/controller/auth"
+	"github.com/nozomi-iida/nozo_blog/presentation/controller"
 	"github.com/nozomi-iida/nozo_blog/test"
 )
 
@@ -15,7 +15,7 @@ func TestAuthController_SignUpRequest(t *testing.T) {
 	json := strings.NewReader(`{"username": "nozomi", "password": "password123"}`)
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest("POST", "/sign_up", json)
-	ac, err := auth.NewAuthController(ts.Filename)
+	ac, err := controller.NewAuthController(ts.Filename)
 	if err != nil {
 		t.Errorf("Controller error %v", err)
 	}
@@ -32,7 +32,7 @@ func TestAuthController_SignInRequest(t *testing.T) {
 	json := strings.NewReader(`{"username": "nozomi", "password": "password123"}`)
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest("POST", "/sign_in", json)
-	ac, err := auth.NewAuthController(ts.Filename)
+	ac, err := controller.NewAuthController(ts.Filename)
 	if err != nil {
 		t.Errorf("Controller error %v", err)
 	}

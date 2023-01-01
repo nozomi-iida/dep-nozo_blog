@@ -14,7 +14,7 @@ type SqliteRepository struct {
 }
 
 type sqliteUser struct {
-	id uuid.UUID `db:"id"`
+	userId uuid.UUID `db:"user_id"`
 	username string `db:"username"`
 	password string `db:"password"`
 }
@@ -22,7 +22,7 @@ type sqliteUser struct {
 func (sc sqliteUser) ToEntity() entity.User  {
 	u := entity.User{}	
 
-	u.SetID(sc.id)
+	u.SetID(sc.userId)
 	u.SetUsername(sc.username)
 
 	if sc.password != "" {
@@ -45,10 +45,10 @@ func New(fileString string) (*SqliteRepository, error)  {
 }
 
 func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
-	rows, err := sr.db.Query("SELECT id, username FROM users WHERE users.id == ?", id)
+	rows, err := sr.db.Query("SELECT user_id, username FROM users WHERE users.user_id == ?", id)
 	var su sqliteUser
 	for rows.Next() {
-		err := rows.Scan(&su.id, &su.username)
+		err := rows.Scan(&su.userId, &su.username)
 		if err != nil {
 			return entity.User{}, user.ErrUserNotFound
 		}
@@ -64,10 +64,10 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
 }
 
 func (sr *SqliteRepository) FindByUsername(username string) (entity.User, error)  {
-	rows, err := sr.db.Query("SELECT id, username, password FROM users WHERE users.username == ?", username)
+	rows, err := sr.db.Query("SELECT user_id, username, password FROM users WHERE users.username == ?", username)
 	var su sqliteUser
 	for rows.Next() {
-		err := rows.Scan(&su.id, &su.username, &su.password)
+		err := rows.Scan(&su.userId, &su.username, &su.password)
 		if err != nil {
 			return entity.User{}, user.ErrUserNotFound
 		}
@@ -89,7 +89,7 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 		return entity.User{}, user.ErrUserAlreadyExist
 	}
 
-	_, err := sr.db.Exec("INSERT INTO users(id, username, password) VALUES (?, ?, ?)", u.GetID(), u.GetUsername(), u.GetPassword()); 
+	_, err := sr.db.Exec("INSERT INTO users(user_id, username, password) VALUES (?, ?, ?)", u.GetID(), u.GetUsername(), u.GetPassword()); 
 	if err != nil {
 		return entity.User{}, err
 	}

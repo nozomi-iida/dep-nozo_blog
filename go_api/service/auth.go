@@ -38,7 +38,7 @@ func NewAuthService(cfgs ...AuthConfiguration) (*AuthService, error)  {
 	return os, nil
 }
 
-func WithSqliteUserRepository(fileString string) AuthConfiguration  {
+func WithSqliteUserRepository(fileString string) AuthConfiguration {
 	return func(as *AuthService) error {
 		u, err := sqlite.New(fileString)
 		if err != nil {

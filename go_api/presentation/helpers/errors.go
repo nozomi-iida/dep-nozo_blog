@@ -1,4 +1,4 @@
-package presentation
+package helpers
 
 import (
 	"encoding/json"
@@ -14,6 +14,7 @@ import (
 var (
 	ErrBadRequest = errors.New("Bad Request")
 	ErrStatusMethodNotAllowed = errors.New(http.StatusText(http.StatusMethodNotAllowed))
+	ErrUnauthorized = errors.New("Unauthorized users")
 )
 
 type ErrorPresentation struct {
@@ -44,6 +45,8 @@ func NewErrorPresentation(err error) ErrorPresentation  {
 		return newErrMsg(service.ErrUnMatchPassword.Error(), http.StatusUnauthorized)
 	case ErrStatusMethodNotAllowed:
 		return newErrMsg("method not allowed", http.StatusMethodNotAllowed)
+	case ErrUnauthorized:
+		return newErrMsg(ErrUnauthorized.Error(), http.StatusUnauthorized)
 	default:
 		se := errors.New("server error")
 		return newErrMsg(se.Error(), http.StatusInternalServerError)
