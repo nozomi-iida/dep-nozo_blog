@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/middleware"
 	"github.com/nozomi-iida/nozo_blog/presentation/controller"
+	"github.com/nozomi-iida/nozo_blog/presentation/middleware"
 	"github.com/nozomi-iida/nozo_blog/test"
 )
 

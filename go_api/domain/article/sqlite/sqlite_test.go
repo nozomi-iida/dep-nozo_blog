@@ -1,7 +1,6 @@
 package sqlite_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/google/uuid"
