@@ -13,5 +13,6 @@ func main()  {
 	http.HandleFunc("/sign_up", ar.HandleSignUpRequest)
 	http.HandleFunc("/sign_in", ar.HandleSignInRequest)
 	http.HandleFunc("/articles", ar.HandleArticleRequest)
+	http.HandleFunc("/topics", ar.HandleTopicRequest)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

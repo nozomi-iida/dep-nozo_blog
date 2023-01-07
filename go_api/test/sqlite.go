@@ -51,14 +51,14 @@ func ConnectDB(t *testing.T) TestSqlite {
 	}}
 }
 
-type UserOption func(*entity.User)
-func SetUsername(username string) UserOption {
+type userOption func(*entity.User)
+func SetUsername(username string) userOption {
 	return func(user *entity.User) {
 		user.Username = username
 	}
 }
 
-func CreateUser(t *testing.T, fileName string, options ...UserOption) entity.User  {
+func CreateUser(t *testing.T, fileName string, options ...userOption) entity.User  {
 	ps, err := valueobject.NewPassword("password123")
 	user, err := entity.NewUser("nozomi", ps)
 	for _, option := range options {

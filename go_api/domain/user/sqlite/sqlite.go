@@ -97,7 +97,7 @@ func (sr *SqliteRepository) Create(u entity.User) (entity.User, error) {
 	return u, nil
 }
 
-func (sr *SqliteRepository)exist(username string) bool  {
+func (sr *SqliteRepository) exist(username string) bool  {
 	us, _ := sr.FindByUsername(username)
 	return us.GetUsername() != ""
 }

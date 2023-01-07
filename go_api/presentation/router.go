@@ -11,15 +11,17 @@ import (
 type router struct {
 	atc controller.AuthController
 	ac controller.ArticleController
+	tc controller.TopicController
 }
 
 func NewRouter(fileString string) (router, error)  {
 	atc, err := controller.NewAuthController(fileString)
 	ac, err := controller.NewArticleController(fileString)
+	tc, err := controller.NewTopicController(fileString)
 	if err != nil {
 		return router{}, err
 	}
-	return router{atc: atc, ac: ac}, nil
+	return router{atc: atc, ac: ac, tc: tc}, nil
 }
 
 func (rt *router) HandleSignUpRequest(w http.ResponseWriter, r *http.Request)  {
@@ -48,3 +50,12 @@ func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  
 		helpers.ErrorHandler(w, helpers.ErrStatusMethodNotAllowed)
 	}
 }
+
+func (rt *router) HandleTopicRequest(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		middleware.AuthMiddleware(http.HandlerFunc(rt.tc.CreteRequest))
+	default:
+		helpers.ErrorHandler(w, helpers.ErrStatusMethodNotAllowed)
+	}
+} 

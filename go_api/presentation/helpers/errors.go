@@ -80,3 +80,19 @@ func IsValid(w http.ResponseWriter, s interface{}) bool {
 		return false
 	}
 }
+
+func Validate(w http.ResponseWriter, s interface{}) {
+	var vl = validator.New()
+	err := vl.Struct(s)	
+	if err != nil {
+		msg := ""
+		for _, err := range err.(validator.ValidationErrors) {
+			msg = fmt.Sprintf("%v is %v", err.Field(), err.Tag())
+		}
+		ep := newErrMsg(msg, http.StatusBadRequest)
+		output, _ := json.MarshalIndent(ep, "", "\t")
+		w.WriteHeader(ep.Error.Code)	
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(output)
+	}
+}
