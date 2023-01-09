@@ -3,7 +3,6 @@ package service_test
 import (
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/service"
 	"github.com/nozomi-iida/nozo_blog/test"
 )
@@ -36,7 +35,7 @@ func TestTopicService_Create(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			_, err := tps.Create(tc.name, entity.SetDescription("test"))
+			_, err := tps.Create(tc.name, "test")
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}

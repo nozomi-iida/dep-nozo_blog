@@ -37,8 +37,8 @@ func WithSqliteTopicRepository(fileString string) topicConfigurations {
 	}
 }
 
-func (ts *TopicService) Create(name string, opts ...entity.TopicOption) (entity.Topic, error)  {
-	tp, err := entity.NewTopic(name, opts...)	
+func (ts *TopicService) Create(name string, description string) (entity.Topic, error)  {
+	tp, err := entity.NewTopic(entity.Topic{Name: name, Description: description})	
 	tp, err = ts.tp.Create(tp)
 	if err != nil {
 		return entity.Topic{}, err

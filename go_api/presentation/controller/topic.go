@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
 	"github.com/nozomi-iida/nozo_blog/service"
 )
@@ -39,7 +38,7 @@ func (tc *TopicController) CreteRequest(w http.ResponseWriter, r *http.Request) 
 	fmt.Printf("rq: %v \n", topicRequest.Name)
 	helpers.Validate(w, topicRequest)
 
-	t, err := tc.ts.Create(topicRequest.Name, entity.SetDescription(topicRequest.Description))
+	t, err := tc.ts.Create(topicRequest.Name, topicRequest.Description)
 	if err != nil {
 		helpers.ErrorHandler(w, err)
 		return

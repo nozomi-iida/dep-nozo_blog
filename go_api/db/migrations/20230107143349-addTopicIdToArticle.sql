@@ -7,4 +7,3 @@ REFERENCES topic(id);
 -- +migrate Down
 ALTER TABLE articles
 DROP topic_id;
--- DROP FOREIGN KEY FK_TopicArticle;

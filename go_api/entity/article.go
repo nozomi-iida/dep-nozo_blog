@@ -19,9 +19,8 @@ type Article struct {
 	Tags []string
 	PublishedAt *time.Time
 	AuthorID uuid.UUID	
-	// ポインタ渡しだとtopicのid自体を維持れるようになってしまうのでは？
 	// 小文字にしたい？
-	TopicId uuid.UUID
+	TopicId *uuid.UUID
 }
 
 func NewArticle(ac Article) (Article, error)  {

@@ -37,7 +37,7 @@ func TestTopicSqlite_Create(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			tp, err := entity.NewTopic(tc.name)
+			tp, err := entity.NewTopic(entity.Topic{Name: tc.name})
 			_, err = sq.Create(tp)
 
 			if err != tc.expectedErr {

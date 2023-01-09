@@ -16,27 +16,13 @@ type Topic struct {
 	Description string
 }
 
-type TopicOption func(t *Topic)
-
-func SetDescription(description string) TopicOption {
-	return func(t *Topic) {
-		t.Description = description	
-	}
-}
-
-// description to optional argument
-func NewTopic(name string, opts ...TopicOption) (Topic, error)  {
-	if name == "" {
+func NewTopic(topic Topic) (Topic, error)  {
+	if topic.Name == "" {
 		return Topic{}, ErrInvalidTopic
 	}
 
-	topic := Topic{
-		TopicID: uuid.New(),
-		Name: name,
-	}
-
-	for _, opt := range opts {
-		opt(&topic)
+	if topic.TopicID.ID() == 0 {
+		topic.TopicID = uuid.New()
 	}
 
 	return topic, nil

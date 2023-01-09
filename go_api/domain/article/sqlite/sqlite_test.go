@@ -7,12 +7,14 @@ import (
 	"github.com/nozomi-iida/nozo_blog/domain/article/sqlite"
 	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/test"
+	"github.com/nozomi-iida/nozo_blog/test/factories"
 )
 
 func TestArticleSqlite_Create(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
 	u := test.CreateUser(t, ts.Filename)
+	tp := factories.CreateTopic(t, ts.Filename)
 	sq, err := sqlite.New(ts.Filename)
 	if err != nil {
 		t.Errorf("sqlite error: %v", err)
@@ -26,7 +28,7 @@ func TestArticleSqlite_Create(t *testing.T) {
 	testCases := []testCase{
 		{
 			test: "Success to create user",
-			article: entity.Article{ArticleID: uuid.New(), Title: "test", Content: "test", AuthorID: u.GetID(), Tags: []string{"tag_1", "tag_2"}},
+			article: entity.Article{ArticleID: uuid.New(), Title: "test", Content: "test", AuthorID: u.GetID(), Tags: []string{"tag_1", "tag_2"}, TopicId: &tp.TopicID},
 			expectedErr: nil,
 		},
 	}
