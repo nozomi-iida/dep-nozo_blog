@@ -25,6 +25,7 @@ type User struct {
 	password string
 }
 
+// REFACTOR: 引数をUserに変更したいけど、その場合passwordをPublicにしても良いのか問題がある。でも、ここでjsonやるの良くない気がする
 func NewUser(username string, password valueobject.Password) (User, error)  {
 	if username == "" {
 		return User{}, ErrInvalidUser

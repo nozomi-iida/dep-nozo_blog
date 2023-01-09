@@ -16,9 +16,14 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			helpers.ErrorHandler(w, helpers.ErrUnauthorized)
 		} else {
 			jwtToken := authHeader[1]
-			claims, err := valueobject.Decode(jwtToken) 
-			if err != nil {
+			if jwtToken == "" {
 				helpers.ErrorHandler(w, helpers.ErrUnauthorized)
+				return
+			}
+			claims, err := valueobject.Decode(jwtToken) 
+			if err != nil || claims.UserId.ID() == 0 {
+				helpers.ErrorHandler(w, helpers.ErrUnauthorized)
+				return
 			}
 			ctx := context.WithValue(r.Context(), "userId", claims.UserId)
 		  next.ServeHTTP(w, r.WithContext(ctx))

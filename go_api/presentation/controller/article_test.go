@@ -18,7 +18,7 @@ func TestArticleController_PostRequest(t *testing.T) {
 	us := test.CreateUser(t, ts.Filename)
 	json := strings.NewReader(`{"title": "test", "content": "test", "isPublic": true, "tags": ["tag_1"]}`)
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest("POST", "/articles/post", json)
+	r := httptest.NewRequest("POST", "/articles", json)
 	ac, err := controller.NewArticleController(ts.Filename)
 	if err != nil {
 		t.Errorf("Controller error %v", err)

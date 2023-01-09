@@ -45,7 +45,7 @@ func (rt *router) HandleSignInRequest(w http.ResponseWriter, r *http.Request)  {
 func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  {
 	switch r.Method {
 	case http.MethodPost:
-		middleware.AuthMiddleware(http.HandlerFunc(rt.ac.PostRequest))	
+		middleware.AuthMiddleware(http.HandlerFunc(rt.ac.PostRequest)).ServeHTTP(w, r)
 	default:
 		helpers.ErrorHandler(w, helpers.ErrStatusMethodNotAllowed)
 	}
@@ -54,7 +54,7 @@ func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  
 func (rt *router) HandleTopicRequest(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		middleware.AuthMiddleware(http.HandlerFunc(rt.tc.CreteRequest))
+		middleware.AuthMiddleware(http.HandlerFunc(rt.tc.CreteRequest)).ServeHTTP(w, r)
 	default:
 		helpers.ErrorHandler(w, helpers.ErrStatusMethodNotAllowed)
 	}
