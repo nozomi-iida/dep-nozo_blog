@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/nozomi-iida/nozo_blog/domain"
 	"github.com/nozomi-iida/nozo_blog/domain/user"
 	"github.com/nozomi-iida/nozo_blog/entity"
 )
@@ -14,9 +15,9 @@ type SqliteRepository struct {
 }
 
 type sqliteUser struct {
-	userId uuid.UUID `db:"user_id"`
-	username string `db:"username"`
-	password string `db:"password"`
+	userId uuid.UUID
+	username string
+	password string
 }
 
 func (sc sqliteUser) ToEntity() entity.User  {
@@ -45,18 +46,15 @@ func New(fileString string) (*SqliteRepository, error)  {
 }
 
 func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
-	rows, err := sr.db.Query("SELECT user_id, username FROM users WHERE users.user_id == ?", id)
 	var su sqliteUser
-	for rows.Next() {
-		err := rows.Scan(&su.userId, &su.username)
-		if err != nil {
-			return entity.User{}, user.ErrUserNotFound
-		}
-	}
+	err := sr.db.QueryRow("SELECT * FROM users WHERE users.user_id == ?", id).Scan(
+		&su.userId, 
+		&su.username, 
+		domain.TrashScanner{},
+	)
 	if err != nil {
 		return entity.User{}, user.ErrUserNotFound
 	}
-	defer rows.Close()
 
 	u := su.ToEntity()
 
@@ -65,15 +63,15 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (entity.User, error)  {
 
 func (sr *SqliteRepository) FindByUsername(username string) (entity.User, error)  {
 	rows, err := sr.db.Query("SELECT user_id, username, password FROM users WHERE users.username == ?", username)
+	if err != nil {
+		return entity.User{}, user.ErrUserNotFound
+	}
 	var su sqliteUser
 	for rows.Next() {
 		err := rows.Scan(&su.userId, &su.username, &su.password)
 		if err != nil {
 			return entity.User{}, user.ErrUserNotFound
 		}
-	}
-	if err != nil {
-		return entity.User{}, user.ErrUserNotFound
 	}
 	defer rows.Close()
 	u := su.ToEntity()

@@ -28,7 +28,14 @@ func TestArticleSqlite_Create(t *testing.T) {
 	testCases := []testCase{
 		{
 			test: "Success to create user",
-			article: entity.Article{ArticleID: uuid.New(), Title: "test", Content: "test", AuthorID: u.GetID(), Tags: []string{"tag_1", "tag_2"}, TopicId: &tp.TopicID},
+			article: entity.Article{
+				ArticleID: uuid.New(), 
+				Title: "test", 
+				Content: "test", 
+				AuthorID: u.GetID(), 
+				Tags: []string{"tag_1", "tag_2"}, 
+				TopicID: &tp.TopicID,
+			},
 			expectedErr: nil,
 		},
 	}
@@ -38,6 +45,47 @@ func TestArticleSqlite_Create(t *testing.T) {
 			_, err = sq.Create(tc.article)
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+		})
+	}
+}
+
+func TestArticleSqlite_FindById(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	a := factories.CreateArticle(t, ts.Filename)
+	sq, err := sqlite.New(ts.Filename)
+	if err != nil {
+		t.Errorf("sqlite error: %v", err)
+	}
+
+	type testCase struct {
+		test string
+		articleId uuid.UUID
+		expectedErr error
+	}
+
+	testCases := []testCase {
+		{
+			test: "Get article",
+			articleId: a.ArticleID,
+			expectedErr: nil,
+		},
+		// {
+		// 	test: "Not found article",
+		// 	articleId: uuid.New(),
+		// 	expectedErr: article.ErrArticleNotFound,
+		// },
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			ac, err := sq.FindById(tc.articleId)
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+			if tc.articleId != ac.ArticleID {
+				t.Errorf("Expected id %v, got %v", tc.articleId, ac.ArticleID)
 			}
 		})
 	}

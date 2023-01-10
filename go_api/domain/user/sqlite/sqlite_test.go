@@ -21,7 +21,7 @@ func TestUserSqlite_FindById(t *testing.T) {
 	}	
 	rs, err := sq.FindById(us.GetID())
 	if rs.GetID() != us.GetID() {
-		t.Errorf("expected err %v, got %v", rs.GetID(), us.GetID())
+		t.Errorf("expected id %v, got %v", us.GetID(), rs.GetID())
 	}
 }
 

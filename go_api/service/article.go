@@ -57,3 +57,7 @@ func (as *ArticleService) Post(title string, content string, tags []string, isPu
 
 	return a, nil
 }
+
+// func (as *ArticleService) GetById(id uuid.UUID) (ArticleDto, error) {
+
+// }

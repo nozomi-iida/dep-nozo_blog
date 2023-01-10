@@ -20,7 +20,7 @@ type Article struct {
 	PublishedAt *time.Time
 	AuthorID uuid.UUID	
 	// 小文字にしたい？
-	TopicId *uuid.UUID
+	TopicID *uuid.UUID
 }
 
 func NewArticle(ac Article) (Article, error)  {

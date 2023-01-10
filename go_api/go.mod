@@ -17,7 +17,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
-	github.com/stretchr/testify v1.7.1 // indirect
-	golang.org/x/sys v0.3.0 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
+	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
 )

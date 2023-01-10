@@ -20,6 +20,7 @@ func isValidEmailFormat(email string) bool {
 }
 
 type User struct {
+	// encodeをuserに実装すればいいと思う
 	UserId valueobject.JwtToken `json:"userId"`
 	Username string `json:"username"`
 	password string
