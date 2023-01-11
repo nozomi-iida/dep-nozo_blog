@@ -8,6 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/mattn/go-sqlite3 v1.14.14
 	github.com/rubenv/sql-migrate v1.2.0
+	go.uber.org/zap v1.17.0
 	golang.org/x/crypto v0.4.0
 )
 
@@ -18,6 +19,8 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
 )

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
+	"github.com/nozomi-iida/nozo_blog/libs/zap"
 	"github.com/nozomi-iida/nozo_blog/presentation"
 )
 
@@ -14,5 +14,5 @@ func main()  {
 	http.HandleFunc("/sign_in", ar.HandleSignInRequest)
 	http.HandleFunc("/articles", ar.HandleArticleRequest)
 	http.HandleFunc("/topics", ar.HandleTopicRequest)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	zap.Logger().Error(http.ListenAndServe(":8080", nil).Error())
 }
