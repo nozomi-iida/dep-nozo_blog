@@ -1,6 +1,9 @@
 package middleware
 
 import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/nozomi-iida/nozo_blog/libs"
@@ -21,23 +24,37 @@ func (lrw *loggingResponseWriter) WriteHeader(code int)  {
 	lrw.ResponseWriter.WriteHeader(code)
 }
 
-// TODO: リクエストボディ、処理時間のlogを作る
-// TODO: status codeによってresponseのログを変更する
+func logByStatusCode(code int)  {
+	switch {
+	case code >= 400 && code < 600:
+		libs.ZipLogger().Error("Completed", 
+			zap.Int("status", code),
+		)
+	default:
+		libs.ZipLogger().Info("Completed", 
+			zap.Int("status", code),
+		)
+	}
+
+}
+
+// TODO: 処理時間のlogを作る
 func WrapHandlerWithLoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		body := make([]byte, r.ContentLength)
-		r.Body.Read(body)
+		buf, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			libs.ZipLogger().Error(fmt.Sprintf("ioutil.ReadAll: %v", err))
+		}
 		libs.ZipLogger().Info("Started", 
 			zap.String("method", r.Method),
 			zap.String("path", r.URL.Path),
-			zap.Any("Parameters", string(body)),
+			zap.Any("Parameters", string(buf)),
 		)
 
 		lrw := newLoggingResponseWriter(w)
 
+		r.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
 		next.ServeHTTP(lrw, r)
-		libs.ZipLogger().Info("Completed", 
-			zap.Int("status", lrw.statusCode),
-		)
+		logByStatusCode(lrw.statusCode)
 	})
 }

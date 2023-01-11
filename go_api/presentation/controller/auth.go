@@ -33,6 +33,9 @@ func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) 
 	var authRequest AuthRequest
 	json.Unmarshal(body, &authRequest)
 
+	if !helpers.IsValid(w, authRequest) {
+		return
+	}
 	ur, err := ac.as.SignUp(authRequest.Username, authRequest.Password)
 	if err != nil {
 		helpers.ErrorHandler(w, err)
