@@ -1,8 +1,8 @@
 package article
 
 import (
+	"database/sql"
 	"errors"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/entity"
@@ -15,12 +15,13 @@ var (
 )
 
 type ArticleDto struct {
-	ArticleID uuid.UUID `json:"article_id" db:"article_id"`
+	ArticleID uuid.UUID `json:"article_id"`
 	Title string `json:"title"`
 	Content string `json:"content"`
-	PublishedAt *time.Time `json:"published_at,omitempty"`
+	PublishedAt sql.NullTime `json:"published_at,omitempty"`
 	Tags []string `json:"tags,omitempty"`
-	Topic string `json:"topic,omitempty"`
+	Topic sql.NullString `json:"topic,omitempty"`
+	AuthorName string `json:"author"`
 }
 
 type ArticleRepository interface {
