@@ -26,5 +26,6 @@ type ArticleDto struct {
 
 type ArticleRepository interface {
 	Create(entity.Article) (entity.Article, error) 
+	Update(entity.Article) (entity.Article, error) 
 	FindById(id uuid.UUID) (ArticleDto, error)
 }

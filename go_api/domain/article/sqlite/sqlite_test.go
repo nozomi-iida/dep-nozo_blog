@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/nozomi-iida/nozo_blog/domain/article"
 	"github.com/nozomi-iida/nozo_blog/domain/article/sqlite"
 	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/test"
@@ -71,11 +72,11 @@ func TestArticleSqlite_FindById(t *testing.T) {
 			articleId: a.ArticleID,
 			expectedErr: nil,
 		},
-		// {
-		// 	test: "Not found article",
-		// 	articleId: uuid.New(),
-		// 	expectedErr: article.ErrArticleNotFound,
-		// },
+		{
+			test: "Not found article",
+			articleId: uuid.New(),
+			expectedErr: article.ErrArticleNotFound,
+		},
 	}
 
 	for _, tc := range testCases {
@@ -84,8 +85,45 @@ func TestArticleSqlite_FindById(t *testing.T) {
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}
-			if tc.articleId != ac.ArticleID {
+			if err == nil && tc.articleId != ac.ArticleID {
 				t.Errorf("Expected id %v, got %v", tc.articleId, ac.ArticleID)
+			}
+		})
+	}
+}
+
+func TestArticleSqlite_Update(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	a := factories.CreateArticle(t, ts.Filename)
+	sq, err := sqlite.New(ts.Filename)
+	if err != nil {
+		t.Errorf("sqlite error: %v", err)
+	}
+
+	type testCase struct {
+		test string
+		updatedArticle entity.Article
+		expectedErr error
+	}
+	a.Title = "update"
+
+	testCases := []testCase {
+		{
+			test: "Success to update article",
+			updatedArticle: a,
+			expectedErr: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			ac, err := sq.Update(tc.updatedArticle)
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+			if err == nil && tc.updatedArticle.Title != ac.Title {
+				t.Errorf("Expected id %v, got %v", tc.updatedArticle.Title, ac.Title)
 			}
 		})
 	}

@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
@@ -98,4 +97,8 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 	}
 	
 	return ad, nil	
+}
+
+func (sr *SqliteRepository) Update(a entity.Article) (entity.Article, error) {
+	return a, nil	
 }
