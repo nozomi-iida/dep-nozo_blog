@@ -128,3 +128,41 @@ func TestArticleSqlite_Update(t *testing.T) {
 		})
 	}
 }
+
+func TestArticleSqlite_Delete(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	a := factories.CreateArticle(t, ts.Filename)
+	sq, err := sqlite.New(ts.Filename)
+	if err != nil {
+		t.Errorf("sqlite error: %v", err)
+	}
+
+	type testCase struct {
+		test string
+		articleId uuid.UUID
+		expectedErr error
+	}
+
+	testCases := []testCase {
+		{
+			test: "Success to delete article",
+			articleId: a.ArticleID,
+			expectedErr: nil,
+		},
+		{
+			test: "Failed to delete article",
+			articleId: uuid.New(),
+			expectedErr: article.ErrArticleNotFound,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			err := sq.Delete(tc.articleId)
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+		})
+	}
+}

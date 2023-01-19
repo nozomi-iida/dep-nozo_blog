@@ -11,21 +11,28 @@ import (
 var (
 	ErrArticleNotFound = errors.New("the article was not found in the repository")
 	ErrFailedToCreateArticle = errors.New("failed to create the article to the repository")
+	ErrFailedToUpdateArticle = errors.New("failed to update the article to the repository")
 	ErrFailedToGetArticle = errors.New("failed to get the article to the repository")
+	ErrFailedToDeleteArticle = errors.New("failed to delete the article to the repository")
 )
 
 type ArticleDto struct {
-	ArticleID uuid.UUID `json:"article_id"`
+	ArticleID uuid.UUID `json:"articleId"`
 	Title string `json:"title"`
 	Content string `json:"content"`
-	PublishedAt sql.NullTime `json:"published_at,omitempty"`
+	PublishedAt sql.NullTime `json:"publishedAt,omitempty"`
 	Tags []string `json:"tags,omitempty"`
 	Topic sql.NullString `json:"topic,omitempty"`
 	AuthorName string `json:"author"`
 }
 
+// repositoryからはentityは返さない方が良い気がするけど、良い詰替え方が分からないのでこのまま
+// 詰め替えたい理由
+// 1. jsonタグをentityにつけたくない
+// 2. repositoryの後にentityを維持れるのってどうなの？
 type ArticleRepository interface {
 	Create(entity.Article) (entity.Article, error) 
-	Update(entity.Article) (entity.Article, error) 
 	FindById(id uuid.UUID) (ArticleDto, error)
+	Update(entity.Article) (entity.Article, error) 
+	delete(id uuid.UUID) error 
 }

@@ -100,5 +100,37 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 }
 
 func (sr *SqliteRepository) Update(a entity.Article) (entity.Article, error) {
+	tx, err := sr.db.Begin()
+	_, err = sr.db.Exec(`
+		UPDATE
+			articles
+		SET 
+			title = ?,
+			content = ?,
+			topic_id = ?
+		WHERE
+			articles.article_id = ?
+	`, a.Title, a.Content, a.TopicID, a.ArticleID)
+	if err != nil {
+		tx.Rollback()
+		return entity.Article{}, article.ErrFailedToUpdateArticle
+	}
+
+	tx.Commit()
+
 	return a, nil	
+}
+
+func (sr *SqliteRepository) Delete(id uuid.UUID) error {
+	result, err := sr.db.Exec("DELETE FROM articles WHERE articles.article_id = ?", id)
+	if err != nil {
+		return article.ErrFailedToDeleteArticle
+	}
+
+	ra, err := result.RowsAffected()
+	if err != nil || ra == 0 {
+		return article.ErrArticleNotFound
+	}
+
+	return nil	
 }

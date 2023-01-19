@@ -13,14 +13,13 @@ var (
 )
 
 type Article struct {
-	ArticleID uuid.UUID
-	Title string
-	Content string
-	Tags []string
-	PublishedAt *time.Time
-	AuthorID uuid.UUID	
-	// 小文字にしたい？
-	TopicID *uuid.UUID
+	ArticleID uuid.UUID `json:"article_id"`
+	Title string `json:"title"`
+	Content string `json:"content"`
+	PublishedAt *time.Time `json:"published_at,omitempty"`
+	Tags []string `json:"tags,omitempty"`
+	AuthorID uuid.UUID `json:"authorID"`
+	TopicID *uuid.UUID `json:"topicID,omitempty"`
 }
 
 func NewArticle(ac Article) (Article, error)  {
