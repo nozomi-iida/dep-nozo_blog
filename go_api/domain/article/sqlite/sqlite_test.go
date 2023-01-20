@@ -34,7 +34,10 @@ func TestArticleSqlite_Create(t *testing.T) {
 				Title: "test", 
 				Content: "test", 
 				AuthorID: u.GetID(), 
-				Tags: []string{"tag_1", "tag_2"}, 
+				Tags: []entity.Tag{
+					{ TagID: uuid.New(), Name: "tag_1" }, 
+					{ TagID: uuid.New(), Name: "tag_2" }, 
+				}, 
 				TopicID: &tp.TopicID,
 			},
 			expectedErr: nil,

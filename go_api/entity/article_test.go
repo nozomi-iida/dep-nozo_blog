@@ -10,7 +10,7 @@ import (
 func TestArticle_NewArticle(t *testing.T) {
 	type testCase struct {
 		test string
-		article entity.Article
+		article entity.ArticleArgument
 		expectedErr error
 	}
 
@@ -19,7 +19,7 @@ func TestArticle_NewArticle(t *testing.T) {
 	testCases := []testCase{
 		{
 			test: "Empty Title validation",
-			article: entity.Article{
+			article: entity.ArticleArgument{
 				Title: "",
 				Content: "test",
 				AuthorID: user.GetID(),
@@ -28,7 +28,7 @@ func TestArticle_NewArticle(t *testing.T) {
 		},
 		{
 			test: "Empty AuthorId validation",
-			article: entity.Article{
+			article: entity.ArticleArgument{
 				Title: "test",
 				Content: "test",
 			},
@@ -36,17 +36,22 @@ func TestArticle_NewArticle(t *testing.T) {
 		},
 		{
 			test: "Too many tags",
-			article: entity.Article{
+			article: entity.ArticleArgument{
 				Title: "test",
 				Content: "test",
 				AuthorID: user.GetID(),
-				Tags: []string{"tag_1", "tag_2", "tag_3", "tag_4"},
+				Tags: []string{
+					"tag_1",
+					"tag_2",
+					"tag_3",
+					"tag_4",
+				},
 			},
 			expectedErr: entity.ErrTooManyTags,
 		},
 		{
 			test: "valid article",
-			article: entity.Article{
+			article: entity.ArticleArgument{
 				Title: "test",
 				Content: "test",
 				AuthorID: user.GetID(),

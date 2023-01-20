@@ -46,7 +46,7 @@ func (as *ArticleService) Post(title string, content string, tags []string, isPu
 		now := time.Now()
 		publishedAt = &now
 	}
-	a, err := entity.NewArticle(entity.Article{Title: title, Content: content, Tags: tags, PublishedAt: publishedAt, AuthorID: authorId})
+	a, err := entity.NewArticle(entity.ArticleArgument{Title: title, Content: content, Tags: tags, PublishedAt: publishedAt, AuthorID: authorId})
 	if err != nil {
 		return entity.Article{}, err
 	}
@@ -57,7 +57,3 @@ func (as *ArticleService) Post(title string, content string, tags []string, isPu
 
 	return a, nil
 }
-
-// func (as *ArticleService) GetById(id uuid.UUID) (ArticleDto, error) {
-
-// }

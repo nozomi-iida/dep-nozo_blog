@@ -34,5 +34,5 @@ type ArticleRepository interface {
 	Create(entity.Article) (entity.Article, error) 
 	FindById(id uuid.UUID) (ArticleDto, error)
 	Update(entity.Article) (entity.Article, error) 
-	delete(id uuid.UUID) error 
+	Delete(id uuid.UUID) error 
 }

@@ -19,20 +19,22 @@ func SetTitle(title string) articleOptions {
 func CreateArticle(t *testing.T, fileName string, options ...articleOptions) entity.Article {
 	user := test.CreateUser(t, fileName)
 	topic := CreateTopic(t, fileName)
-	a, err := entity.NewArticle(entity.Article{
+	a, err := entity.NewArticle(entity.ArticleArgument{
 		Title: "test article", 
 		Content: "content", 
-		Tags: []string{"tag_1", "tag_2"}, 
+		Tags: []string{
+			"tag_1",
+			"tag_2",
+		}, 
 		AuthorID: user.GetID(),
 		TopicID: &topic.TopicID,
 	})
-	article, err := entity.NewArticle(a)	
 	sq, err := sqlite.New(fileName)
-	_, err = sq.Create(article)
+	_, err = sq.Create(a)
 	if err != nil {
 		t.Error("create user err:", err)
 	}
 
-	return article
+	return a
 }
 

@@ -25,13 +25,51 @@ func New(fileString string) (*SqliteRepository, error)  {
 
 func (sr *SqliteRepository) Create(a entity.Article) (entity.Article, error) {
 	tx, err := sr.db.Begin()
-	_, err = tx.Exec("INSERT INTO articles(article_id, title, content, published_at, author_id, topic_id) VALUES (?, ?, ?, ?, ?, ?)", a.ArticleID, a.Title, a.Content, a.PublishedAt, a.AuthorID, a.TopicID)
+	_, err = tx.Exec(`
+		INSERT INTO 
+			articles(
+				article_id, 
+				title, 
+				content, 
+				published_at, 
+				author_id, 
+				topic_id
+			) 
+		VALUES (?, ?, ?, ?, ?, ?)`, 
+		a.ArticleID, a.Title, a.Content, a.PublishedAt, a.AuthorID, a.TopicID,
+	)
 	if err != nil {
 		tx.Rollback()
 		return entity.Article{}, article.ErrFailedToCreateArticle
 	}
 	for _, tag := range a.Tags {
-		_, err = tx.Exec("INSERT INTO article_tags(article_id, name) VALUES (?, ?)", a.ArticleID, tag)	
+		row, err := tx.Query(`
+			SELECT
+				tag_id
+			FROM 
+				tags
+			WHERE tags.name = ?`, 
+			tag.Name,
+		)
+
+		if !row.Next() || err != nil {
+			_, err = tx.Exec(`
+				INSERT INTO 
+					tags(tag_id, name)
+				VALUES(?, ?)`, 
+				tag.TagID, tag.Name,
+			)
+			if err != nil {
+				tx.Rollback()
+				return entity.Article{}, article.ErrFailedToCreateArticle
+			}
+		}
+		_, err = tx.Exec(`
+			INSERT INTO 
+				article_tags(article_id, tag_id) 
+			VALUES (?, ?)`, 
+			a.ArticleID, tag.TagID,
+		)	
 		if err != nil {
 			tx.Rollback()
 			return entity.Article{}, article.ErrFailedToCreateArticle
@@ -80,8 +118,12 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 		SELECT
 			tags.name
 		FROM
-			article_tags as tags
-		WHERE tags.article_id = ?
+			article_tags
+		INNER JOIN
+			tags
+		ON
+			article_tags.tag_id = tags.tag_id
+		WHERE article_tags.article_id = ?
 	`, id)
 
 	if err != nil {
@@ -89,11 +131,11 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var tag string
-		if err := rows.Scan(&tag); err != nil {
+		var tagName string
+		if err := rows.Scan(&tagName); err != nil {
 			return article.ArticleDto{}, article.ErrArticleNotFound
 		}
-		ad.Tags = append(ad.Tags, tag)
+		ad.Tags = append(ad.Tags, tagName)
 	}
 	
 	return ad, nil	
