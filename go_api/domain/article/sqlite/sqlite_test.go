@@ -54,47 +54,6 @@ func TestArticleSqlite_Create(t *testing.T) {
 	}
 }
 
-func TestArticleSqlite_FindById(t *testing.T) {
-	ts := test.ConnectDB(t)
-	defer ts.Remove()
-	a := factories.CreateArticle(t, ts.Filename)
-	sq, err := sqlite.New(ts.Filename)
-	if err != nil {
-		t.Errorf("sqlite error: %v", err)
-	}
-
-	type testCase struct {
-		test string
-		articleId uuid.UUID
-		expectedErr error
-	}
-
-	testCases := []testCase {
-		{
-			test: "Get article",
-			articleId: a.ArticleID,
-			expectedErr: nil,
-		},
-		{
-			test: "Not found article",
-			articleId: uuid.New(),
-			expectedErr: article.ErrArticleNotFound,
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.test, func(t *testing.T) {
-			ac, err := sq.FindById(tc.articleId)
-			if err != tc.expectedErr {
-				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
-			}
-			if err == nil && tc.articleId != ac.ArticleID {
-				t.Errorf("Expected id %v, got %v", tc.articleId, ac.ArticleID)
-			}
-		})
-	}
-}
-
 func TestArticleSqlite_Update(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
@@ -169,3 +128,91 @@ func TestArticleSqlite_Delete(t *testing.T) {
 		})
 	}
 }
+
+func TestArticleSqlite_List(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
+	engineerArticle := factories.CreateArticle(t, ts.Filename, factories.SetTitle("engineer"))
+	factories.CreateArticle(t, ts.Filename)
+	sq, err := sqlite.New(ts.Filename)
+	if err != nil {
+		t.Errorf("sqlite error: %v", err)
+	}
+
+	type testCase struct {
+		test string
+		query article.ArticleQuery
+		expectedCount int
+		expectedErr error
+	}
+
+	testCases := []testCase {
+		{
+			test: "get Article",
+			query: article.ArticleQuery{},
+			expectedCount: 2,
+			expectedErr: nil,
+		},
+		{
+			test: "get keyword engineer",
+			query: article.ArticleQuery{Keyword: engineerArticle.Title},
+			expectedCount: 1,
+			expectedErr: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			rs, err := sq.List(tc.query)
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+			if err == nil && len(rs.Articles) != tc.expectedCount {
+				t.Errorf("Expected count %v, got %v", tc.expectedCount, len(rs.Articles))
+			}
+		})
+	}
+}
+	
+func TestArticleSqlite_FindById(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	a := factories.CreateArticle(t, ts.Filename)
+	sq, err := sqlite.New(ts.Filename)
+	if err != nil {
+		t.Errorf("sqlite error: %v", err)
+	}
+
+	type testCase struct {
+		test string
+		articleId uuid.UUID
+		expectedErr error
+	}
+
+	testCases := []testCase {
+		{
+			test: "Get article",
+			articleId: a.ArticleID,
+			expectedErr: nil,
+		},
+		{
+			test: "Not found article",
+			articleId: uuid.New(),
+			expectedErr: article.ErrArticleNotFound,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			ac, err := sq.FindById(tc.articleId)
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+			if err == nil && tc.articleId != ac.ArticleID {
+				t.Errorf("Expected id %v, got %v", tc.articleId, ac.ArticleID)
+			}
+		})
+	}
+}
+

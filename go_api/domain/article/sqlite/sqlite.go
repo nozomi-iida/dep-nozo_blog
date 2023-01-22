@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
@@ -80,67 +81,6 @@ func (sr *SqliteRepository) Create(a entity.Article) (entity.Article, error) {
 	return a, nil
 }
 
-func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
-	var ad article.ArticleDto 
-
-	err := sr.db.QueryRow(`
-		SELECT 
-			articles.article_id,
-			articles.title,
-			articles.content,
-			articles.published_at,
-			topics.name as topic,
-			authors.username as authorName
-		FROM 
-			articles 
-		INNER JOIN
-			topics
-		ON
-			topics.topic_id = articles.topic_id
-		INNER JOIN
-			users as authors
-		ON
-			authors.user_id = articles.author_id
-		WHERE articles.article_id = ?
-	`, id).Scan(
-		&ad.ArticleID, 
-		&ad.Title, 
-		&ad.Content, 
-		&ad.PublishedAt, 
-		&ad.Topic,
-		&ad.AuthorName,
-	)
-	if err != nil {
-		return article.ArticleDto{}, article.ErrArticleNotFound
-	}
-
-	rows, err := sr.db.Query(`
-		SELECT
-			tags.name
-		FROM
-			article_tags
-		INNER JOIN
-			tags
-		ON
-			article_tags.tag_id = tags.tag_id
-		WHERE article_tags.article_id = ?
-	`, id)
-
-	if err != nil {
-		return article.ArticleDto{}, article.ErrArticleNotFound
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var tagName string
-		if err := rows.Scan(&tagName); err != nil {
-			return article.ArticleDto{}, article.ErrArticleNotFound
-		}
-		ad.Tags = append(ad.Tags, tagName)
-	}
-	
-	return ad, nil	
-}
-
 func (sr *SqliteRepository) Update(a entity.Article) (entity.Article, error) {
 	tx, err := sr.db.Begin()
 	_, err = sr.db.Exec(`
@@ -175,4 +115,155 @@ func (sr *SqliteRepository) Delete(id uuid.UUID) error {
 	}
 
 	return nil	
+}
+
+func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto, error)  {
+	var rs article.ListArticleDto
+	var articleIDs []interface{}
+	articleMap := make(map[uuid.UUID]article.ArticleDto) 
+
+	rows, err := sr.db.Query(`
+		SELECT 
+			articles.article_id,
+			articles.title,
+			articles.content,
+			articles.published_at,
+			topics.name as topic,
+			authors.username as authorName
+		FROM 
+			articles 
+		INNER JOIN
+			topics
+		ON
+			topics.topic_id = articles.topic_id
+		INNER JOIN
+			users as authors
+		ON
+			authors.user_id = articles.author_id
+		WHERE articles.published_at is NOT NULL
+		AND articles.title LIKE ?;
+	`, "%" + q.Keyword + "%")
+
+	if err != nil {
+		return article.ListArticleDto{}, article.ErrFailedToListArticle
+	}
+
+	for rows.Next() {
+		var ad article.ArticleDto
+		err = rows.Scan(
+			&ad.ArticleID, 
+			&ad.Title, 
+			&ad.Content, 
+			&ad.PublishedAt, 
+			&ad.Topic,
+			&ad.AuthorName,
+		)
+		if err != nil {
+			return article.ListArticleDto{}, article.ErrFailedToListArticle
+		}
+
+		articleIDs = append(articleIDs, ad.ArticleID.String())
+		articleMap[ad.ArticleID] = ad
+	}
+
+	if len(articleIDs) > 0 {
+		repeat := strings.Repeat("?,", len(articleIDs)-1) +"?"
+		rows, err = sr.db.Query(`
+			SELECT
+				tags.name,
+				article_tags.article_id
+			FROM
+				article_tags
+			INNER JOIN
+				tags
+			ON
+				article_tags.tag_id = tags.tag_id
+			WHERE article_tags.article_id IN ( `+ repeat +`);
+		`, articleIDs... 
+		)
+
+		if err != nil {
+			return article.ListArticleDto{}, article.ErrFailedToListArticle
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var tagName string
+			var articleID uuid.UUID 
+			err = rows.Scan(&tagName, &articleID)
+			if err != nil {
+				return article.ListArticleDto{}, article.ErrFailedToListArticle
+			}
+			ar := articleMap[articleID]
+			ar.Tags = append(ar.Tags, tagName)
+			articleMap[articleID] = ar
+		}
+	}
+
+	for _, ac := range articleMap {
+		rs.Articles = append(rs.Articles, ac)
+	}
+
+	return rs, nil
+}
+
+func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
+	var ad article.ArticleDto 
+
+	err := sr.db.QueryRow(`
+		SELECT 
+			articles.article_id,
+			articles.title,
+			articles.content,
+			articles.published_at,
+			topics.name as topic,
+			authors.username as authorName
+		FROM 
+			articles 
+		INNER JOIN
+			topics
+		ON
+			topics.topic_id = articles.topic_id
+		INNER JOIN
+			users as authors
+		ON
+			authors.user_id = articles.author_id
+		WHERE articles.article_id = ?
+	`, id).Scan(
+		&ad.ArticleID, 
+		&ad.Title, 
+		&ad.Content, 
+		&ad.PublishedAt, 
+		&ad.Topic,
+		&ad.AuthorName,
+	)
+
+	if err != nil {
+		return article.ArticleDto{}, article.ErrArticleNotFound
+	}
+
+	rows, err := sr.db.Query(`
+		SELECT
+			tags.name
+		FROM
+			article_tags
+		INNER JOIN
+			tags
+		ON
+			article_tags.tag_id = tags.tag_id
+		WHERE article_tags.article_id = ?
+	`, id)
+
+	if err != nil {
+		return article.ArticleDto{}, article.ErrArticleNotFound
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var tagName string
+		if err := rows.Scan(&tagName); err != nil {
+			return article.ArticleDto{}, article.ErrArticleNotFound
+		}
+		ad.Tags = append(ad.Tags, tagName)
+	}
+	
+	return ad, nil	
 }
