@@ -59,3 +59,41 @@ func NewArticle(aa ArticleArgument) (Article, error)  {
 		TopicID: aa.TopicID,
 	}, nil
 }
+
+func (a *Article) Public() {
+	now := time.Now()
+	a.PublishedAt = &now
+}
+
+func (a *Article) SetID(id uuid.UUID)  {
+	a.ArticleID = id	
+}
+
+func (a *Article) SetTitle(title string)  {
+	if title == "" {
+		return
+	}
+	a.Title = title
+}
+
+func (a *Article) SetContent(content string)  {
+	if content == "" {
+		return
+	}
+	a.Content = content
+}
+
+func (a *Article) SetTags(tagNames []string) {
+	var tags []Tag
+	if len(tagNames) > 3 {
+		return
+	}
+	for _, tag := range tagNames {
+		nt, err := NewTag(tag)
+		if err != nil {
+			return
+		}
+		tags = append(tags, nt)
+	}
+	a.Tags = tags
+}

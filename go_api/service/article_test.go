@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/service"
 	"github.com/nozomi-iida/nozo_blog/test"
+	"github.com/nozomi-iida/nozo_blog/test/factories"
 )
 
 func TestArticle_Post(t *testing.T) {
@@ -41,7 +42,7 @@ func TestArticle_Post(t *testing.T) {
 			expectedErr: nil,
 		},
 		{
-			test: "Public article",
+			test: "Private article",
 			title: "Test",
 			content: "Test",
 			isPublic: false,
@@ -60,6 +61,49 @@ func TestArticle_Post(t *testing.T) {
 			if tc.isPublic && ac.PublishedAt.IsZero() {
 				t.Error("isPublic is true but publishedAt is null")
 			}
+		})
+	}
+}
+
+func TestArticle_Update(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	ac := factories.CreateArticle(t, ts.Filename)
+	var tags []string
+	for _, tag := range ac.Tags {
+		tags = append(tags, tag.Name)
+	}
+	as, err := service.NewArticleService(
+		service.WithSqliteArticleRepository(ts.Filename),
+	)
+	if err != nil {
+		t.Errorf("service error: %v", err)
+	}
+
+	type testCase struct {
+		test string
+		articleID uuid.UUID
+		title string
+		content string
+		isPublic bool
+		tags []string
+		expectedErr error
+	}	
+
+	testCases := []testCase {
+		{
+			test: "Update article",
+			title: "Update Title",
+			content: ac.Content,
+			isPublic: ac.PublishedAt.IsZero(),
+			tags: tags,
+			expectedErr: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			ac, err = as.Update(tc.articleID, tc.title, tc.content, tc.tags, tc.isPublic)
 		})
 	}
 }

@@ -22,10 +22,15 @@ type ArticleDto struct {
 	Title string `json:"title"`
 	Content string `json:"content"`
 	PublishedAt sql.NullString `json:"publishedAt,omitempty"`
-	Tags []string `json:"tags,omitempty"`
-	Topic sql.NullString `json:"topic,omitempty"`
-	AuthorName string `json:"author"`
+	Tags []entity.Tag `json:"tags,omitempty"`
+	Topic entity.Topic `json:"topic,omitempty"`
+	Author entity.User `json:"author"`
 }
+
+// func (ad ArticleDto) ToEntity() entity.Article {
+// 	a := entity.Article{}
+
+// }
 
 type ListArticleDto struct {
 	Articles []ArticleDto `json:"articles"`

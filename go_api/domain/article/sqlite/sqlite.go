@@ -2,18 +2,30 @@ package sqlite
 
 import (
 	"database/sql"
+	"fmt"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
 	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/libs"
-	"github.com/simukti/sqldb-logger/logadapter/zapadapter"
 	sqldblogger "github.com/simukti/sqldb-logger"
+	"github.com/simukti/sqldb-logger/logadapter/zapadapter"
 )
 
 type SqliteRepository struct {
 	db *sql.DB
+}
+
+type ArticleRepository struct {
+	ArticleID uuid.UUID 
+	Title string 
+	Content string 
+	PublishedAt *time.Time 
+	Tags []entity.Tag 
+	AuthorID uuid.UUID 
+	TopicID *uuid.UUID 
 }
 
 func New(fileString string) (*SqliteRepository, error)  {
@@ -85,6 +97,7 @@ func (sr *SqliteRepository) Create(a entity.Article) (entity.Article, error) {
 	return a, nil
 }
 
+// TODO: tagの更新処理をやる
 func (sr *SqliteRepository) Update(a entity.Article) (entity.Article, error) {
 	tx, err := sr.db.Begin()
 	_, err = sr.db.Exec(`
@@ -132,8 +145,11 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 			articles.title,
 			articles.content,
 			articles.published_at,
-			topics.name as topic,
-			authors.username as authorName
+			topics.topic_id,
+			topics.name,
+			topics.description,
+			authors.user_id,
+			authors.username
 		FROM 
 			articles 
 		INNER JOIN
@@ -159,10 +175,14 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 			&ad.Title, 
 			&ad.Content, 
 			&ad.PublishedAt, 
-			&ad.Topic,
-			&ad.AuthorName,
+			&ad.Topic.TopicID,
+			&ad.Topic.Name,
+			&ad.Topic.Description,
+			&ad.Author.UserId.ID,
+			&ad.Author.Username,
 		)
 		if err != nil {
+			fmt.Printf("article scan err: %v\n", err)
 			return article.ListArticleDto{}, article.ErrFailedToListArticle
 		}
 
@@ -174,6 +194,7 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 		repeat := strings.Repeat("?,", len(articleIDs)-1) +"?"
 		rows, err = sr.db.Query(`
 			SELECT
+				tags.tag_id,
 				tags.name,
 				article_tags.article_id
 			FROM
@@ -187,18 +208,20 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 		)
 
 		if err != nil {
+			fmt.Printf("tag err: %v\n", err)
 			return article.ListArticleDto{}, article.ErrFailedToListArticle
 		}
 		defer rows.Close()
 		for rows.Next() {
-			var tagName string
+			var tag entity.Tag
 			var articleID uuid.UUID 
-			err = rows.Scan(&tagName, &articleID)
+			err = rows.Scan(&tag.TagID, &tag.Name, &articleID)
 			if err != nil {
+			fmt.Printf("tag scan err: %v\n", err)
 				return article.ListArticleDto{}, article.ErrFailedToListArticle
 			}
 			ar := articleMap[articleID]
-			ar.Tags = append(ar.Tags, tagName)
+			ar.Tags = append(ar.Tags, tag)
 			articleMap[articleID] = ar
 		}
 	}
@@ -219,8 +242,11 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 			articles.title,
 			articles.content,
 			articles.published_at,
-			topics.name as topic,
-			authors.username as authorName
+			topics.topic_id,
+			topics.name,
+			topics.description,
+			authors.user_id,
+			authors.username
 		FROM 
 			articles 
 		INNER JOIN
@@ -237,8 +263,11 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 		&ad.Title, 
 		&ad.Content, 
 		&ad.PublishedAt, 
-		&ad.Topic,
-		&ad.AuthorName,
+		&ad.Topic.TopicID,
+		&ad.Topic.Name,
+		&ad.Topic.Description,
+		&ad.Author.UserId.ID,
+		&ad.Author.Username,
 	)
 
 	if err != nil {
@@ -247,6 +276,7 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 
 	rows, err := sr.db.Query(`
 		SELECT
+			tags.tag_id,
 			tags.name
 		FROM
 			article_tags
@@ -262,11 +292,11 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var tagName string
-		if err := rows.Scan(&tagName); err != nil {
+		var tag entity.Tag
+		if err := rows.Scan(&tag.TagID, &tag.Name); err != nil {
 			return article.ArticleDto{}, article.ErrArticleNotFound
 		}
-		ad.Tags = append(ad.Tags, tagName)
+		ad.Tags = append(ad.Tags, tag)
 	}
 	
 	return ad, nil	

@@ -1,8 +1,6 @@
 package service
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
 	"github.com/nozomi-iida/nozo_blog/domain/article/sqlite"
@@ -41,14 +39,13 @@ func WithSqliteArticleRepository(fileString string) articleConfiguration {
 }
 
 func (as *ArticleService) Post(title string, content string, tags []string, isPublic bool, authorId uuid.UUID) (entity.Article, error)  {
-	var publishedAt *time.Time = nil
-	if (isPublic) {
-		now := time.Now()
-		publishedAt = &now
-	}
-	a, err := entity.NewArticle(entity.ArticleArgument{Title: title, Content: content, Tags: tags, PublishedAt: publishedAt, AuthorID: authorId})
+	a, err := entity.NewArticle(entity.ArticleArgument{Title: title, Content: content, Tags: tags, PublishedAt: nil, AuthorID: authorId})
+	
 	if err != nil {
 		return entity.Article{}, err
+	}
+	if (isPublic) {
+		a.Public()
 	}
 	a, err = as.ap.Create(a)
 	if err != nil {
@@ -56,4 +53,12 @@ func (as *ArticleService) Post(title string, content string, tags []string, isPu
 	}
 
 	return a, nil
+}
+
+func (as *ArticleService) Update(articleId uuid.UUID, title string, content string, tags []string, isPublic bool) (entity.Article, error)  {
+	_, err := as.ap.FindById(articleId)
+	if err != nil {
+		return entity.Article{}, err
+	}
+	return entity.Article{}, nil
 }
