@@ -7,6 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
 	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog/libs"
+	"github.com/simukti/sqldb-logger/logadapter/zapadapter"
+	sqldblogger "github.com/simukti/sqldb-logger"
 )
 
 type SqliteRepository struct {
@@ -16,6 +19,7 @@ type SqliteRepository struct {
 func New(fileString string) (*SqliteRepository, error)  {
 	db, err := sql.Open("sqlite3", fileString)
 	
+	db = sqldblogger.OpenDriver(fileString, db.Driver(), zapadapter.New(libs.ZipLogger()))
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +170,7 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 		articleMap[ad.ArticleID] = ad
 	}
 
-	if len(articleIDs) > 0 {
+	if len(articleMap) > 0 {
 		repeat := strings.Repeat("?,", len(articleIDs)-1) +"?"
 		rows, err = sr.db.Query(`
 			SELECT
