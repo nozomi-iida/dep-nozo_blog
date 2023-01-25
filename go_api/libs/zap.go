@@ -9,9 +9,9 @@ import (
 )
 
 func ZipLogger() *zap.Logger  {
-	config := zap.NewDevelopmentConfig()
+	config := zap.NewProductionConfig()
 	_, b, _, _ := runtime.Caller(0)
-	logPath   := filepath.Join(filepath.Dir(b), "../", "logs/development.log") 
+	logPath   := filepath.Join(filepath.Dir(b), "../", "logs/development.json") 
 	config.OutputPaths = []string{logPath,"stdout"}
 	config.DisableCaller = true 
 	// 環境変数で管理出来たほうが良いかも
