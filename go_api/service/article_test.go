@@ -54,7 +54,7 @@ func TestArticle_Post(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			ac, err := as.Post(tc.title, tc.content, tc.tags, tc.isPublic, tc.authorId)
+			ac, err := as.Post(tc.title, tc.content, tc.tags, tc.isPublic, tc.authorId, nil)
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}

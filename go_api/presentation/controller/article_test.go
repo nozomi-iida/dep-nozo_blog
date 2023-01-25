@@ -10,6 +10,7 @@ import (
 	"github.com/nozomi-iida/nozo_blog/presentation/controller"
 	"github.com/nozomi-iida/nozo_blog/presentation/middleware"
 	"github.com/nozomi-iida/nozo_blog/test"
+	"github.com/nozomi-iida/nozo_blog/test/factories"
 )
 
 func TestArticleController_PostRequest(t *testing.T) {
@@ -28,6 +29,27 @@ func TestArticleController_PostRequest(t *testing.T) {
 	r.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
 	middleware.AuthMiddleware(http.HandlerFunc(ac.PostRequest)).ServeHTTP(w, r)
 	if w.Code != http.StatusCreated {
+		t.Errorf("Response code is %v", w.Code)
+	}
+}
+
+// TODO: テストケースを増やしたい
+func TestArticleController_PatchRequest(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	us := test.CreateUser(t, ts.Filename)
+	a := factories.CreateArticle(t, ts.Filename)
+	json := strings.NewReader(`{"title": "update test", "content": "test", "isPublic": true, "tags": ["tag_1"]}`)
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodPatch, fmt.Sprintf("/articles/%v", a.ArticleID), json)
+	ac, err := controller.NewArticleController(ts.Filename)
+	if err != nil {
+		t.Errorf("Controller error %v", err)
+	}
+	token, err := us.UserId.Encode();
+	r.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
+	middleware.AuthMiddleware(http.HandlerFunc(ac.PatchRequest)).ServeHTTP(w, r)
+	if w.Code != http.StatusOK {
 		t.Errorf("Response code is %v", w.Code)
 	}
 }

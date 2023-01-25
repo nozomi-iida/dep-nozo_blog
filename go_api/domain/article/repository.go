@@ -27,20 +27,6 @@ type ArticleDto struct {
 	Author entity.User `json:"author"`
 }
 
-func (ad ArticleDto) ToEntity() entity.Article {
-	a := entity.Article{}
-	a.ArticleID = ad.ArticleID
-	a.Title = ad.Title
-	a.Content = ad.Content
-	a.PublishedAt = ad.PublishedAt
-	a.AuthorID = ad.Author.UserId.ID
-	if ad.Topic != nil {
-		a.TopicID = &ad.Topic.TopicID
-	}
-
-	return a
-}
-
 type ListArticleDto struct {
 	Articles []ArticleDto `json:"articles"`
 }
@@ -52,7 +38,7 @@ type ArticleQuery struct {
 // repositoryからはentityは返さない方が良い気がするけど、良い詰替え方が分からないのでこのまま
 // 詰め替えたい理由
 // 1. jsonタグをentityにつけたくない
-// 2. repositoryの後にentityを維持れるのってどうなの？
+// 2. repositoryの中にentityを維持れるのってどうなの？
 type ArticleRepository interface {
 	List(query ArticleQuery) (ListArticleDto, error)
 	Create(entity.Article) (entity.Article, error) 

@@ -38,8 +38,8 @@ func WithSqliteArticleRepository(fileString string) articleConfiguration {
 	}
 }
 
-func (as *ArticleService) Post(title string, content string, tags []string, isPublic bool, authorId uuid.UUID) (entity.Article, error)  {
-	a, err := entity.NewArticle(entity.ArticleArgument{Title: title, Content: content, Tags: tags, PublishedAt: nil, AuthorID: authorId})
+func (as *ArticleService) Post(title string, content string, tags []string, isPublic bool, authorId uuid.UUID, topicID *uuid.UUID) (entity.Article, error)  {
+	a, err := entity.NewArticle(entity.ArticleArgument{Title: title, Content: content, Tags: tags, PublishedAt: nil, AuthorID: authorId, TopicID: topicID})
 	
 	if err != nil {
 		return entity.Article{}, err

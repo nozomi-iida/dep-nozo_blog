@@ -46,6 +46,8 @@ func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  
 	switch r.Method {
 	case http.MethodPost:
 		middleware.AuthMiddleware(http.HandlerFunc(rt.ac.PostRequest)).ServeHTTP(w, r)
+	case http.MethodPatch:
+		middleware.AuthMiddleware(http.HandlerFunc(rt.ac.PatchRequest)).ServeHTTP(w, r)
 	default:
 		helpers.ErrorHandler(w, helpers.ErrStatusMethodNotAllowed)
 	}
