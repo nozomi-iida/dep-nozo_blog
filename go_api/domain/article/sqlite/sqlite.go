@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
@@ -18,14 +17,37 @@ type SqliteRepository struct {
 	db *sql.DB
 }
 
-type ArticleRepository struct {
+type QueryArticleSqlite struct {
 	ArticleID uuid.UUID 
 	Title string 
 	Content string 
-	PublishedAt *time.Time 
+	PublishedAt string 
 	Tags []entity.Tag 
-	AuthorID uuid.UUID 
-	TopicID *uuid.UUID 
+	TopicID uuid.NullUUID
+	TopicName sql.NullString
+	TopicDescription sql.NullString
+	Author entity.User 
+}
+
+func (qa QueryArticleSqlite) ToDto() article.ArticleDto {
+	ad := article.ArticleDto{
+		ArticleID: qa.ArticleID,
+		Title: qa.Title,
+		Content: qa.Content,
+		PublishedAt: &qa.PublishedAt,
+		Tags: qa.Tags,
+		Author: qa.Author,
+	}	
+
+	var topic *entity.Topic = nil
+	if(qa.TopicID.Valid) {
+		topic.TopicID = qa.TopicID.UUID
+		topic.Name = qa.TopicName.String
+		topic.Description = qa.TopicDescription.String
+	}
+	ad.Topic = topic
+
+	return ad
 }
 
 func New(fileString string) (*SqliteRepository, error)  {
@@ -182,7 +204,6 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 			&ad.Author.Username,
 		)
 		if err != nil {
-			fmt.Printf("article scan err: %v\n", err)
 			return article.ListArticleDto{}, article.ErrFailedToListArticle
 		}
 
@@ -208,7 +229,6 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 		)
 
 		if err != nil {
-			fmt.Printf("tag err: %v\n", err)
 			return article.ListArticleDto{}, article.ErrFailedToListArticle
 		}
 		defer rows.Close()
@@ -217,7 +237,6 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 			var articleID uuid.UUID 
 			err = rows.Scan(&tag.TagID, &tag.Name, &articleID)
 			if err != nil {
-			fmt.Printf("tag scan err: %v\n", err)
 				return article.ListArticleDto{}, article.ErrFailedToListArticle
 			}
 			ar := articleMap[articleID]
@@ -234,7 +253,7 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 }
 
 func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
-	var ad article.ArticleDto 
+	var qa QueryArticleSqlite 
 
 	err := sr.db.QueryRow(`
 		SELECT 
@@ -249,28 +268,29 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 			authors.username
 		FROM 
 			articles 
-		INNER JOIN
+		LEFT JOIN
 			topics
 		ON
-			topics.topic_id = articles.topic_id
-		INNER JOIN
+		articles.topic_id = topics.topic_id
+		LEFT JOIN
 			users as authors
 		ON
-			authors.user_id = articles.author_id
+			articles.author_id = authors.user_id
 		WHERE articles.article_id = ?
 	`, id).Scan(
-		&ad.ArticleID, 
-		&ad.Title, 
-		&ad.Content, 
-		&ad.PublishedAt, 
-		&ad.Topic.TopicID,
-		&ad.Topic.Name,
-		&ad.Topic.Description,
-		&ad.Author.UserId.ID,
-		&ad.Author.Username,
+		&qa.ArticleID, 
+		&qa.Title, 
+		&qa.Content, 
+		&qa.PublishedAt, 
+		&qa.TopicID,
+		&qa.TopicName,
+		&qa.TopicDescription,
+		&qa.Author.UserId.ID,
+		&qa.Author.Username,
 	)
 
 	if err != nil {
+		fmt.Printf("article scan err: %v\n", err)
 		return article.ArticleDto{}, article.ErrArticleNotFound
 	}
 
@@ -296,8 +316,9 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 		if err := rows.Scan(&tag.TagID, &tag.Name); err != nil {
 			return article.ArticleDto{}, article.ErrArticleNotFound
 		}
-		ad.Tags = append(ad.Tags, tag)
+		qa.Tags = append(qa.Tags, tag)
 	}
+	ad := qa.ToDto()
 	
 	return ad, nil	
 }

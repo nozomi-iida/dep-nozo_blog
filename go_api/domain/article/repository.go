@@ -1,7 +1,6 @@
 package article
 
 import (
-	"database/sql"
 	"errors"
 
 	"github.com/google/uuid"
@@ -21,16 +20,24 @@ type ArticleDto struct {
 	ArticleID uuid.UUID `json:"articleId"`
 	Title string `json:"title"`
 	Content string `json:"content"`
-	PublishedAt sql.NullString `json:"publishedAt,omitempty"`
+	PublishedAt *string `json:"publishedAt,omitempty"`
 	Tags []entity.Tag `json:"tags,omitempty"`
-	Topic entity.Topic `json:"topic,omitempty"`
+	Topic *entity.Topic `json:"topic,omitempty"`
 	Author entity.User `json:"author"`
 }
 
-// func (ad ArticleDto) ToEntity() entity.Article {
-// 	a := entity.Article{}
+// publishedAt(string)をtime.Timeの型に変換できない
+func (ad ArticleDto) ToEntity() entity.Article {
+	a := entity.Article{}
+	a.ArticleID = ad.ArticleID
+	a.Title = ad.Title
+	a.Content = ad.Content
+	// a.PublishedAt = &ad.PublishedAt
+	a.TopicID = &ad.Topic.TopicID
+	a.AuthorID = ad.Author.UserId.ID
 
-// }
+	return a
+}
 
 type ListArticleDto struct {
 	Articles []ArticleDto `json:"articles"`

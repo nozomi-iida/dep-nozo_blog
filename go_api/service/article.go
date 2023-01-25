@@ -56,7 +56,8 @@ func (as *ArticleService) Post(title string, content string, tags []string, isPu
 }
 
 func (as *ArticleService) Update(articleId uuid.UUID, title string, content string, tags []string, isPublic bool) (entity.Article, error)  {
-	_, err := as.ap.FindById(articleId)
+	a, err := as.ap.FindById(articleId)
+	as.ap.Update(a.ToEntity())
 	if err != nil {
 		return entity.Article{}, err
 	}

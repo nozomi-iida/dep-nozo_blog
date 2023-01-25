@@ -42,6 +42,21 @@ func TestArticleSqlite_Create(t *testing.T) {
 			},
 			expectedErr: nil,
 		},
+		{
+			test: "Success to create null topic article",
+			article: entity.Article{
+				ArticleID: uuid.New(), 
+				Title: "test", 
+				Content: "test", 
+				AuthorID: u.GetID(), 
+				Tags: []entity.Tag{
+					{ TagID: uuid.New(), Name: "tag_1" }, 
+					{ TagID: uuid.New(), Name: "tag_2" }, 
+				}, 
+				TopicID: nil,
+			},
+			expectedErr: nil,
+		},
 	}
 
 	for _, tc := range testCases {

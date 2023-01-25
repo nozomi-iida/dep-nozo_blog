@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article/sqlite"
 	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/test"
@@ -24,11 +25,16 @@ func SetPublishedAt(time *time.Time) articleOptions {
 	}	
 }
 
+func SetTopic(topicID uuid.UUID) articleOptions {
+	return func(a *entity.Article) {
+		a.TopicID = &topicID 
+	}	
+}
+
 var called = 0
 
 func CreateArticle(t *testing.T, fileName string, options ...articleOptions) entity.Article {
 	user := test.CreateUser(t, fileName, test.SetUsername(fmt.Sprintf("user%v", called)))
-	topic := CreateTopic(t, fileName, SetTopicName(fmt.Sprintf("user%v", called)))
 	now := time.Now()
 	a, err := entity.NewArticle(entity.ArticleArgument{
 		Title: "test article", 
@@ -39,7 +45,7 @@ func CreateArticle(t *testing.T, fileName string, options ...articleOptions) ent
 		}, 
 		PublishedAt: &now,
 		AuthorID: user.GetID(),
-		TopicID: &topic.TopicID,
+		TopicID: nil,
 	})
 	for _, op := range options {
 		op(&a)
