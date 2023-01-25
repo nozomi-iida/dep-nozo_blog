@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
@@ -20,7 +21,7 @@ type QueryArticleSqlite struct {
 	ArticleID uuid.UUID 
 	Title string 
 	Content string 
-	PublishedAt string 
+	PublishedAt *time.Time
 	Tags []entity.Tag 
 	TopicID uuid.NullUUID
 	TopicName sql.NullString
@@ -33,7 +34,7 @@ func (qa QueryArticleSqlite) ToDto() article.ArticleDto {
 		ArticleID: qa.ArticleID,
 		Title: qa.Title,
 		Content: qa.Content,
-		PublishedAt: &qa.PublishedAt,
+		PublishedAt: qa.PublishedAt,
 		Tags: qa.Tags,
 		Author: qa.Author,
 	}	

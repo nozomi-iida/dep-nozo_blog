@@ -2,6 +2,7 @@ package article
 
 import (
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/entity"
@@ -20,7 +21,7 @@ type ArticleDto struct {
 	ArticleID uuid.UUID `json:"articleId"`
 	Title string `json:"title"`
 	Content string `json:"content"`
-	PublishedAt *string `json:"publishedAt,omitempty"`
+	PublishedAt *time.Time `json:"publishedAt,omitempty"`
 	Tags []entity.Tag `json:"tags,omitempty"`
 	Topic *entity.Topic `json:"topic,omitempty"`
 	Author entity.User `json:"author"`
@@ -33,8 +34,10 @@ func (ad ArticleDto) ToEntity() entity.Article {
 	a.Title = ad.Title
 	a.Content = ad.Content
 	// a.PublishedAt = &ad.PublishedAt
-	a.TopicID = &ad.Topic.TopicID
 	a.AuthorID = ad.Author.UserId.ID
+	if ad.Topic != nil {
+		a.TopicID = &ad.Topic.TopicID
+	}
 
 	return a
 }

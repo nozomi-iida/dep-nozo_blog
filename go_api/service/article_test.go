@@ -93,6 +93,7 @@ func TestArticle_Update(t *testing.T) {
 	testCases := []testCase {
 		{
 			test: "Update article",
+			articleID: ac.ArticleID,
 			title: "Update Title",
 			content: ac.Content,
 			isPublic: ac.PublishedAt.IsZero(),
