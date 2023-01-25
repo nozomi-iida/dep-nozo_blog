@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"fmt"
 	"strings"
 
 	"github.com/google/uuid"
@@ -174,14 +173,14 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 			authors.username
 		FROM 
 			articles 
-		INNER JOIN
+		LEFT JOIN
 			topics
 		ON
-			topics.topic_id = articles.topic_id
-		INNER JOIN
+			articles.topic_id = topics.topic_id
+		LEFT JOIN
 			users as authors
 		ON
-			authors.user_id = articles.author_id
+		articles.author_id = authors.user_id
 		WHERE articles.published_at is NOT NULL
 		AND articles.title LIKE ?;
 	`, "%" + q.Keyword + "%")
@@ -191,24 +190,24 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 	}
 
 	for rows.Next() {
-		var ad article.ArticleDto
+		var qa QueryArticleSqlite
 		err = rows.Scan(
-			&ad.ArticleID, 
-			&ad.Title, 
-			&ad.Content, 
-			&ad.PublishedAt, 
-			&ad.Topic.TopicID,
-			&ad.Topic.Name,
-			&ad.Topic.Description,
-			&ad.Author.UserId.ID,
-			&ad.Author.Username,
+			&qa.ArticleID, 
+			&qa.Title, 
+			&qa.Content, 
+			&qa.PublishedAt, 
+			&qa.TopicID,
+			&qa.TopicName,
+			&qa.TopicDescription,
+			&qa.Author.UserId.ID,
+			&qa.Author.Username,
 		)
 		if err != nil {
 			return article.ListArticleDto{}, article.ErrFailedToListArticle
 		}
 
-		articleIDs = append(articleIDs, ad.ArticleID.String())
-		articleMap[ad.ArticleID] = ad
+		articleIDs = append(articleIDs, qa.ArticleID.String())
+		articleMap[qa.ArticleID] = qa.ToDto()
 	}
 
 	if len(articleMap) > 0 {
@@ -290,7 +289,6 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 	)
 
 	if err != nil {
-		fmt.Printf("article scan err: %v\n", err)
 		return article.ArticleDto{}, article.ErrArticleNotFound
 	}
 
