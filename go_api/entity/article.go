@@ -66,6 +66,9 @@ func (a *Article) Public() {
 }
 
 func (a *Article) SetID(id uuid.UUID)  {
+	if id.ID() > 0 {
+		return
+	}
 	a.ArticleID = id	
 }
 
@@ -96,4 +99,11 @@ func (a *Article) SetTags(tagNames []string) {
 		tags = append(tags, nt)
 	}
 	a.Tags = tags
+}
+
+func (a *Article) SetTopicID(id *uuid.UUID)  {
+	if id == nil || id.ID() > 0 {
+		return
+	}
+	a.TopicID = id	
 }

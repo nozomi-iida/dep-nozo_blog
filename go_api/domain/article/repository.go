@@ -27,13 +27,12 @@ type ArticleDto struct {
 	Author entity.User `json:"author"`
 }
 
-// publishedAt(string)をtime.Timeの型に変換できない
 func (ad ArticleDto) ToEntity() entity.Article {
 	a := entity.Article{}
 	a.ArticleID = ad.ArticleID
 	a.Title = ad.Title
 	a.Content = ad.Content
-	// a.PublishedAt = &ad.PublishedAt
+	a.PublishedAt = ad.PublishedAt
 	a.AuthorID = ad.Author.UserId.ID
 	if ad.Topic != nil {
 		a.TopicID = &ad.Topic.TopicID

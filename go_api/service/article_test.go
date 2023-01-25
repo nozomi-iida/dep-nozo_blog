@@ -87,6 +87,7 @@ func TestArticle_Update(t *testing.T) {
 		content string
 		isPublic bool
 		tags []string
+		topicID *uuid.UUID
 		expectedErr error
 	}	
 
@@ -98,13 +99,20 @@ func TestArticle_Update(t *testing.T) {
 			content: ac.Content,
 			isPublic: ac.PublishedAt.IsZero(),
 			tags: tags,
+			topicID: nil,
 			expectedErr: nil,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			ac, err = as.Update(tc.articleID, tc.title, tc.content, tc.tags, tc.isPublic)
+			ac, err = as.Update(tc.articleID, tc.title, tc.content, tc.tags, tc.topicID, tc.isPublic)
 		})
+		if err != tc.expectedErr {
+			t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+		}
+		if err == nil && ac.Title != tc.title {
+			t.Errorf("Expected title %v, got %v", tc.title, ac.Title)
+		}
 	}
 }
