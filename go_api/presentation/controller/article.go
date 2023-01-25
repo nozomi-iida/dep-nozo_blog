@@ -91,3 +91,20 @@ func (ac *ArticleController) PatchRequest(w http.ResponseWriter, r *http.Request
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }
+
+func (ac *ArticleController) DeleteRequest(w http.ResponseWriter, r *http.Request)  {
+	sub := strings.TrimPrefix(r.URL.Path, "/articles")
+	_, queryArticleID := filepath.Split(sub)
+	articleID, err := uuid.Parse(queryArticleID)
+	if err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+	err = ac.as.Delete(articleID)
+	if err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+	
+	w.WriteHeader(http.StatusNoContent)
+}

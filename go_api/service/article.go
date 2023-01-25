@@ -71,3 +71,12 @@ func (as *ArticleService) Update(articleID uuid.UUID, title string, content stri
 	}
 	return a, nil
 }
+
+func (as *ArticleService) Delete(articleID uuid.UUID) error {
+	err := as.ap.Delete(articleID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
