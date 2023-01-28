@@ -108,3 +108,26 @@ func (ac *ArticleController) DeleteRequest(w http.ResponseWriter, r *http.Reques
 	
 	w.WriteHeader(http.StatusNoContent)
 }
+
+
+func (ac *ArticleController) FindByIdRequest(w http.ResponseWriter, r *http.Request)  {
+
+	sub := strings.TrimPrefix(r.URL.Path, "/articles")
+	_, queryArticleID := filepath.Split(sub)
+	articleID, err := uuid.Parse(queryArticleID)
+	if err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+	article, err := ac.as.FindById(articleID)
+	if err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+
+	output, _ := json.MarshalIndent(article, "", "\t")
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(output)
+}

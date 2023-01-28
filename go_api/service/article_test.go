@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/nozomi-iida/nozo_blog/domain/article"
 	"github.com/nozomi-iida/nozo_blog/service"
 	"github.com/nozomi-iida/nozo_blog/test"
 	"github.com/nozomi-iida/nozo_blog/test/factories"
@@ -148,6 +149,91 @@ func TestArticle_Delete(t *testing.T) {
 
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+		})
+	}
+}
+
+func TestArticle_FindById(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	ac := factories.CreateArticle(t, ts.Filename)
+	as, err := service.NewArticleService(
+		service.WithSqliteArticleRepository(ts.Filename),
+	)
+	if err != nil {
+		t.Errorf("service error: %v", err)
+	}
+
+	type testCase struct {
+		test string
+		articleID uuid.UUID
+		expectedErr error
+	}
+
+	testCases := []testCase {
+		{
+			test: "Success to find by id article",
+			articleID: ac.ArticleID,
+			expectedErr: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			_, err := as.FindById(tc.articleID)
+
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+		})
+	}
+}
+
+func TestArticle_List(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	engineerAC := factories.CreateArticle(t, ts.Filename, factories.SetTitle("engineer"))
+	factories.CreateArticle(t, ts.Filename)
+	factories.CreateArticle(t, ts.Filename)
+	as, err := service.NewArticleService(
+		service.WithSqliteArticleRepository(ts.Filename),
+	)
+	if err != nil {
+		t.Errorf("service error: %v", err)
+	}
+
+	type testCase struct {
+		test string
+		query article.ArticleQuery
+		expectedCount int
+		expectedErr error
+	}
+
+	testCases := []testCase {
+		{
+			test: "Success to list articles",
+			query: article.ArticleQuery{},
+			expectedCount: 3,
+			expectedErr: nil,
+		},
+		{
+			test: "List from keyword",
+			query: article.ArticleQuery{Keyword: engineerAC.Title},
+			expectedCount: 1,
+			expectedErr: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			res, err := as.List(tc.query)
+
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+			if err == nil && tc.expectedCount != len(res.Articles) {
+				t.Errorf("Expected count %v, got %v", tc.expectedCount, len(res.Articles))
 			}
 		})
 	}

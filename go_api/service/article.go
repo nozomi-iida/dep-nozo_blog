@@ -80,3 +80,14 @@ func (as *ArticleService) Delete(articleID uuid.UUID) error {
 
 	return nil
 }
+
+func (as *ArticleService) FindById(id uuid.UUID) (article.ArticleDto, error) {
+	a, err := as.ap.FindById(id)
+	return a, err
+}
+
+
+func (as *ArticleService) List(query article.ArticleQuery) (article.ListArticleDto, error) {
+	a, err := as.ap.List(query)
+	return a, err
+}
