@@ -1,7 +1,10 @@
 package presentation
 
 import (
+	"fmt"
 	"net/http"
+	"path"
+	"strings"
 
 	"github.com/nozomi-iida/nozo_blog/presentation/controller"
 	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
@@ -12,6 +15,15 @@ type router struct {
 	atc controller.AuthController
 	ac controller.ArticleController
 	tc controller.TopicController
+}
+
+func shiftPath(p string) (head, tail string) {
+	p = path.Clean("/" + p)
+	i := strings.Index(p[1:], "/") + 1
+	if i <= 0 {
+			return p[1:], "/"
+	}
+	return p[1:i], p[i:]
 }
 
 func NewRouter(fileString string) (router, error)  {
@@ -42,14 +54,30 @@ func (rt *router) HandleSignInRequest(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
+// routesの構造化ってどうやるんだ？ findByIDとListが同じエンドポイントになってしまっている
 func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  {
+	var head string
+	head, r.URL.Path = shiftPath(r.URL.Path)
+	fmt.Printf(head)
 	switch r.Method {
+	case http.MethodGet:
+		if head != "" {
+			http.HandlerFunc(rt.ac.FindByIdRequest).ServeHTTP(w, r)
+		} else {
+			http.HandlerFunc(rt.ac.ListRequest).ServeHTTP(w, r)
+		}
 	case http.MethodPost:
-		middleware.AuthMiddleware(http.HandlerFunc(rt.ac.PostRequest)).ServeHTTP(w, r)
+		if head != "" {
+			middleware.AuthMiddleware(http.HandlerFunc(rt.ac.PostRequest)).ServeHTTP(w, r)
+		}
 	case http.MethodPatch:
-		middleware.AuthMiddleware(http.HandlerFunc(rt.ac.PatchRequest)).ServeHTTP(w, r)
+		if head != "" {
+			middleware.AuthMiddleware(http.HandlerFunc(rt.ac.PatchRequest)).ServeHTTP(w, r)
+		}
 	case http.MethodDelete:
-		middleware.AuthMiddleware(http.HandlerFunc(rt.ac.DeleteRequest)).ServeHTTP(w, r)
+		if head != "" {
+			middleware.AuthMiddleware(http.HandlerFunc(rt.ac.DeleteRequest)).ServeHTTP(w, r)
+		}
 	default:
 		helpers.ErrorHandler(w, helpers.ErrStatusMethodNotAllowed)
 	}

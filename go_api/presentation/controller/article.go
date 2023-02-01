@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/nozomi-iida/nozo_blog/domain/article"
 	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
 	"github.com/nozomi-iida/nozo_blog/service"
 )
@@ -109,9 +110,7 @@ func (ac *ArticleController) DeleteRequest(w http.ResponseWriter, r *http.Reques
 	w.WriteHeader(http.StatusNoContent)
 }
 
-
 func (ac *ArticleController) FindByIdRequest(w http.ResponseWriter, r *http.Request)  {
-
 	sub := strings.TrimPrefix(r.URL.Path, "/articles")
 	_, queryArticleID := filepath.Split(sub)
 	articleID, err := uuid.Parse(queryArticleID)
@@ -126,6 +125,22 @@ func (ac *ArticleController) FindByIdRequest(w http.ResponseWriter, r *http.Requ
 	}
 
 	output, _ := json.MarshalIndent(article, "", "\t")
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(output)
+}
+
+func (ac *ArticleController) ListRequest(w http.ResponseWriter, r *http.Request)  {
+	keyword := r.URL.Query().Get("keyword")
+	query := article.ArticleQuery{Keyword: keyword}
+	articles, err := ac.as.List(query)
+	if err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+
+	output, _ := json.MarshalIndent(articles, "", "\t")
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
