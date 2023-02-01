@@ -6,6 +6,7 @@
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
+    "test": "jest",
     "lint": "next lint",
     "prettier": "prettier --write",
     "theme": "chakra-cli tokens ./src/libs/chakra/theme.ts",
@@ -36,8 +37,12 @@
   },
   "devDependencies": {
     "@chakra-ui/cli": "^2.1.8",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
     "eslint": "8.26.0",
     "eslint-config-next": "13.0.1",
+    "jest": "^29.4.1",
+    "jest-environment-jsdom": "^29.4.1",
     "npm-run-all": "^4.1.5",
     "pathpida": "^0.18.1",
     "prettier": "^2.7.1"
