@@ -1,4 +1,12 @@
 export const pagesPath = {
+  "admin": {
+    "management": {
+      $url: (url?: { hash?: string }) => ({ pathname: '/admin/management' as const, hash: url?.hash })
+    },
+    "sign_in": {
+      $url: (url?: { hash?: string }) => ({ pathname: '/admin/sign-in' as const, hash: url?.hash })
+    }
+  },
   "articles": {
     _id: (id: string | number) => ({
       $url: (url?: { hash?: string }) => ({ pathname: '/articles/[id]' as const, query: { id }, hash: url?.hash })
