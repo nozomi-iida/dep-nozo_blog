@@ -1,18 +1,26 @@
 import { NextPageWithLayout } from "pages/_app.page";
 import {
+  Box,
   Button,
+  Center,
+  Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
+  HStack,
   Input,
+  Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { pagesPath } from "libs/pathpida/$path";
 import { useRouter } from "next/router";
-import { FC } from "react";
+import { FC, ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Layout } from "components/Layout";
 
 const schema = z.object({
   username: z.string().min(1, { message: "Please enter your username" }),
@@ -34,23 +42,37 @@ const SignInPage: NextPageWithLayout = () => {
   });
 
   return (
-    <form onSubmit={onSubmit}>
-      <FormControl isInvalid={!!errors.username}>
-        <FormLabel>Username</FormLabel>
-        <Input {...register("username")} />
-        {errors.username && (
-          <FormErrorMessage>{errors.username.message}</FormErrorMessage>
-        )}
-      </FormControl>
-      <FormControl isInvalid={!!errors.password}>
-        <FormLabel>Password</FormLabel>
-        <Input {...register("password")} />
-        {errors.password && (
-          <FormErrorMessage>{errors.password.message}</FormErrorMessage>
-        )}
-      </FormControl>
-      <Button type="submit">Sign In</Button>
-    </form>
+    <Box px={8} w="400px" mx="auto" boxShadow="2xl" borderRadius="base">
+      <Text fontWeight="bold" fontSize="lg" py={6} color="subInfoText">
+        SIGN IN
+      </Text>
+      <Divider />
+      <VStack gap={6} as="form" onSubmit={onSubmit} py={8}>
+        <FormControl isInvalid={!!errors.username}>
+          <FormLabel>Username</FormLabel>
+          <Input {...register("username")} />
+          {errors.username && (
+            <FormErrorMessage>{errors.username.message}</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl isInvalid={!!errors.password}>
+          <FormLabel>Password</FormLabel>
+          <Input {...register("password")} />
+          {errors.password && (
+            <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+          )}
+        </FormControl>
+        <Button type="submit">Sign In</Button>
+      </VStack>
+    </Box>
+  );
+};
+
+SignInPage.getLayout = (page: ReactElement) => {
+  return (
+    <Layout>
+      <Layout.Content>{page}</Layout.Content>
+    </Layout>
   );
 };
 

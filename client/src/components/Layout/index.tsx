@@ -24,15 +24,15 @@ type LayoutSubComponent = {
 export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
   const color = useColorModeValue("#f7f8f8", "#0b0b0c");
   return (
-    <Box backgroundColor={color} pt="100px" minH="100vh">
+    <Flex flexDir="column" backgroundColor={color} pt="100px" minH="100vh">
       <Header />
-      <Flex mx="auto" maxW={970} py={14}>
+      <Flex flex={1} mx="auto" maxW={970} py={14}>
         {children}
       </Flex>
       <Box mx="auto" maxW={970}>
         <Footer />
       </Box>
-    </Box>
+    </Flex>
   );
 };
 
