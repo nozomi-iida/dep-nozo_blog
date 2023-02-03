@@ -5,7 +5,7 @@ import { strapiClient } from "libs/strapi/api/axios";
 import { Article } from "libs/strapi/models/article";
 import { StrapiListResponse } from "libs/strapi/types";
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "pages/_app";
+import { NextPageWithLayout } from "pages/_app.page";
 import { ReactElement } from "react-markdown/lib/react-markdown";
 import qs from "qs";
 import useSWR from "swr";

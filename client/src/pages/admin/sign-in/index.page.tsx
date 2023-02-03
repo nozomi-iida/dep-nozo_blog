@@ -1,3 +1,4 @@
+import { NextPageWithLayout } from "pages/_app.page";
 import {
   Button,
   FormControl,
@@ -19,7 +20,7 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-export const SignInForm: FC = () => {
+const SignInPage: NextPageWithLayout = () => {
   const toast = useToast();
   const router = useRouter();
   const {
@@ -52,3 +53,5 @@ export const SignInForm: FC = () => {
     </form>
   );
 };
+
+export default SignInPage;

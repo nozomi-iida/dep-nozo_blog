@@ -12,6 +12,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  pageExtensions: ["page.tsx"],
 };
 
 module.exports = nextConfig;

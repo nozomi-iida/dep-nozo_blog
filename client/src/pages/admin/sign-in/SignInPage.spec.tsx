@@ -1,7 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { SignInForm } from ".";
 import { ChakraProvider } from "@chakra-ui/react";
+import SignInPage from "./index.page";
 
 // TODO: 共通化したい
 const pushMock = jest.fn();
@@ -34,7 +34,7 @@ describe("sign in form", () => {
   test("Success to sign in", async () => {
     render(
       <ChakraProvider>
-        <SignInForm />
+        <SignInPage />
       </ChakraProvider>
     );
     await typeUsername("hoge");
@@ -46,7 +46,7 @@ describe("sign in form", () => {
   test("Show Validate Error", async () => {
     render(
       <ChakraProvider>
-        <SignInForm />
+        <SignInPage />
       </ChakraProvider>
     );
     await clickSignIn();

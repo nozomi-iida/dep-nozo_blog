@@ -4,7 +4,7 @@ import { strapiClient } from "libs/strapi/api/axios";
 import { Topic, Topic as TopicType } from "libs/strapi/models/topic";
 import { StrapiGetResponse, StrapiListResponse } from "libs/strapi/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { NextPageWithLayout } from "pages/_app";
+import { NextPageWithLayout } from "pages/_app.page";
 import { ReactElement } from "react";
 import qs from "qs";
 import { ArticleCard } from "components/ArticleCard";

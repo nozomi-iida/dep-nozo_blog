@@ -15,7 +15,7 @@ import { strapiClient } from "libs/strapi/api/axios";
 import { Article } from "libs/strapi/models/article";
 import { StrapiGetResponse, StrapiListResponse } from "libs/strapi/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { NextPageWithLayout } from "pages/_app";
+import { NextPageWithLayout } from "pages/_app.page";
 import qs from "qs";
 import { ReactElement, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";

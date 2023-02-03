@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { ArticleCard } from "components/ArticleCard";
 import { Layout } from "components/Layout";
-import { NextPageWithLayout } from "./_app";
+import { NextPageWithLayout } from "./_app.page";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { StrapiListResponse } from "libs/strapi/types";
