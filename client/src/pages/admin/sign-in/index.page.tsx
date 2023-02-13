@@ -8,7 +8,6 @@ import {
   FormLabel,
   Input,
   Text,
-  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { pagesPath } from "libs/pathpida/$path";
@@ -19,6 +18,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { restCli } from "libs/axios";
 import { AdminLayout } from "components/Layout/AdminLayout";
+import { getRestErrorMessage } from "libs/axios/errorHandler";
+import { useCustomToast } from "libs/chakra/useCustomToast";
 
 const schema = z.object({
   username: z.string().min(1, { message: "Please enter your username" }),
@@ -27,7 +28,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const SignInPage: NextPageWithLayout = () => {
-  const toast = useToast();
+  const toast = useCustomToast();
   const router = useRouter();
   const {
     register,
@@ -37,9 +38,11 @@ const SignInPage: NextPageWithLayout = () => {
   const onSubmit = handleSubmit(async (params) => {
     try {
       await restCli.post("/sign_in", params);
-      toast({ title: "Success to sign in", status: "success" });
+      toast({ title: "Success to sign in" });
       router.push(pagesPath.admin.management.$url());
-    } catch (error) {}
+    } catch (error) {
+      toast({ title: getRestErrorMessage(error), status: "error" });
+    }
   });
 
   return (

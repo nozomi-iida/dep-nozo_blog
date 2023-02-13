@@ -29,6 +29,9 @@ const chakraTheme = extendTheme({
         color: props.colorMode === "light" ? "#2f3235" : "#eaedf1",
       }),
     },
+    Alert: {
+      variants: {},
+    },
   },
   breakpoints: {
     sm: "320px",
