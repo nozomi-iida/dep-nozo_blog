@@ -2,13 +2,10 @@ import { NextPageWithLayout } from "pages/_app.page";
 import {
   Box,
   Button,
-  Center,
   Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
-  HStack,
   Input,
   Text,
   useToast,
@@ -16,12 +13,12 @@ import {
 } from "@chakra-ui/react";
 import { pagesPath } from "libs/pathpida/$path";
 import { useRouter } from "next/router";
-import { FC, ReactElement } from "react";
+import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Layout } from "components/Layout";
 import { restCli } from "libs/axios";
+import { AdminLayout } from "components/Layout/AdminLayout";
 
 const schema = z.object({
   username: z.string().min(1, { message: "Please enter your username" }),
@@ -39,7 +36,7 @@ const SignInPage: NextPageWithLayout = () => {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
   const onSubmit = handleSubmit(async (params) => {
     try {
-      await restCli.post("/sign-in", params);
+      await restCli.post("/sign_in", params);
       toast({ title: "Success to sign in", status: "success" });
       router.push(pagesPath.admin.management.$url());
     } catch (error) {}
@@ -81,9 +78,9 @@ const SignInPage: NextPageWithLayout = () => {
 
 SignInPage.getLayout = (page: ReactElement) => {
   return (
-    <Layout>
-      <Layout.Content>{page}</Layout.Content>
-    </Layout>
+    <AdminLayout>
+      <AdminLayout.Content>{page}</AdminLayout.Content>
+    </AdminLayout>
   );
 };
 
