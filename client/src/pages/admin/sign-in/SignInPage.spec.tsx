@@ -10,10 +10,6 @@ const pushMock = jest.fn();
 jest.mock("next/router", () => ({
   useRouter() {
     return {
-      route: "/",
-      pathname: "/",
-      query: "",
-      asPath: "",
       push: pushMock,
     };
   },
