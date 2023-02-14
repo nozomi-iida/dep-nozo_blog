@@ -12,7 +12,6 @@ export const restCli = axios.create({
 
 restCli.interceptors.response.use(
   (res) => {
-    console.log(res);
     return res;
   },
   (error: AxiosError<{ error: RestErrorResponse }>) => {
