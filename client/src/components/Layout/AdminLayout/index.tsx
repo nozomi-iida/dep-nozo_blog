@@ -7,9 +7,6 @@ import {
 } from "@chakra-ui/react";
 import { Footer } from "components/Footer";
 import { FC, ReactNode } from "react";
-import { AiFillCaretUp } from "react-icons/ai";
-import { useEffect } from "react";
-import { useThemeColor } from "libs/chakra/theme";
 
 type LayoutProps = {
   children: ReactNode;
@@ -25,8 +22,8 @@ export const AdminLayout: FC<LayoutProps> & LayoutSubComponent = ({
 }) => {
   const color = useColorModeValue("#f7f8f8", "#0b0b0c");
   return (
-    <Flex flexDir="column" backgroundColor={color} pt="100px" minH="100vh">
-      <Flex flex={1} mx="auto" maxW={970} py={14}>
+    <Flex flexDir="column" backgroundColor={color} minH="100vh">
+      <Flex flex={1} mx="auto" maxW={970} w="full" py={14}>
         {children}
       </Flex>
       <Box mx="auto" maxW={970}>
