@@ -1,7 +1,9 @@
 export const pagesPath = {
   "admin": {
-    "management": {
-      $url: (url?: { hash?: string }) => ({ pathname: '/admin/management' as const, hash: url?.hash })
+    "managements": {
+      "articles": {
+        $url: (url?: { hash?: string }) => ({ pathname: '/admin/managements/articles' as const, hash: url?.hash })
+      }
     },
     "sign_in": {
       $url: (url?: { hash?: string }) => ({ pathname: '/admin/sign-in' as const, hash: url?.hash })

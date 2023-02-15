@@ -34,7 +34,7 @@ const SignInPage: NextPageWithLayout = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
   const onSubmit = handleSubmit(async (params) => {
     try {
@@ -44,7 +44,7 @@ const SignInPage: NextPageWithLayout = () => {
         res.data.token as string
       );
       toast({ title: "Success to sign in" });
-      router.push(pagesPath.admin.management.$url());
+      router.push(pagesPath.admin.managements.articles.$url());
     } catch (error) {
       toast({ title: getRestErrorMessage(error), status: "error" });
     }
@@ -78,7 +78,9 @@ const SignInPage: NextPageWithLayout = () => {
           )}
         </FormControl>
         {/* TODO make button style */}
-        <Button type="submit">Sign In</Button>
+        <Button type="submit" isLoading={isSubmitting}>
+          Sign In
+        </Button>
       </VStack>
     </Box>
   );
