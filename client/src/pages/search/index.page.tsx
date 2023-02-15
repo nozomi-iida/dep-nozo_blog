@@ -6,11 +6,11 @@ import { Article } from "libs/strapi/models/article";
 import { StrapiListResponse } from "libs/strapi/types";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "pages/_app.page";
-import { ReactElement } from "react-markdown/lib/react-markdown";
 import qs from "qs";
 import useSWR from "swr";
 import { NextHead } from "components/NextHead";
 import { pagesPath } from "libs/pathpida/$path";
+import { ReactElement } from "react";
 
 const Search: NextPageWithLayout = () => {
   const router = useRouter();
