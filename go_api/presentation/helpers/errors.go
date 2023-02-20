@@ -38,6 +38,7 @@ func newErrMsg(message string, code int) ErrorPresentation  {
 }
 
 func NewErrorPresentation(err error) ErrorPresentation  {
+	fmt.Printf("err: %v\n", err)
 	switch err {
 	case user.ErrUserNotFound:
 		return newErrMsg(user.ErrUserNotFound.Error(), http.StatusNotFound)

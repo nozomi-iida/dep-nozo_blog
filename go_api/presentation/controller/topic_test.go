@@ -25,3 +25,18 @@ func TestTopicController_Create(t *testing.T) {
 		t.Errorf("Response code is %v", w.Code)
 	}
 }
+
+func TestTopicController_List(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest("Get", "/topics", nil)
+	tc, err := controller.NewTopicController(ts.Filename)
+	if err != nil {
+		t.Errorf("Controller error %v", err)
+	}
+	tc.ListRequest(w, r)
+	if w.Code != http.StatusOK {
+		t.Errorf("Response code is %v", w.Code)
+	}
+}

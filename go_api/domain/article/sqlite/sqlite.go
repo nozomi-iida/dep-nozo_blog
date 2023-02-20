@@ -231,6 +231,7 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 		if err != nil {
 			return article.ListArticleDto{}, article.ErrFailedToListArticle
 		}
+
 		defer rows.Close()
 		for rows.Next() {
 			var tag entity.Tag

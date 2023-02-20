@@ -1,7 +1,6 @@
 package presentation
 
 import (
-	"fmt"
 	"net/http"
 	"path"
 	"strings"
@@ -58,7 +57,7 @@ func (rt *router) HandleSignInRequest(w http.ResponseWriter, r *http.Request)  {
 func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  {
 	var head string
 	head, r.URL.Path = shiftPath(r.URL.Path)
-	fmt.Printf(head)
+	head, r.URL.Path = shiftPath(r.URL.Path)
 	switch r.Method {
 	case http.MethodGet:
 		if head != "" {
@@ -85,6 +84,8 @@ func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  
 
 func (rt *router) HandleTopicRequest(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
+	case http.MethodGet:
+		middleware.AuthMiddleware(http.HandlerFunc(rt.tc.ListRequest)).ServeHTTP(w, r)
 	case http.MethodPost:
 		middleware.AuthMiddleware(http.HandlerFunc(rt.tc.CreteRequest)).ServeHTTP(w, r)
 	default:

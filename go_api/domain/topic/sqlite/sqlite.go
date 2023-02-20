@@ -52,6 +52,38 @@ func (sr *sqliteRepository) Create(t entity.Topic) (entity.Topic, error) {
 	return t, nil
 }
 
+func (sr *sqliteRepository) List() ([]entity.Topic, error)  {
+	var ts []entity.Topic
+
+	rows, err := sr.db.Query(`
+		SELECT
+			topics.topic_id,
+			topics.name,
+			topics.description
+		FROM
+			topics;
+	`)
+
+	if err != nil {
+		return []entity.Topic{}, topic.ErrFailedToListTopics 
+	}
+
+	for rows.Next() {
+		var et entity.Topic
+
+		err = rows.Scan(
+			&et.TopicID,
+			&et.Name,
+			&et.Description,
+		)	
+		if err != nil {
+			return []entity.Topic{}, topic.ErrFailedToListTopics 
+		}
+		ts = append(ts, et)	
+	}
+	return ts, nil
+}
+
 func (sr *sqliteRepository) findByName(name string) (entity.Topic, error)  {
 	rows, err := sr.db.Query("SELECT name FROM topics WHERE topics.name == ?", name)	
 	var st sqliteTopic

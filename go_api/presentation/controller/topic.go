@@ -54,3 +54,15 @@ func (tc *TopicController) CreteRequest(w http.ResponseWriter, r *http.Request) 
 	w.WriteHeader(http.StatusCreated)
 	w.Write(output)
 }
+
+func (tc *TopicController) ListRequest(w http.ResponseWriter, r *http.Request) {
+	topics, err := tc.ts.List()
+	if err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+	output, _ := json.MarshalIndent(topics, "", "\t")
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(output)
+}

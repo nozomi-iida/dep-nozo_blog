@@ -46,3 +46,12 @@ func (ts *TopicService) Create(name string, description string) (entity.Topic, e
 
 	return tp, nil
 }
+
+func (ts *TopicService) List() ([]entity.Topic, error)  {
+	topics, err := ts.tp.List()
+	if err != nil {
+		return []entity.Topic{}, err
+	}
+
+	return topics, nil
+}
