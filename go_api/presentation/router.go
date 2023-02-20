@@ -85,7 +85,7 @@ func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  
 func (rt *router) HandleTopicRequest(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		middleware.AuthMiddleware(http.HandlerFunc(rt.tc.ListRequest)).ServeHTTP(w, r)
+		http.HandlerFunc(rt.tc.ListRequest).ServeHTTP(w, r)
 	case http.MethodPost:
 		middleware.AuthMiddleware(http.HandlerFunc(rt.tc.CreteRequest)).ServeHTTP(w, r)
 	default:

@@ -33,6 +33,7 @@ const CreateArticlePage: NextPageWithLayout = () => {
   const fetchTopics = (url: string) =>
     restCli<{ topics: Topic[] }>(url).then((res) => res.data);
   const { data: topicData } = useSWR("/topics", fetchTopics);
+
   const {
     register,
     handleSubmit,
@@ -48,7 +49,7 @@ const CreateArticlePage: NextPageWithLayout = () => {
       <form onSubmit={onSubmit}>
         <FormControl>
           <FormLabel>Topic</FormLabel>
-          <Select {...register("topic")}>
+          <Select {...register("topic")} placeholder=" ">
             {topicData &&
               topicData.topics.map((topic) => (
                 <option value={topic.topicID} key={topic.topicID}>
