@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
 	"github.com/nozomi-iida/nozo_blog/service"
 )
@@ -36,6 +37,19 @@ type topicResponse struct {
 	Description string `json:"description,omitempty"`
 }
 
+type topicListResponse struct {
+	Topics []topicResponse `json:"topics"`
+}
+
+func listToJson(topics []entity.Topic) topicListResponse {
+	var trs = []topicResponse{}
+	for _, t := range topics {
+		trs = append(trs, topicResponse{TopicId: t.TopicID, Name: t.Name, Description: t.Description})
+	}
+
+	return topicListResponse{Topics: trs}
+}
+
 func (tc *TopicController) CreteRequest(w http.ResponseWriter, r *http.Request) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
@@ -61,7 +75,8 @@ func (tc *TopicController) ListRequest(w http.ResponseWriter, r *http.Request) {
 		helpers.ErrorHandler(w, err)
 		return
 	}
-	output, _ := json.MarshalIndent(topics, "", "\t")
+	tj := listToJson(topics)
+	output, _ := json.MarshalIndent(tj, "", "\t")
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(output)

@@ -41,7 +41,6 @@ const CreateArticlePage: NextPageWithLayout = () => {
   const onSubmit = handleSubmit(async (params) => {
     console.log(params);
   });
-  console.log(errors);
 
   return (
     <Box>

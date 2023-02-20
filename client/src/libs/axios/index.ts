@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import { localStorageKeys } from "utils/localstorageKeys";
 
 export type RestErrorResponse = {
   code: number;
@@ -8,6 +9,16 @@ export type RestErrorResponse = {
 
 export const restCli = axios.create({
   baseURL: process.env.NEXT_PUBLIC_REST_API_URI,
+});
+
+restCli.interceptors.request.use((config) => {
+  if (config.headers && !config.headers?.Authorization) {
+    const token = localStorage.getItem(localStorageKeys.JWT_TOKEN);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
 });
 
 restCli.interceptors.response.use(
