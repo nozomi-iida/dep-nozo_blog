@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { rest } from "msw";
 import { Topic } from "libs/api/models/topic";
+import { Tag } from "libs/api/models/tag";
 
 export const handler = {
   signIn: {
@@ -24,8 +25,8 @@ export const handler = {
       topics: Topic[] = [
         {
           topicID: randomUUID(),
-          name: "test 1",
-          description: "test 1",
+          name: "topic 1",
+          description: "topic 1",
         },
       ]
     ) => {
@@ -34,6 +35,18 @@ export const handler = {
           ctx.status(200),
           ctx.json({
             topics,
+          })
+        );
+      });
+    },
+  },
+  getTags: {
+    success: (tags: Tag[] = [{ tagID: randomUUID(), name: "tag1" }]) => {
+      return rest.get("/tags", (_, res, ctx) => {
+        return res(
+          ctx.status(200),
+          ctx.json({
+            tags,
           })
         );
       });

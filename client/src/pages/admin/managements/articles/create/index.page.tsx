@@ -18,6 +18,7 @@ import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import { z } from "zod";
+import { TagInput } from "./TagInput";
 
 const schema = z.object({
   title: z.string().min(1, { message: "title is required" }),
@@ -46,7 +47,7 @@ const CreateArticlePage: NextPageWithLayout = () => {
   return (
     <Box>
       <Heading>Create an article</Heading>
-      <form onSubmit={onSubmit}>
+      <div>
         <FormControl>
           <FormLabel>Topic</FormLabel>
           <Select {...register("topic")} placeholder=" ">
@@ -60,7 +61,7 @@ const CreateArticlePage: NextPageWithLayout = () => {
         </FormControl>
         <FormControl>
           <FormLabel>Tags</FormLabel>
-          {/* TODO: 実装 */}
+          <TagInput />
         </FormControl>
         <FormControl isInvalid={!!errors.title?.message}>
           <FormLabel>Title</FormLabel>
@@ -76,10 +77,10 @@ const CreateArticlePage: NextPageWithLayout = () => {
           <FormLabel>Public</FormLabel>
           <Switch {...register("isPublic")} />
         </FormControl>
-        <Button type="submit" isLoading={isSubmitting}>
+        <Button onClick={onSubmit} isLoading={isSubmitting}>
           Create
         </Button>
-      </form>
+      </div>
     </Box>
   );
 };
