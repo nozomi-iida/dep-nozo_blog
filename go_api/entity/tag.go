@@ -25,3 +25,10 @@ func NewTag(name string) (Tag, error) {
 		Name: name,
 	}, nil	
 }
+
+func (t *Tag) SetName(name string)  {
+	if name == "" {
+		return
+	}
+	t.Name = name
+}
