@@ -14,6 +14,7 @@ type router struct {
 	atc controller.AuthController
 	ac controller.ArticleController
 	tc controller.TopicController
+	tgc controller.TagController
 }
 
 func shiftPath(p string) (head, tail string) {
@@ -29,10 +30,11 @@ func NewRouter(fileString string) (router, error)  {
 	atc, err := controller.NewAuthController(fileString)
 	ac, err := controller.NewArticleController(fileString)
 	tc, err := controller.NewTopicController(fileString)
+	tgc, err := controller.NewTagController(fileString)
 	if err != nil {
 		return router{}, err
 	}
-	return router{atc: atc, ac: ac, tc: tc}, nil
+	return router{atc: atc, ac: ac, tc: tc, tgc: tgc}, nil
 }
 
 func (rt *router) HandleSignUpRequest(w http.ResponseWriter, r *http.Request)  {
@@ -81,6 +83,16 @@ func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  
 		helpers.ErrorHandler(w, helpers.ErrStatusMethodNotAllowed)
 	}
 }
+
+func (rt *router) HandleTagRequest(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		http.HandlerFunc(rt.tgc.ListRequest).ServeHTTP(w, r)
+	default:
+		helpers.ErrorHandler(w, helpers.ErrStatusMethodNotAllowed)
+	}
+} 
+
 
 func (rt *router) HandleTopicRequest(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {

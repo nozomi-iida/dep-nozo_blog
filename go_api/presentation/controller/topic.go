@@ -41,7 +41,7 @@ type topicListResponse struct {
 	Topics []topicResponse `json:"topics"`
 }
 
-func listToJson(topics []entity.Topic) topicListResponse {
+func topicListToJson(topics []entity.Topic) topicListResponse {
 	var trs = []topicResponse{}
 	for _, t := range topics {
 		trs = append(trs, topicResponse{TopicId: t.TopicID, Name: t.Name, Description: t.Description})
@@ -75,7 +75,7 @@ func (tc *TopicController) ListRequest(w http.ResponseWriter, r *http.Request) {
 		helpers.ErrorHandler(w, err)
 		return
 	}
-	tj := listToJson(topics)
+	tj := topicListToJson(topics)
 	output, _ := json.MarshalIndent(tj, "", "\t")
 
 	w.WriteHeader(http.StatusOK)

@@ -22,6 +22,7 @@ func main()  {
 	mux.HandleFunc("/sign_in", middleware.WrapHandlerWithLoggingMiddleware(http.HandlerFunc(ar.HandleSignInRequest)).ServeHTTP)
 	mux.HandleFunc("/articles", middleware.WrapHandlerWithLoggingMiddleware(http.HandlerFunc(ar.HandleArticleRequest)).ServeHTTP)
 	mux.HandleFunc("/topics", middleware.WrapHandlerWithLoggingMiddleware(http.HandlerFunc(ar.HandleTopicRequest)).ServeHTTP)
+	mux.HandleFunc("/tags", middleware.WrapHandlerWithLoggingMiddleware(http.HandlerFunc(ar.HandleTagRequest)).ServeHTTP)
 	// handler := middleware.CorsMiddleware(mux)
 	handler := cors.AllowAll().Handler(mux)
 	libs.ZipLogger().Error(http.ListenAndServe(":8080", handler).Error())
