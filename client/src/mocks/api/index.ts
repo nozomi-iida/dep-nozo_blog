@@ -24,7 +24,7 @@ export const handler = {
     success: (
       topics: Topic[] = [
         {
-          topicID: randomUUID(),
+          topicId: randomUUID(),
           name: "topic 1",
           description: "topic 1",
         },

@@ -1,5 +1,5 @@
 export type Topic = {
-  topicID: string;
+  topicId: string;
   name: string;
   description: string;
 };

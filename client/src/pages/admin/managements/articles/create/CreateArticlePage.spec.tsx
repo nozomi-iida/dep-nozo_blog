@@ -6,7 +6,7 @@ import { setupServer } from "msw/node";
 import CreateArticlePage from "./index.page";
 
 const mockTopic = {
-  topicID: randomUUID(),
+  topicId: randomUUID(),
   name: "mock topic",
   description: "",
 };

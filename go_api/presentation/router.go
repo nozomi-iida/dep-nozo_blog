@@ -68,7 +68,7 @@ func (rt *router) HandleArticleRequest(w http.ResponseWriter, r *http.Request)  
 			http.HandlerFunc(rt.ac.ListRequest).ServeHTTP(w, r)
 		}
 	case http.MethodPost:
-		if head != "" {
+		if head == "" {
 			middleware.AuthMiddleware(http.HandlerFunc(rt.ac.PostRequest)).ServeHTTP(w, r)
 		}
 	case http.MethodPatch:

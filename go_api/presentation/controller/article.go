@@ -29,7 +29,7 @@ func NewArticleController(fileString string) (ArticleController, error)  {
 type ArticleRequest struct {
 	Title string `json:"title" validate:"required"`
 	Content string `json:"content" validate:"required"`
-	IsPublic bool `json:"isPublic" validate:"required"`
+	IsPublic bool `json:"isPublic"`
 	Tags []string `json:"tags"`
 	TopicID *uuid.UUID `json:"topicId"`
 }

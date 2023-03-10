@@ -1,12 +1,4 @@
-import {
-  ChangeEvent,
-  FC,
-  KeyboardEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FC, useEffect, useId, useMemo, useState } from "react";
 import useSWR from "swr";
 import { restCli } from "libs/axios";
 import { Tag as TagType } from "libs/api/models/tag";
@@ -15,11 +7,17 @@ import { Box, Text } from "@chakra-ui/react";
 
 type TagInputProps = {
   max?: number;
+  value?: string[];
+  onChange?: (value: string[]) => void;
 };
 
 type Option = { label: string; value: string };
 
-export const TagInput: FC<TagInputProps> = ({ max = 3 }) => {
+export const TagInput: FC<TagInputProps> = ({
+  max = 3,
+  value: valueProps,
+  onChange: onChangeProps,
+}) => {
   const fetchTopics = (url: string) =>
     restCli<{ tags: TagType[] }>(url).then((res) => res.data);
   const { data: tagData } = useSWR("/tags", fetchTopics);
@@ -35,46 +33,33 @@ export const TagInput: FC<TagInputProps> = ({ max = 3 }) => {
       value: tag.name,
     }));
     tagDataOptions?.push({ value: tagName, label: tagName });
+
     return tagDataOptions;
   }, [tagData, tagName]);
 
   const onChange = (options: MultiValue<Option>) => {
-    if (options.length >= 3) {
+    if (options.length > max) {
       setMessage("cannot add more than three tags");
       setTagName("");
     } else {
       setTags(options);
-    }
-  };
-  const onKeydown = (e: KeyboardEvent) => {
-    if (e.key === "Backspace" && !tagName) {
-      const cloneTags = tags.concat();
-      cloneTags.pop();
-
-      setTags(cloneTags);
-      setMessage("");
+      onChangeProps?.(options.map((option) => option.value));
     }
   };
 
   const onInputChange = (value: string) => {
     setTagName(value);
-    // setMessage("");
   };
 
-  // const onTagDelete = (index: number) => {
-  //   const filteredTags = tags.filter((_, idx) => idx !== index);
-  //   setTags(filteredTags);
-  // };
-
-  // const onClickMenuItem = (name: string) => {
-  //   addTags(name);
-  // };
-
-  // useEffect(() => {
-  //   if (tags.length < 3) {
-  //     setMessage("");
-  //   }
-  // }, [tags]);
+  useEffect(() => {
+    if (valueProps?.length) {
+      const options = valueProps.map((value) => ({
+        label: value,
+        value,
+      }));
+      setTags(options);
+    }
+  }, []);
 
   return (
     <Box>
@@ -82,11 +67,11 @@ export const TagInput: FC<TagInputProps> = ({ max = 3 }) => {
         value={tags}
         onInputChange={onInputChange}
         onChange={onChange}
-        onKeyDown={onKeydown}
         isMulti
         backspaceRemovesValue
         options={options}
         placeholder=""
+        instanceId={useId()}
       />
       <Text color="red.500">{message}</Text>
     </Box>
