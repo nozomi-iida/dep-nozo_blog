@@ -32,7 +32,9 @@ export const TagInput: FC<TagInputProps> = ({
       label: tag.name,
       value: tag.name,
     }));
-    tagDataOptions?.push({ value: tagName, label: tagName });
+    if (tagName) {
+      tagDataOptions?.push({ value: tagName, label: tagName });
+    }
 
     return tagDataOptions;
   }, [tagData, tagName]);
