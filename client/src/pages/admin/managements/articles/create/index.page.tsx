@@ -131,6 +131,7 @@ const CreateArticlePage: NextPageWithLayout = () => {
 CreateArticlePage.getLayout = (page: ReactElement) => {
   return (
     <AdminLayout>
+      <AdminLayout.Sidebar />
       <AdminLayout.Content>{page}</AdminLayout.Content>
     </AdminLayout>
   );

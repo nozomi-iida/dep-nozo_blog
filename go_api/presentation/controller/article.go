@@ -5,9 +5,11 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
+	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
 	"github.com/nozomi-iida/nozo_blog/service"
 )
@@ -32,6 +34,37 @@ type ArticleRequest struct {
 	IsPublic bool `json:"isPublic"`
 	Tags []string `json:"tags"`
 	TopicID *uuid.UUID `json:"topicId"`
+}
+
+type ArticleResponse struct {
+	ArticleID uuid.UUID `json:"articleId"`
+	Title string `json:"title"`
+	Content string `json:"content"`
+	PublishedAt *time.Time `json:"publishedAt,omitempty"`
+	Tags []entity.Tag `json:"tags,omitempty"`
+	Topic *entity.Topic `json:"topic,omitempty"`
+	Author entity.User `json:"author"`
+}
+
+type ArticleListResponse struct {
+	Articles []ArticleResponse `json:"articles"`
+}
+
+func articleListToJson(articleDto article.ListArticleDto) ArticleListResponse {
+	var ars = []ArticleResponse{}
+	for _, a := range articleDto.Articles {
+		ars = append(ars, ArticleResponse{
+			ArticleID: a.ArticleID, 
+			Title: a.Title, 
+			Content: a.Content, 
+			PublishedAt: a.PublishedAt, 
+			Tags: a.Tags, 
+			Topic: a.Topic, 
+			Author: a.Author,
+		})
+	}
+
+	return ArticleListResponse{Articles: ars}
 }
 
 func (ac *ArticleController) PostRequest(w http.ResponseWriter, r *http.Request)  {
@@ -140,7 +173,8 @@ func (ac *ArticleController) ListRequest(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	output, _ := json.MarshalIndent(articles, "", "\t")
+	aj := articleListToJson(articles)
+	output, _ := json.MarshalIndent(aj, "", "\t")
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")

@@ -18,17 +18,17 @@ var (
 )
 
 type ArticleDto struct {
-	ArticleID uuid.UUID `json:"articleId"`
-	Title string `json:"title"`
-	Content string `json:"content"`
-	PublishedAt *time.Time `json:"publishedAt,omitempty"`
-	Tags []entity.Tag `json:"tags,omitempty"`
-	Topic *entity.Topic `json:"topic,omitempty"`
-	Author entity.User `json:"author"`
+	ArticleID uuid.UUID
+	Title string
+	Content string
+	PublishedAt *time.Time
+	Tags []entity.Tag
+	Topic *entity.Topic
+	Author entity.User
 }
 
 type ListArticleDto struct {
-	Articles []ArticleDto `json:"articles"`
+	Articles []ArticleDto
 }
 
 type ArticleQuery struct {
