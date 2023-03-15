@@ -1,7 +1,18 @@
-import { Box, Button, Heading, HStack, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { AdminRouter } from "components/AdminRouter";
-import { ArticleCard } from "components/ArticleCard";
 import { AdminLayout } from "components/Layout/AdminLayout";
+import dayjs from "dayjs";
 import { Article } from "libs/api/models/article";
 import { restAdminCli } from "libs/axios/restAdminCli";
 import { pagesPath } from "libs/pathpida/$path";
@@ -16,7 +27,6 @@ const ManagementArticlesPage: NextPageWithLayout = () => {
   const fetchArticles = (url: string) =>
     restAdminCli.get<{ articles: Article[] }>(url).then((res) => res.data);
   const { data: articleData } = useSWR("/articles", fetchArticles);
-  console.log(articleData);
 
   return (
     <AdminRouter>
@@ -32,18 +42,30 @@ const ManagementArticlesPage: NextPageWithLayout = () => {
             Create
           </Button>
         </HStack>
-        <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={10}>
-          {articleData?.articles.map((article) => (
-            <ArticleCard
-              key={article.articleId}
-              articleId={article.articleId}
-              article={article}
-              url={pagesPath.admin.managements.articles
-                ._id(article.articleId)
-                .$url()}
-            />
-          ))}
-        </SimpleGrid>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>Title</Th>
+              <Th>Published At</Th>
+              <Th>Action</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {articleData?.articles.map((article) => (
+              <Tr key={article.articleId}>
+                <Td>{article.title}</Td>
+                <Td>
+                  {article.publishedAt
+                    ? dayjs(article.publishedAt).format("YYYY-MM-DD")
+                    : "UnPublished"}
+                </Td>
+                <Td>
+                  <Button>編集</Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
       </Box>
     </AdminRouter>
   );
