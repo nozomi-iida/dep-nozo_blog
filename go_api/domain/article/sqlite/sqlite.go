@@ -160,6 +160,10 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 	var rs article.ListArticleDto
 	var articleIDs []interface{}
 	articleMap := make(map[uuid.UUID]article.ArticleDto) 
+	withDraftQuery := ""
+	if !q.WithDraft {
+		withDraftQuery = "AND articles.published_at IS NOT NULL"
+	} 
 
 	rows, err := sr.db.Query(`
 		SELECT 
@@ -182,8 +186,7 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 			users as authors
 		ON
 		articles.author_id = authors.user_id
-		WHERE articles.published_at is NOT NULL
-		AND articles.title LIKE ?;
+		WHERE articles.title LIKE ? ` + withDraftQuery + `;
 	`, "%" + q.Keyword + "%")
 
 	if err != nil {

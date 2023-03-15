@@ -33,6 +33,7 @@ type ListArticleDto struct {
 
 type ArticleQuery struct {
 	Keyword string
+	WithDraft bool
 }
 
 // repositoryからはentityは返さない方が良い気がするけど、良い詰替え方が分からないのでこのまま

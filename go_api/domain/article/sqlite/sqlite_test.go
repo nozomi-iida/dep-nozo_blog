@@ -175,6 +175,12 @@ func TestArticleSqlite_List(t *testing.T) {
 			expectedCount: 1,
 			expectedErr: nil,
 		},
+		{
+			test: "get all Article",
+			query: article.ArticleQuery{WithDraft: true},
+			expectedCount: 3,
+			expectedErr: nil,
+		},
 	}
 
 	for _, tc := range testCases {
