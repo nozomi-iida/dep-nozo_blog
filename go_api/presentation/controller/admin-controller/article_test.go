@@ -1,34 +1,71 @@
 package admincontroller_test
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	admincontroller "github.com/nozomi-iida/nozo_blog/presentation/controller/admin-controller"
-	"github.com/nozomi-iida/nozo_blog/presentation/middleware"
+	"github.com/nozomi-iida/nozo_blog/domain/article"
+	"github.com/nozomi-iida/nozo_blog/presentation"
 	"github.com/nozomi-iida/nozo_blog/test"
 	"github.com/nozomi-iida/nozo_blog/test/factories"
 )
 
 func TestArticleController_ListRequest(t *testing.T) {
 	ts := test.ConnectDB(t)
-	defer ts.Remove()
+	var r, _ = presentation.NewRouter(ts.Filename)
+	testServer := httptest.NewServer(r)
+	t.Cleanup(func() {
+		testServer.Close()
+	})
 	us := test.CreateUser(t, ts.Filename)
 	factories.CreateArticle(t, ts.Filename)
 	factories.CreateArticle(t, ts.Filename)
-	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodPatch, "/articles", nil)
-	ac, err := admincontroller.NewArticleController(ts.Filename)
-	if err != nil {
-		t.Errorf("Controller error %v", err)
-	}
+	factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
+	req, err := http.NewRequestWithContext(context.TODO(), http.MethodGet, testServer.URL+"/api/v1/admin/articles", nil)
 	token, err := us.UserId.Encode();
-	r.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
-	middleware.AuthMiddleware(http.HandlerFunc(ac.ListRequest)).ServeHTTP(w, r)
-	if w.Code != http.StatusOK {
-		t.Errorf("Response code is %v", w.Code)
+	req.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
+	if err != nil {
+		t.Fatal(err)
+	}
+	cli := &http.Client{}
+	type testCase struct {
+		test string
+		expectedCount int
+		expectedErr error
+	}
+
+	testCases := []testCase {
+		{
+			test: "get all Article",
+			expectedCount: 3,
+			expectedErr: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			resp, err := cli.Do(req)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var got article.ListArticleDto
+			err = json.NewDecoder(resp.Body).Decode(&got)
+			if err != nil {
+				t.Fatal(err)
+			}
+			resp.Body.Close()
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+			if err == nil && tc.expectedCount != len(got.Articles) {
+				t.Errorf("Expected count %v, got %v", tc.expectedCount, len(got.Articles))
+			}
+		})
 	}
 }
+
 

@@ -3,6 +3,7 @@ package presentation
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/nozomi-iida/nozo_blog/presentation/controller"
+	admincontroller "github.com/nozomi-iida/nozo_blog/presentation/controller/admin-controller"
 	"github.com/nozomi-iida/nozo_blog/presentation/middleware"
 )
 
@@ -11,6 +12,7 @@ func NewRouter(fileString string) (*chi.Mux, error)  {
 	ac, err := controller.NewArticleController(fileString)
 	tc, err := controller.NewTopicController(fileString)
 	tgc, err := controller.NewTagController(fileString)
+	aac, err := admincontroller.NewArticleController(fileString)
 	if err != nil {
 		return &chi.Mux{}, err
 	}
@@ -36,7 +38,7 @@ func NewRouter(fileString string) (*chi.Mux, error)  {
 		r.Route("/admin", func(r chi.Router) {
 			r.Use(middleware.AuthMiddleware)
 			r.Route("/articles", func(r chi.Router) {
-				r.Get("/", ac.ListRequest)
+				r.Get("/", aac.ListRequest)
 				r.Post("/", ac.PostRequest)
 				r.Get("/{article_id}", ac.FindByIdRequest)
 				r.Put("/{article_id}", ac.PatchRequest)
