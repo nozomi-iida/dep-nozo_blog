@@ -11,5 +11,7 @@ import (
 
 func main()  {
 	var r, _ = presentation.NewRouter("./tmp/data.db")
+	// handler := cors.AllowAll().Handler(r)
+
 	libs.ZipLogger().Error(http.ListenAndServe(":8080", r).Error())
 }

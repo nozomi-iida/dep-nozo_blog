@@ -8,7 +8,6 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/google/uuid v1.3.0
 	github.com/mattn/go-sqlite3 v1.14.14
-	github.com/rs/cors v1.8.3
 	github.com/rubenv/sql-migrate v1.2.0
 	github.com/simukti/sqldb-logger v0.0.0-20230108155151-646c1a075551
 	github.com/simukti/sqldb-logger/logadapter/zapadapter v0.0.0-20230108155151-646c1a075551

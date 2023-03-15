@@ -67,5 +67,3 @@ func TestArticleController_ListRequest(t *testing.T) {
 		})
 	}
 }
-
-

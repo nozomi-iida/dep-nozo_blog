@@ -18,10 +18,11 @@ func NewRouter(fileString string) (*chi.Mux, error)  {
 	}
 	r := chi.NewRouter()
 	r.Use(middleware.WrapHandlerWithLoggingMiddleware)
+	r.Use(middleware.CorsMiddleware)
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Route("/auth", func(r chi.Router) {
-			r.Post("/sign-in", atc.SignInRequest)
-			r.Post("/sign-up", atc.SignUpRequest)
+			r.Post("/sign_in", atc.SignInRequest)
+			r.Post("/sign_up", atc.SignUpRequest)
 		})
 		r.Route("/public", func(r chi.Router) {
 			r.Route("/articles", func(r chi.Router) {
