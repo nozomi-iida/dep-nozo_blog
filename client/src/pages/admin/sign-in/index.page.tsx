@@ -16,11 +16,11 @@ import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { restCli } from "libs/axios";
 import { AdminLayout } from "components/Layout/AdminLayout";
 import { getRestErrorMessage } from "libs/axios/errorHandler";
 import { useCustomToast } from "libs/chakra/useCustomToast";
 import { localStorageKeys } from "utils/localstorageKeys";
+import { restAuthCli } from "libs/axios/restAuthCli";
 
 const schema = z.object({
   username: z.string().min(1, { message: "Please enter your username" }),
@@ -38,7 +38,7 @@ const SignInPage: NextPageWithLayout = () => {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
   const onSubmit = handleSubmit(async (params) => {
     try {
-      const res = await restCli.post<{ token: string }>("/sign_in", params);
+      const res = await restAuthCli.post<{ token: string }>("/sign_in", params);
       localStorage.setItem(
         localStorageKeys.JWT_TOKEN,
         res.data.token as string

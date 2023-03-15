@@ -19,6 +19,7 @@ export const AdminRouter: FC<AdminRouterProps> = ({ children }) => {
       router.push(pagesPath.admin.sign_in.$url());
     }
   }, []);
+
   return jwtToken ? (
     children
   ) : (

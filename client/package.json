@@ -10,7 +10,7 @@
     "lint": "next lint",
     "prettier": "prettier --write",
     "theme": "chakra-cli tokens ./src/libs/chakra/theme.ts",
-    "genPath": "pathpida -s -o ./src/libs/pathpida"
+    "pathpida": "pathpida -s -o ./src/libs/pathpida"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.11",

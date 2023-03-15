@@ -7,11 +7,11 @@ export type RestErrorResponse = {
   type: string;
 };
 
-export const restCli = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_REST_API_URI}/api/v1/public`,
+export const restAdminCli = axios.create({
+  baseURL: `${process.env.NEXT_PUBLIC_REST_API_URI}/api/v1/admin`,
 });
 
-restCli.interceptors.request.use((config) => {
+restAdminCli.interceptors.request.use((config) => {
   if (config.headers && !config.headers?.Authorization) {
     const token = localStorage.getItem(localStorageKeys.JWT_TOKEN);
     if (token) {
@@ -21,7 +21,7 @@ restCli.interceptors.request.use((config) => {
   return config;
 });
 
-restCli.interceptors.response.use(
+restAdminCli.interceptors.response.use(
   (res) => {
     return res;
   },
