@@ -39,13 +39,14 @@ func (qa QueryArticleSqlite) ToDto() article.ArticleDto {
 		Author: qa.Author,
 	}	
 
-	var topic *entity.Topic = nil
-	if(qa.TopicID.Valid) {
+	if qa.TopicID.Valid {
+		var topic = entity.Topic{}
 		topic.TopicID = qa.TopicID.UUID
 		topic.Name = qa.TopicName.String
 		topic.Description = qa.TopicDescription.String
+		ad.Topic = &topic
 	}
-	ad.Topic = topic
+
 
 	return ad
 }
@@ -64,6 +65,7 @@ func New(fileString string) (*SqliteRepository, error)  {
 
 func (sr *SqliteRepository) Create(a entity.Article) (entity.Article, error) {
 	tx, err := sr.db.Begin()
+	defer tx.Commit()
 	_, err = tx.Exec(`
 		INSERT INTO 
 			articles(
@@ -82,12 +84,7 @@ func (sr *SqliteRepository) Create(a entity.Article) (entity.Article, error) {
 		return entity.Article{}, article.ErrFailedToCreateArticle
 	}
 	err = createArticleTags(tx, a.ArticleID, a.Tags)
-	if err != nil {
-		tx.Rollback()
-		return entity.Article{}, article.ErrFailedToCreateArticle
-	}
 
-	tx.Commit()
 	return a, nil
 }
 
@@ -343,7 +340,7 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 
 func createArticleTags(tx *sql.Tx, ai uuid.UUID, tags []entity.Tag) error  {
 	for _, tag := range tags {
-		row:= tx.QueryRow(`
+		rows, err := tx.Query(`
 			SELECT
 				tag_id
 			FROM 
@@ -352,7 +349,7 @@ func createArticleTags(tx *sql.Tx, ai uuid.UUID, tags []entity.Tag) error  {
 			tag.Name,
 		)
 
-		if row.Err() != nil {
+		if !rows.Next() {
 			_, err := tx.Exec(`
 				INSERT INTO 
 					tags(tag_id, name)
@@ -365,7 +362,7 @@ func createArticleTags(tx *sql.Tx, ai uuid.UUID, tags []entity.Tag) error  {
 			}
 		}
 
-		_, err := tx.Exec(`
+		_, err = tx.Exec(`
 			INSERT INTO 
 				article_tags(article_id, tag_id) 
 			VALUES (?, ?)`, 

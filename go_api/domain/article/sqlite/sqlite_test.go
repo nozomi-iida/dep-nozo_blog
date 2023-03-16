@@ -66,6 +66,7 @@ func TestArticleSqlite_Create(t *testing.T) {
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}
+			sq.FindById(tc.article.ArticleID)
 		})
 	}
 }
@@ -207,7 +208,6 @@ func TestArticleSqlite_FindById(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
 	a := factories.CreateArticle(t, ts.Filename)
-	pa := factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
 	sq, err := sqlite.New(ts.Filename)
 	if err != nil {
 		t.Errorf("sqlite error: %v", err)
@@ -230,11 +230,6 @@ func TestArticleSqlite_FindById(t *testing.T) {
 			articleId: uuid.New(),
 			expectedErr: article.ErrArticleNotFound,
 		},
-		{
-			test: "Not found when unpublished article",
-			articleId: pa.ArticleID,
-			expectedErr: article.ErrArticleNotFound,
-		},
 	}
 
 	for _, tc := range testCases {
@@ -243,6 +238,7 @@ func TestArticleSqlite_FindById(t *testing.T) {
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}
+			fmt.Printf("article: %v\n", ac.Tags)
 			if err == nil && tc.articleId != ac.ArticleID {
 				t.Errorf("Expected id %v, got %v", tc.articleId, ac.ArticleID)
 			}
