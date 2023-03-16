@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"fmt"
 	"strings"
 	"time"
 
@@ -107,42 +106,18 @@ func (sr *SqliteRepository) Update(a entity.Article) (entity.Article, error) {
 		return entity.Article{}, article.ErrFailedToUpdateArticle
 	}
 
-	rows, err := tx.Query(`
-		SELECT
-			article_tags.article_id,
-			article_tags.tag_id
-		FROM
+	_, err = tx.Exec(`
+		DELETE FROM 
 			article_tags
 		WHERE
-			article_tags.article_id = ?`,
+			article_tags.article_id = ?;`,
 		a.ArticleID,
 	)
 	if err != nil {
 		tx.Rollback()
 		return entity.Article{}, article.ErrFailedToUpdateArticle
 	}
-
-	for rows.Next() {
-		var articleID uuid.UUID
-		var tagID uuid.UUID
-		err := rows.Scan(&articleID, &tagID)
-		if err != nil {
-			tx.Rollback()
-			return entity.Article{}, article.ErrFailedToUpdateArticle
-		}
-		fmt.Printf("articleID: %v, tagID: %v\n", articleID, tagID)
-		_, err = tx.Exec(`
-			DELETE FROM 
-				article_tags
-			WHERE
-				article_tags.article_id = ? AND article_tags.tag_id = ?`,
-			articleID, tagID,
-		)
-		if err != nil {
-			tx.Rollback()
-			return entity.Article{}, article.ErrFailedToUpdateArticle
-		}
-	}
+	
 	err = createArticleTags(tx, a.ArticleID, a.Tags)
 	if err != nil {
 		tx.Rollback()
