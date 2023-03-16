@@ -27,6 +27,7 @@ restAdminCli.interceptors.response.use(
   },
   (error: AxiosError<{ error: RestErrorResponse }>) => {
     const errorData = error.response?.data;
+    // TODO: Handle error
     if (errorData) {
       throw errorData.error;
     }

@@ -280,7 +280,7 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 			users as authors
 		ON
 			articles.author_id = authors.user_id
-		WHERE articles.article_id = ?
+		WHERE articles.article_id = ?;
 	`, id).Scan(
 		&qa.ArticleID, 
 		&qa.Title, 
@@ -321,6 +321,7 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 		}
 		qa.Tags = append(qa.Tags, tag)
 	}
+
 	ad := qa.ToDto()
 	
 	return ad, nil	

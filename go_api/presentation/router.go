@@ -41,8 +41,8 @@ func NewRouter(fileString string) (*chi.Mux, error)  {
 			r.Route("/articles", func(r chi.Router) {
 				r.Get("/", aac.ListRequest)
 				r.Post("/", ac.PostRequest)
-				r.Get("/{article_id}", ac.FindByIdRequest)
-				r.Put("/{article_id}", ac.PatchRequest)
+				r.Get("/{article_id}", aac.FindByIdRequest)
+				r.Patch("/{article_id}", aac.PatchRequest)
 				r.Delete("/{article_id}", ac.DeleteRequest)
 			})
 		})

@@ -200,6 +200,7 @@ func TestArticleSqlite_FindById(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
 	a := factories.CreateArticle(t, ts.Filename)
+	pa := factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
 	sq, err := sqlite.New(ts.Filename)
 	if err != nil {
 		t.Errorf("sqlite error: %v", err)
@@ -220,6 +221,11 @@ func TestArticleSqlite_FindById(t *testing.T) {
 		{
 			test: "Not found article",
 			articleId: uuid.New(),
+			expectedErr: article.ErrArticleNotFound,
+		},
+		{
+			test: "Not found when unpublished article",
+			articleId: pa.ArticleID,
 			expectedErr: article.ErrArticleNotFound,
 		},
 	}

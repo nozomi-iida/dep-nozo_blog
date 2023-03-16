@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import { Article } from "libs/api/models/article";
 import { restAdminCli } from "libs/axios/restAdminCli";
 import { pagesPath } from "libs/pathpida/$path";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "pages/_app.page";
 import { ReactElement } from "react";
@@ -60,7 +61,13 @@ const ManagementArticlesPage: NextPageWithLayout = () => {
                     : "UnPublished"}
                 </Td>
                 <Td>
-                  <Button>編集</Button>
+                  <Link
+                    href={pagesPath.admin.managements.articles
+                      ._id(article.articleId)
+                      .edit.$url()}
+                  >
+                    <Button>編集</Button>
+                  </Link>
                 </Td>
               </Tr>
             ))}

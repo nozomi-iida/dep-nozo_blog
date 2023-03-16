@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Select } from "chakra-react-select";
+import { ArticleFormData, articleSchema } from "components/ArticleForm";
 import { AdminLayout } from "components/Layout/AdminLayout";
 import { Topic } from "libs/api/models/topic";
 import { restCli } from "libs/axios";
@@ -20,18 +21,7 @@ import { NextPageWithLayout } from "pages/_app.page";
 import { ReactElement, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
-import { z } from "zod";
 import { TagInput } from "./TagInput";
-
-const schema = z.object({
-  title: z.string().min(1, { message: "title is required" }),
-  content: z.string().min(1, { message: "content is required" }),
-  topic: z.string().optional(),
-  tags: z.string().array().max(3, { message: "select up to three tags" }),
-  isPublic: z.boolean({ required_error: "isPublic is required" }),
-});
-
-type FormData = z.infer<typeof schema>;
 
 const CreateArticlePage: NextPageWithLayout = () => {
   const toast = useToast();
@@ -54,8 +44,8 @@ const CreateArticlePage: NextPageWithLayout = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
+  } = useForm<ArticleFormData>({
+    resolver: zodResolver(articleSchema),
     defaultValues: { tags: [] },
   });
 

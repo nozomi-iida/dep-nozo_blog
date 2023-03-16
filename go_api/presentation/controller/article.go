@@ -90,41 +90,7 @@ func (ac *ArticleController) PostRequest(w http.ResponseWriter, r *http.Request)
 	w.Write(output)
 }
 
-func (ac *ArticleController) PatchRequest(w http.ResponseWriter, r *http.Request)  {
-	sub := strings.TrimPrefix(r.URL.Path, "/articles")
-	_, queryArticleID := filepath.Split(sub)
-	articleID, err := uuid.Parse(queryArticleID)
-	if err != nil {
-		helpers.ErrorHandler(w, err)
-		return
-	}
-	body := make([]byte, r.ContentLength)
-	r.Body.Read(body)	
-	var articleRequest ArticleRequest
-	json.Unmarshal(body, &articleRequest)
-	if !helpers.IsValid(w, articleRequest) {
-		return
-	}
 
-	a, err := ac.as.Update(
-		articleID,
-		articleRequest.Title, 
-		articleRequest.Content, 
-		articleRequest.Tags,
-		articleRequest.TopicID,
-		articleRequest.IsPublic, 
-	)
-	if err != nil {
-		helpers.ErrorHandler(w, err)
-		return
-	}
-
-	output, _ := json.MarshalIndent(a, "", "\t")
-
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(output)
-}
 
 func (ac *ArticleController) DeleteRequest(w http.ResponseWriter, r *http.Request)  {
 	sub := strings.TrimPrefix(r.URL.Path, "/articles")

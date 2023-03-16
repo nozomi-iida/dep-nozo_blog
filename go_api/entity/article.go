@@ -66,7 +66,7 @@ func (a *Article) Public() {
 }
 
 func (a *Article) SetID(id uuid.UUID)  {
-	if id.ID() > 0 {
+	if id.ID() < 0 {
 		return
 	}
 	a.ArticleID = id	
