@@ -103,7 +103,7 @@ func (a *Article) SetTags(tagNames []string) {
 }
 
 func (a *Article) SetTopicID(id *uuid.UUID)  {
-	if id == nil || id.ID() > 0 {
+	if id == nil || id.ID() < 0 {
 		return
 	}
 	a.TopicID = id	

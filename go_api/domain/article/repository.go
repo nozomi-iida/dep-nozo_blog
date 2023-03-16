@@ -44,6 +44,6 @@ type ArticleRepository interface {
 	List(query ArticleQuery) (ListArticleDto, error)
 	Create(entity.Article) (entity.Article, error) 
 	FindById(id uuid.UUID) (ArticleDto, error)
-	Update(entity.Article) (entity.Article, error) 
+	Update(entity.Article) error
 	Delete(id uuid.UUID) error 
 }

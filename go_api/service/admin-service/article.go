@@ -57,11 +57,12 @@ func (as *ArticleService) Update(articleID uuid.UUID, title string, content stri
 	a.SetTitle(title)
 	a.SetContent(content)
 	a.SetTags(tags)
-	a.SetTopicID(a.TopicID)
+	a.SetTopicID(topicID)
 	if(isPublic) {
 		a.Public()
 	}
-	_, err := as.ap.Update(a)
+
+	err := as.ap.Update(a)
 	if err != nil {
 		return entity.Article{}, err
 	}

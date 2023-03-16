@@ -75,6 +75,7 @@ func TestArticleSqlite_Update(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
 	a := factories.CreateArticle(t, ts.Filename)
+	topic := factories.CreateTopic(t, ts.Filename)
 	sq, err := sqlite.New(ts.Filename)
 	if err != nil {
 		t.Errorf("sqlite error: %v", err)
@@ -86,6 +87,7 @@ func TestArticleSqlite_Update(t *testing.T) {
 		expectedErr error
 	}
 	a.SetTitle("update title")
+	a.SetTopicID(&topic.TopicID)
 	a.SetTags([]string{"update"})
 
 	testCases := []testCase {
@@ -98,7 +100,7 @@ func TestArticleSqlite_Update(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			_, err := sq.Update(tc.updatedArticle)
+			err := sq.Update(tc.updatedArticle)
 			ac, err := sq.FindById(tc.updatedArticle.ArticleID)
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
@@ -106,6 +108,10 @@ func TestArticleSqlite_Update(t *testing.T) {
 			if err == nil && tc.updatedArticle.Title != ac.Title {
 				t.Errorf("Expected id %v, got %v", tc.updatedArticle.Title, ac.Title)
 			}
+			fmt.Printf("topic: %v\n", ac.Topic)
+			// if err == nil && *tc.updatedArticle.TopicID != ac.Topic.TopicID {
+			// 	t.Errorf("Expected id %v, got %v", tc.updatedArticle.Title, ac.Title)
+			// }
 			if err == nil && tc.updatedArticle.Tags[0].Name != ac.Tags[0].Name {
 				t.Errorf("Expected tag %v, got %v", tc.updatedArticle.Tags[0].Name, ac.Tags[0].Name)
 			}
@@ -237,7 +243,6 @@ func TestArticleSqlite_FindById(t *testing.T) {
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}
-			fmt.Printf("article: %v\n", ac.Tags)
 			if err == nil && tc.articleId != ac.ArticleID {
 				t.Errorf("Expected id %v, got %v", tc.articleId, ac.ArticleID)
 			}

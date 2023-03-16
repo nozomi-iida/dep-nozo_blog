@@ -13,6 +13,7 @@ import (
 	"github.com/nozomi-iida/nozo_blog/domain/article"
 	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/presentation"
+	"github.com/nozomi-iida/nozo_blog/presentation/serializer"
 	"github.com/nozomi-iida/nozo_blog/test"
 	"github.com/nozomi-iida/nozo_blog/test/factories"
 )
@@ -107,7 +108,7 @@ func TestArticleController_FindByIdRequest(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			var got article.ArticleDto
+			var got serializer.ArticleJson
 			err = json.NewDecoder(resp.Body).Decode(&got)
 			if err != nil {
 				t.Fatal(err)

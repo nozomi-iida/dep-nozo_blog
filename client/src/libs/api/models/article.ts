@@ -1,3 +1,4 @@
+import { Tag } from "./tag";
 import { Topic } from "./topic";
 
 export type Article = {
@@ -5,6 +6,6 @@ export type Article = {
   title: string;
   content: string;
   publishedAt?: string;
-  tags: string[];
+  tags: Tag[];
   topic?: Topic;
 };

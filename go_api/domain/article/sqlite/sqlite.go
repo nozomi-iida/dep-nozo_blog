@@ -47,7 +47,6 @@ func (qa QueryArticleSqlite) ToDto() article.ArticleDto {
 		ad.Topic = &topic
 	}
 
-
 	return ad
 }
 
@@ -88,7 +87,7 @@ func (sr *SqliteRepository) Create(a entity.Article) (entity.Article, error) {
 	return a, nil
 }
 
-func (sr *SqliteRepository) Update(a entity.Article) (entity.Article, error) {
+func (sr *SqliteRepository) Update(a entity.Article) error {
 	tx, err := sr.db.Begin()
 	defer tx.Commit()
 	_, err = sr.db.Exec(`
@@ -103,7 +102,7 @@ func (sr *SqliteRepository) Update(a entity.Article) (entity.Article, error) {
 	`, a.Title, a.Content, a.TopicID, a.ArticleID)
 	if err != nil {
 		tx.Rollback()
-		return entity.Article{}, article.ErrFailedToUpdateArticle
+		return article.ErrFailedToUpdateArticle
 	}
 
 	_, err = tx.Exec(`
@@ -115,16 +114,16 @@ func (sr *SqliteRepository) Update(a entity.Article) (entity.Article, error) {
 	)
 	if err != nil {
 		tx.Rollback()
-		return entity.Article{}, article.ErrFailedToUpdateArticle
+		return article.ErrFailedToUpdateArticle
 	}
 	
 	err = createArticleTags(tx, a.ArticleID, a.Tags)
 	if err != nil {
 		tx.Rollback()
-		return entity.Article{}, article.ErrFailedToUpdateArticle
+		return article.ErrFailedToUpdateArticle
 	}
 
-	return a, nil	
+	return nil	
 }
 
 func (sr *SqliteRepository) Delete(id uuid.UUID) error {

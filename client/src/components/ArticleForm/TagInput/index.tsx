@@ -30,7 +30,7 @@ export const TagInput: FC<TagInputProps> = ({
 
     const tagDataOptions = tagData?.tags.map((tag) => ({
       label: tag.name,
-      value: tag.name,
+      value: tag.tagId,
     }));
     if (tagName) {
       tagDataOptions?.push({ value: tagName, label: tagName });
@@ -56,12 +56,13 @@ export const TagInput: FC<TagInputProps> = ({
   useEffect(() => {
     if (valueProps?.length) {
       const options = valueProps.map((value) => ({
-        label: value,
+        label: "hoge",
         value,
       }));
+
       setTags(options);
     }
-  }, []);
+  }, [valueProps]);
 
   return (
     <Box>

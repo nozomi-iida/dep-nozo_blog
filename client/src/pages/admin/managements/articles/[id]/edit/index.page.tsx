@@ -1,7 +1,11 @@
 import { Button } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AdminRouter } from "components/AdminRouter";
-import { ArticleForm, articleSchema } from "components/ArticleForm";
+import {
+  ArticleForm,
+  ArticleFormData,
+  articleSchema,
+} from "components/ArticleForm";
 import { AdminLayout } from "components/Layout/AdminLayout";
 import { Article } from "libs/api/models/article";
 import { restAdminCli } from "libs/axios/restAdminCli";
@@ -17,7 +21,9 @@ const EditArticleDPage: NextPageWithLayout = () => {
   const { id } = router.query;
   const fetchArticle = (url: string) =>
     restAdminCli.get<Article>(url).then((res) => res.data);
-  const methods = useForm({ resolver: zodResolver(articleSchema) });
+  const methods = useForm<ArticleFormData>({
+    resolver: zodResolver(articleSchema),
+  });
   const onSubmit = methods.handleSubmit(async (params) => {
     try {
       await restAdminCli.patch(`/articles/${id}`, params);
@@ -29,7 +35,13 @@ const EditArticleDPage: NextPageWithLayout = () => {
     (async () => {
       if (id) {
         const article = await fetchArticle(`/articles/${id}`);
-        methods.reset(article);
+        methods.reset({
+          title: article.title,
+          content: article.content,
+          topicId: article.topic?.topicId,
+          tagIds: article.tags.map((tag) => tag.tagId),
+          isPublic: !!article?.publishedAt,
+        });
       }
     })();
   }, [id]);

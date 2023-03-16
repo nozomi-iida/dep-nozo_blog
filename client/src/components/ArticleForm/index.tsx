@@ -19,8 +19,8 @@ import useSWR from "swr";
 export const articleSchema = z.object({
   title: z.string().min(1, { message: "title is required" }),
   content: z.string().min(1, { message: "content is required" }),
-  topic: z.string().optional(),
-  tags: z.string().array().max(3, { message: "select up to three tags" }),
+  topicId: z.string().optional(),
+  tagIds: z.string().array().max(3, { message: "select up to three tags" }),
   isPublic: z.boolean({ required_error: "isPublic is required" }),
 });
 
@@ -48,10 +48,10 @@ export const ArticleForm = () => {
 
   return (
     <VStack gap={4}>
-      <FormControl isInvalid={!!errors.topic?.message}>
+      <FormControl isInvalid={!!errors.topicId?.message}>
         <FormLabel>Topic</FormLabel>
         <Controller
-          name="topic"
+          name="topicId"
           control={control}
           render={({ field: { value, onChange } }) => (
             <Select
@@ -64,19 +64,19 @@ export const ArticleForm = () => {
             />
           )}
         />
-        <FormErrorMessage>{errors.topic?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors.topicId?.message}</FormErrorMessage>
       </FormControl>
-      <FormControl isInvalid={!!errors.tags?.length}>
+      <FormControl isInvalid={!!errors.tagIds?.length}>
         <FormLabel>Tags</FormLabel>
         <Controller
-          name="tags"
+          name="tagIds"
           control={control}
           render={({ field: { value, onChange } }) => (
             <TagInput value={value} onChange={onChange} />
           )}
         />
-        {Array.isArray(errors.tags) &&
-          errors.tags?.map((error) => (
+        {Array.isArray(errors.tagIds) &&
+          errors.tagIds?.map((error) => (
             <FormErrorMessage key={error?.message}>
               {error?.message}
             </FormErrorMessage>
