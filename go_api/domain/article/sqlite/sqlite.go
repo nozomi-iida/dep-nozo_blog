@@ -96,10 +96,11 @@ func (sr *SqliteRepository) Update(a entity.Article) error {
 		SET 
 			title = ?,
 			content = ?,
+			published_at = ?, 
 			topic_id = ?
 		WHERE
 			articles.article_id = ?
-	`, a.Title, a.Content, a.TopicID, a.ArticleID)
+	`, a.Title, a.Content, a.PublishedAt, a.TopicID, a.ArticleID)
 	if err != nil {
 		tx.Rollback()
 		return article.ErrFailedToUpdateArticle

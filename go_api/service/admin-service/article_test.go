@@ -92,7 +92,7 @@ func TestArticle_FindById(t *testing.T) {
 func TestArticle_Update(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
-	ac := factories.CreateArticle(t, ts.Filename)
+	ac := factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
 	var tags []string
 	for _, tag := range ac.Tags {
 		tags = append(tags, tag.Name)
@@ -121,7 +121,7 @@ func TestArticle_Update(t *testing.T) {
 			articleID: ac.ArticleID,
 			title: "Update Title",
 			content: ac.Content,
-			isPublic: ac.PublishedAt.IsZero(),
+			isPublic: true,
 			tags: tags,
 			topicID: nil,
 			expectedErr: nil,
@@ -130,13 +130,17 @@ func TestArticle_Update(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			ac, err = as.Update(tc.articleID, tc.title, tc.content, tc.tags, tc.topicID, tc.isPublic)
+			_, err = as.Update(tc.articleID, tc.title, tc.content, tc.tags, tc.topicID, tc.isPublic)
+			ac, err := as.FindById(tc.articleID)
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+			if err == nil && ac.Title != tc.title {
+				t.Errorf("Expected title %v, got %v", tc.title, ac.Title)
+			}
+			if err == nil && tc.isPublic && ac.PublishedAt == nil {
+				t.Errorf("Expected published")
+			}
 		})
-		if err != tc.expectedErr {
-			t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
-		}
-		if err == nil && ac.Title != tc.title {
-			t.Errorf("Expected title %v, got %v", tc.title, ac.Title)
-		}
 	}
 }

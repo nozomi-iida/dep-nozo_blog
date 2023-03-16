@@ -109,9 +109,6 @@ func TestArticleSqlite_Update(t *testing.T) {
 				t.Errorf("Expected id %v, got %v", tc.updatedArticle.Title, ac.Title)
 			}
 			fmt.Printf("topic: %v\n", ac.Topic)
-			// if err == nil && *tc.updatedArticle.TopicID != ac.Topic.TopicID {
-			// 	t.Errorf("Expected id %v, got %v", tc.updatedArticle.Title, ac.Title)
-			// }
 			if err == nil && tc.updatedArticle.Tags[0].Name != ac.Tags[0].Name {
 				t.Errorf("Expected tag %v, got %v", tc.updatedArticle.Tags[0].Name, ac.Tags[0].Name)
 			}
