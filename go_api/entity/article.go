@@ -86,6 +86,7 @@ func (a *Article) SetContent(content string)  {
 	a.Content = content
 }
 
+// ちゃんとエラー返すようにするべきな気がする
 func (a *Article) SetTags(tagNames []string) {
 	var tags []Tag
 	if len(tagNames) > 3 {

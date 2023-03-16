@@ -1,6 +1,7 @@
 package sqlite_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/google/uuid"
@@ -83,7 +84,8 @@ func TestArticleSqlite_Update(t *testing.T) {
 		updatedArticle entity.Article
 		expectedErr error
 	}
-	a.Title = "update"
+	a.SetTitle("update title")
+	a.SetTags([]string{"update"})
 
 	testCases := []testCase {
 		{
@@ -95,12 +97,17 @@ func TestArticleSqlite_Update(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			ac, err := sq.Update(tc.updatedArticle)
+			_, err := sq.Update(tc.updatedArticle)
+			ac, err := sq.FindById(tc.updatedArticle.ArticleID)
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}
 			if err == nil && tc.updatedArticle.Title != ac.Title {
 				t.Errorf("Expected id %v, got %v", tc.updatedArticle.Title, ac.Title)
+			}
+			fmt.Printf("tag: %v\n", ac)
+			if err == nil && tc.updatedArticle.Tags[0].Name != ac.Tags[0].Name {
+				t.Errorf("Expected tag %v, got %v", tc.updatedArticle.Tags[0].Name, ac.Tags[0].Name)
 			}
 		})
 	}

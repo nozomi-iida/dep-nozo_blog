@@ -51,7 +51,7 @@ func (as *ArticleService) FindById(id uuid.UUID) (article.ArticleDto, error) {
 }
 
 func (as *ArticleService) Update(articleID uuid.UUID, title string, content string, tags []string, topicID *uuid.UUID, isPublic bool) (entity.Article, error)  {
-	// TODO: reconstractur使用するべきな気がする
+	// TODO: findByIdでentity.Articleを取得して、そのentity.ArticleをUpdateするようにする
 	a := entity.Article{}	
 	a.SetID(articleID)
 	a.SetTitle(title)

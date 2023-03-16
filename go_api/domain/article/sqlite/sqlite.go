@@ -81,38 +81,10 @@ func (sr *SqliteRepository) Create(a entity.Article) (entity.Article, error) {
 		tx.Rollback()
 		return entity.Article{}, article.ErrFailedToCreateArticle
 	}
-	for _, tag := range a.Tags {
-		row, err := tx.Query(`
-			SELECT
-				tag_id
-			FROM 
-				tags
-			WHERE tags.name = ?`, 
-			tag.Name,
-		)
-
-		if !row.Next() || err != nil {
-			_, err = tx.Exec(`
-				INSERT INTO 
-					tags(tag_id, name)
-				VALUES(?, ?)`, 
-				tag.TagID, tag.Name,
-			)
-			if err != nil {
-				tx.Rollback()
-				return entity.Article{}, article.ErrFailedToCreateArticle
-			}
-		}
-		_, err = tx.Exec(`
-			INSERT INTO 
-				article_tags(article_id, tag_id) 
-			VALUES (?, ?)`, 
-			a.ArticleID, tag.TagID,
-		)	
-		if err != nil {
-			tx.Rollback()
-			return entity.Article{}, article.ErrFailedToCreateArticle
-		}
+	err = createArticleTags(tx, a.ArticleID, a.Tags)
+	if err != nil {
+		tx.Rollback()
+		return entity.Article{}, article.ErrFailedToCreateArticle
 	}
 
 	tx.Commit()
@@ -136,6 +108,48 @@ func (sr *SqliteRepository) Update(a entity.Article) (entity.Article, error) {
 		tx.Rollback()
 		return entity.Article{}, article.ErrFailedToUpdateArticle
 	}
+
+	// rows, err := tx.Query(`
+	// 	SELECT
+	// 		article_tags.article_id,
+	// 		article_tags.tag_id
+	// 	FROM
+	// 		article_tags
+	// 	WHERE
+	// 		article_tags.article_id = ?`,
+	// 	a.ArticleID,
+	// )
+	// if err != nil {
+	// 	tx.Rollback()
+	// 	return entity.Article{}, article.ErrFailedToUpdateArticle
+	// }
+
+	// for rows.Next() {
+	// 	var articleID uuid.UUID
+	// 	var tagID uuid.UUID
+	// 	err := rows.Scan(&articleID, &tagID)
+	// 	if err != nil {
+	// 		tx.Rollback()
+	// 		return entity.Article{}, article.ErrFailedToUpdateArticle
+	// 	}
+	// 	_, err = tx.Exec(`
+	// 		DELETE FROM 
+	// 			article_tags
+	// 		WHERE
+	// 			article_tags.article_id = ? AND article_tags.tag_id = ?`,
+	// 		articleID, tagID,
+	// 	)
+	// 	if err != nil {
+	// 		tx.Rollback()
+	// 		return entity.Article{}, article.ErrFailedToUpdateArticle
+	// 	}
+	// }
+
+	// err = createArticleTags(tx, a.ArticleID, a.Tags)
+	// if err != nil {
+	// 	tx.Rollback()
+	// 	return entity.Article{}, article.ErrFailedToUpdateArticle
+	// }
 
 	tx.Commit()
 
@@ -325,4 +339,43 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 	ad := qa.ToDto()
 	
 	return ad, nil	
+}
+
+func createArticleTags(tx *sql.Tx, ai uuid.UUID, tags []entity.Tag) error  {
+	for _, tag := range tags {
+		row:= tx.QueryRow(`
+			SELECT
+				tag_id
+			FROM 
+				tags
+			WHERE tags.name = ?`, 
+			tag.Name,
+		)
+
+		if row.Err() != nil {
+			_, err := tx.Exec(`
+				INSERT INTO 
+					tags(tag_id, name)
+				VALUES(?, ?)`, 
+				tag.TagID, tag.Name,
+			)
+			if err != nil {
+				tx.Rollback()
+				return article.ErrFailedToCreateArticle
+			}
+		}
+
+		_, err := tx.Exec(`
+			INSERT INTO 
+				article_tags(article_id, tag_id) 
+			VALUES (?, ?)`, 
+			ai, tag.TagID,
+		)	
+		if err != nil {
+			tx.Rollback()
+			return article.ErrFailedToCreateArticle
+		}
+	}
+
+	return nil
 }
