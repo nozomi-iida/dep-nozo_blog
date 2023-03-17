@@ -50,20 +50,22 @@ export const ArticleForm = () => {
     <VStack gap={4}>
       <FormControl isInvalid={!!errors.topicId?.message}>
         <FormLabel>Topic</FormLabel>
-        <Controller
-          name="topicId"
-          control={control}
-          render={({ field: { value, onChange } }) => (
-            <Select
-              value={options.find((option) => option.value === value)}
-              placeholder=""
-              options={options}
-              onChange={(value) => {
-                onChange(value?.value);
-              }}
-            />
-          )}
-        />
+        {!!options.length && (
+          <Controller
+            name="topicId"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                value={options.find((option) => option.value === value)}
+                placeholder=""
+                options={options}
+                onChange={(value) => {
+                  onChange(value?.value);
+                }}
+              />
+            )}
+          />
+        )}
         <FormErrorMessage>{errors.topicId?.message}</FormErrorMessage>
       </FormControl>
       <FormControl isInvalid={!!errors.tagIds?.length}>

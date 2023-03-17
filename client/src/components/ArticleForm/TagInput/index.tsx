@@ -25,6 +25,7 @@ export const TagInput: FC<TagInputProps> = ({
   const [tags, setTags] = useState<MultiValue<Option>>([]);
   const [tagName, setTagName] = useState("");
   const [message, setMessage] = useState("");
+  const instanceId = useId();
   const options = useMemo(() => {
     if (!tagData?.tags.length) return [];
 
@@ -66,16 +67,18 @@ export const TagInput: FC<TagInputProps> = ({
 
   return (
     <Box>
-      <Select
-        value={tags}
-        onInputChange={onInputChange}
-        onChange={onChange}
-        isMulti
-        backspaceRemovesValue
-        options={options}
-        placeholder=""
-        instanceId={useId()}
-      />
+      {!!options.length && (
+        <Select
+          value={tags}
+          onInputChange={onInputChange}
+          onChange={onChange}
+          isMulti
+          backspaceRemovesValue
+          options={options}
+          placeholder=""
+          instanceId={instanceId}
+        />
+      )}
       <Text color="red.500">{message}</Text>
     </Box>
   );

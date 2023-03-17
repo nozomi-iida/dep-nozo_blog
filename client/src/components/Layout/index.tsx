@@ -26,7 +26,7 @@ export const Layout: FC<LayoutProps> & LayoutSubComponent = ({ children }) => {
   return (
     <Flex flexDir="column" backgroundColor={color} pt="100px" minH="100vh">
       <Header />
-      <Flex flex={1} mx="auto" maxW={970} py={14}>
+      <Flex flex={1} mx="auto" maxW={970} w="full" py={14}>
         {children}
       </Flex>
       <Box mx="auto" maxW={970}>
