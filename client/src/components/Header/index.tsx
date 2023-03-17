@@ -29,10 +29,9 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
+import { restCli } from "libs/axios";
 import { pagesPath } from "libs/pathpida/$path";
-import { strapiClient } from "libs/strapi/api/axios";
 import { Topic } from "libs/strapi/models/topic";
-import { StrapiListResponse } from "libs/strapi/types";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
@@ -51,12 +50,10 @@ export const Header = () => {
   const router = useRouter();
 
   const color = useColorModeValue("white", "#18191b");
-  const fetchTopics = () => {
-    return strapiClient
-      .get<StrapiListResponse<Topic>>("topics")
-      .then((res) => res.data.data.map((el) => el.attributes.name));
+  const fetchTopics = (url: string) => {
+    return restCli.get<{ topics: Topic[] }>(url).then((res) => res.data);
   };
-  const { data: topics } = useSWR("topics", fetchTopics);
+  const { data: topicData } = useSWR("topics", fetchTopics);
 
   const onSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -124,10 +121,10 @@ export const Header = () => {
                       Home
                     </Text>
                   </Link>
-                  {topics?.map((topic) => (
+                  {topicData?.topics.map((topic) => (
                     <Link
-                      key={topic}
-                      href={pagesPath.topics._topic(topic).$url()}
+                      key={topic.name}
+                      href={pagesPath.topics._topic(topic?.name).$url()}
                     >
                       <Text
                         lineHeight={showShadow ? "70px" : "100px"}
@@ -135,7 +132,7 @@ export const Header = () => {
                         fontSize="sm"
                         _hover={{ color: "activeColor" }}
                       >
-                        {topic}
+                        {topic.name}
                       </Text>
                     </Link>
                   ))}
@@ -274,10 +271,10 @@ export const Header = () => {
                     Home
                   </Text>
                 </Link>
-                {topics?.map((topic) => (
+                {topicData?.topics.map((topic) => (
                   <Link
-                    key={topic}
-                    href={pagesPath.topics._topic(topic).$url()}
+                    key={topic.name}
+                    href={pagesPath.topics._topic(topic.name).$url()}
                     style={{ width: "100%", textAlign: "center" }}
                   >
                     <Text
@@ -285,7 +282,7 @@ export const Header = () => {
                       fontWeight="bold"
                       _hover={{ color: "activeColor" }}
                     >
-                      {topic}
+                      {topic.name}
                     </Text>
                   </Link>
                 ))}
