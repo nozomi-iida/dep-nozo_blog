@@ -26,10 +26,10 @@ import { useThemeColor } from "libs/chakra/theme";
 import { NextHead } from "components/NextHead";
 import { markdown2content } from "utils/helpers";
 import { restCli } from "libs/axios";
-import { Article } from "libs/api/models/article";
+import { Article, ListArticleResponse } from "libs/api/models/article";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await restCli.get<{ articles: Article[] }>("/articles");
+  const res = await restCli.get<ListArticleResponse>("/articles");
 
   const paths = res.data.articles.map((article) => ({
     params: {

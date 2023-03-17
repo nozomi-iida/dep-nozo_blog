@@ -13,7 +13,7 @@ import {
 import { AdminRouter } from "components/AdminRouter";
 import { AdminLayout } from "components/Layout/AdminLayout";
 import dayjs from "dayjs";
-import { Article } from "libs/api/models/article";
+import { ListArticleResponse } from "libs/api/models/article";
 import { restAdminCli } from "libs/axios/restAdminCli";
 import { pagesPath } from "libs/pathpida/$path";
 import Link from "next/link";
@@ -26,7 +26,7 @@ import useSWR from "swr";
 const ManagementArticlesPage: NextPageWithLayout = () => {
   const router = useRouter();
   const fetchArticles = (url: string) =>
-    restAdminCli.get<{ articles: Article[] }>(url).then((res) => res.data);
+    restAdminCli.get<ListArticleResponse>(url).then((res) => res.data);
   const { data: articleData } = useSWR("/articles", fetchArticles);
 
   return (

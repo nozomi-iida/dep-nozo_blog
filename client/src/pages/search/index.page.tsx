@@ -1,31 +1,26 @@
 import { Box, Heading, SimpleGrid } from "@chakra-ui/react";
 import { ArticleCard } from "components/ArticleCard";
 import { Layout } from "components/Layout";
-import { strapiClient } from "libs/strapi/api/axios";
-import { Article } from "libs/strapi/models/article";
-import { StrapiListResponse } from "libs/strapi/types";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "pages/_app.page";
-import qs from "qs";
 import useSWR from "swr";
 import { NextHead } from "components/NextHead";
 import { pagesPath } from "libs/pathpida/$path";
 import { ReactElement } from "react";
+import { restCli } from "libs/axios";
+import { ListArticleResponse } from "libs/api/models/article";
+import qs from "qs";
+
+export type OptionalQuery = {
+  keyword?: string;
+};
 
 const Search: NextPageWithLayout = () => {
   const router = useRouter();
   const keyword = (router.query.keyword ?? "") as string;
-  const query = qs.stringify(
-    {
-      populate: "*",
-      filters: { title: { $contains: keyword } },
-    },
-    { encodeValuesOnly: true }
-  );
-  const searchArticlesFetcher = () =>
-    strapiClient
-      .get<StrapiListResponse<Article>>(`articles?${query}`)
-      .then((res) => res.data.data);
+  const query = qs.stringify({ keyword });
+  const searchArticlesFetcher = (url: string) =>
+    restCli.get<ListArticleResponse>(url).then((res) => res.data);
 
   const { data: searchArticlesData } = useSWR(
     `articles?${query}`,
@@ -40,12 +35,8 @@ const Search: NextPageWithLayout = () => {
       </Heading>
 
       <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={10}>
-        {searchArticlesData?.map((article) => (
-          <ArticleCard
-            key={article.id}
-            article={article.attributes}
-            articleId={article.id}
-          />
+        {searchArticlesData?.articles.map((article) => (
+          <ArticleCard key={article.articleId} article={article} />
         ))}
       </SimpleGrid>
     </Box>

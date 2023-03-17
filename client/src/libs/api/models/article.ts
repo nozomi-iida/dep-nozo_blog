@@ -11,6 +11,10 @@ export type ArticleQueryParams = {
   keyword?: string;
 };
 
+export type ListArticleResponse = {
+  articles: Article[];
+};
+
 export type Article = {
   articleId: string;
   title: string;

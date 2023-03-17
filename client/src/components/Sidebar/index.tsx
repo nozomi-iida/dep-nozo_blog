@@ -1,16 +1,14 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 import { ArticleWidget } from "components/ArticleWidget";
-import { strapiClient } from "libs/strapi/api/axios";
-import { StrapiListResponse } from "libs/strapi/types";
 import qs from "qs";
 import { ArticleMedia } from "components/ ArticleMedia";
 import { useThemeColor } from "libs/chakra/theme";
 import useSWR from "swr";
 import { restCli } from "libs/axios";
 import {
-  Article,
   ArticleOrderBy,
   ArticleQueryParams,
+  ListArticleResponse,
 } from "libs/api/models/article";
 
 export const Sidebar = () => {
@@ -29,7 +27,7 @@ export const Sidebar = () => {
 
   const latestArticlesFetcher = () =>
     restCli
-      .get<{ articles: Article[] }>("/articles", {
+      .get<ListArticleResponse>("/articles", {
         params: query,
       })
       .then((res) => {
@@ -38,7 +36,7 @@ export const Sidebar = () => {
 
   const popularArticlesFetcher = () =>
     restCli
-      .get<{ articles: Article[] }>("/articles", {
+      .get<ListArticleResponse>("/articles", {
         params: query,
       })
       .then((res) => {

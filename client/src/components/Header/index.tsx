@@ -57,7 +57,7 @@ export const Header = () => {
 
   const onSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push(`${pagesPath.search.$url().pathname}?keyword=${keyword}`);
+    router.push(pagesPath.search.$url({ query: { keyword } }));
     setSearchOpen.off();
     setTimeout(() => {
       setKeyword("");

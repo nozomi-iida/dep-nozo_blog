@@ -1,3 +1,5 @@
+import type { OptionalQuery as OptionalQuery0 } from '../../pages/search/index.page'
+
 export const pagesPath = {
   "admin": {
     "managements": {
@@ -23,7 +25,7 @@ export const pagesPath = {
     })
   },
   "search": {
-    $url: (url?: { hash?: string }) => ({ pathname: '/search' as const, hash: url?.hash })
+    $url: (url?: { query?: OptionalQuery0, hash?: string }) => ({ pathname: '/search' as const, query: url?.query, hash: url?.hash })
   },
   "topics": {
     _topic: (topic: string | number) => ({

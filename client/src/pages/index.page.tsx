@@ -6,13 +6,13 @@ import { Box, SimpleGrid } from "@chakra-ui/react";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextHead } from "components/NextHead";
 import { pagesPath } from "libs/pathpida/$path";
-import { Article } from "libs/api/models/article";
+import { Article, ListArticleResponse } from "libs/api/models/article";
 import { restCli } from "libs/axios";
 
 export const getStaticProps: GetStaticProps<{
   articles: Article[];
 }> = async () => {
-  const res = await restCli.get<{ articles: Article[] }>("/articles");
+  const res = await restCli.get<ListArticleResponse>("/articles");
 
   return {
     props: {
