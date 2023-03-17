@@ -52,7 +52,7 @@ func (sr *sqliteRepository) Create(t entity.Topic) (entity.Topic, error) {
 	return t, nil
 }
 
-func (sr *sqliteRepository) List() ([]entity.Topic, error)  {
+func (sr *sqliteRepository) List(q topic.TopicQuery) ([]entity.Topic, error)  {
 	var ts []entity.Topic
 
 	rows, err := sr.db.Query(`
@@ -61,8 +61,9 @@ func (sr *sqliteRepository) List() ([]entity.Topic, error)  {
 			topics.name,
 			topics.description
 		FROM
-			topics;
-	`)
+			topics
+		WHERE topics.name LIKE ?;
+	`, "%" + q.Keyword + "%")
 
 	if err != nil {
 		return []entity.Topic{}, topic.ErrFailedToListTopics 

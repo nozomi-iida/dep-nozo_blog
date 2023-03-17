@@ -53,7 +53,7 @@ func TestTopicSqlite_List(t *testing.T) {
 	defer ts.Remove()
 	sq, err := sqlite.New(ts.Filename)
 	factories.CreateTopic(t, ts.Filename)
-	factories.CreateTopic(t, ts.Filename, factories.SetTopicName("topic 2"))
+	factories.CreateTopic(t, ts.Filename, factories.SetTopicName("targeted"))
 	factories.CreateTopic(t, ts.Filename, factories.SetTopicName("topic 3"))
 	if err != nil {
 		t.Errorf("sqlite error: %v", err)
@@ -61,6 +61,7 @@ func TestTopicSqlite_List(t *testing.T) {
 
 	type testCase struct {
 		test string
+		query topic.TopicQuery
 		expectedCount int 
 		expectedErr error
 	}
@@ -68,6 +69,19 @@ func TestTopicSqlite_List(t *testing.T) {
 	testCases := []testCase {
 		{
 			test: "Get 3 topics",
+			query: topic.TopicQuery{},
+			expectedCount: 3,
+			expectedErr: nil,
+		},
+		{
+			test: "Get targeted topic",
+			query: topic.TopicQuery{Keyword: "targeted"},
+			expectedCount: 1,
+			expectedErr: nil,
+		},
+		{
+			test: "Get topics with article association",
+			query: topic.TopicQuery{AssociatedWith: topic.Article},
 			expectedCount: 3,
 			expectedErr: nil,
 		},
@@ -75,12 +89,15 @@ func TestTopicSqlite_List(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			topics, err := sq.List()
+			topics, err := sq.List(tc.query)
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}
 			if err == nil && len(topics) != tc.expectedCount {
 				t.Errorf("Expected count %v, got %v", tc.expectedCount, len(topics))
+			}
+			if err == nil && tc.query.AssociatedWith == topic.Article && len(topics[0]) == 0 {
+				t.Error("Expected articles, got none")
 			}
 		})	
 	}
