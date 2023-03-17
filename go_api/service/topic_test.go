@@ -3,6 +3,7 @@ package service_test
 import (
 	"testing"
 
+	"github.com/nozomi-iida/nozo_blog/domain/topic"
 	"github.com/nozomi-iida/nozo_blog/service"
 	"github.com/nozomi-iida/nozo_blog/test"
 	"github.com/nozomi-iida/nozo_blog/test/factories"
@@ -43,7 +44,7 @@ func TestTopicService_Create(t *testing.T) {
 	}
 }
 
-func TestTopicService_List(t *testing.T) {
+func TestTopicService_PublicList(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
 	nts, err := service.NewTopicService(
@@ -73,12 +74,12 @@ func TestTopicService_List(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			topics, err := nts.List()
+			topics, err := nts.PublicList(topic.TopicQuery{})
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}
-			if err != nil && len(topics) == tc.expectedCount {
-				t.Errorf("Expected count %v, got %v", tc.expectedCount, len(topics))
+			if err != nil && len(topics.Topics) == tc.expectedCount {
+				t.Errorf("Expected count %v, got %v", tc.expectedCount, len(topics.Topics))
 			}
 		})
 	}

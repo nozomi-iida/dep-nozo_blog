@@ -13,27 +13,6 @@ var (
 	ErrInvalidAssociatedType = errors.New("invalid associated type")
 )
 
-type AssociatedType string
-
-const (
-	Article AssociatedType = "article"
-)
-
-func NewAssociatedType(associate string) (AssociatedType, error) {
-	switch associate {
-	case "article":
-		return Article, nil
-	default:
-		return "", ErrInvalidAssociatedType
-	}	
-}
-
-type TopicQuery struct {
-	Keyword string
-	AssociatedWith AssociatedType
-}
-
 type TopicRepository interface {
-	List(query TopicQuery) ([]entity.Topic, error)
 	Create(topic entity.Topic) (entity.Topic, error)
 }

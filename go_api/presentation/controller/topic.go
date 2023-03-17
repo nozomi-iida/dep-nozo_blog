@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/nozomi-iida/nozo_blog/domain/topic"
 	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
 	"github.com/nozomi-iida/nozo_blog/service"
@@ -70,13 +71,25 @@ func (tc *TopicController) CreteRequest(w http.ResponseWriter, r *http.Request) 
 }
 
 func (tc *TopicController) ListRequest(w http.ResponseWriter, r *http.Request) {
-	topics, err := tc.ts.List()
+	keyword := r.URL.Query().Get("keyword")
+	query := topic.TopicQuery{Keyword: keyword}
+	associatedWith := r.URL.Query().Get("associatedWith")
+	if associatedWith != "" {
+		aw, err := topic.NewAssociatedType(associatedWith)
+		if err != nil {
+			helpers.ErrorHandler(w, err)
+			return
+		}
+		query.AssociatedWith = aw
+	}
+
+	topics, err := tc.ts.PublicList(query)
 	if err != nil {
 		helpers.ErrorHandler(w, err)
 		return
 	}
-	tj := topicListToJson(topics)
-	output, _ := json.MarshalIndent(tj, "", "\t")
+
+	output, _ := json.MarshalIndent(topics, "", "\t")
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(output)

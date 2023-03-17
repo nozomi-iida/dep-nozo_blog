@@ -10,6 +10,7 @@ type topicConfigurations func(tp *TopicService) error
 
 type TopicService struct {
 	tp topic.TopicRepository
+	tc topic.TopicQueryService
 }
 
 func NewTopicService (cfgs ...topicConfigurations) (*TopicService, error) {
@@ -32,6 +33,7 @@ func WithSqliteTopicRepository(fileString string) topicConfigurations {
 			return err
 		}
 		ts.tp = s
+		ts.tc = s
 
 		return nil
 	}
@@ -47,10 +49,10 @@ func (ts *TopicService) Create(name string, description string) (entity.Topic, e
 	return tp, nil
 }
 
-func (ts *TopicService) List() ([]entity.Topic, error)  {
-	topics, err := ts.tp.List()
+func (ts *TopicService) PublicList(query topic.TopicQuery) (topic.TopicListDto, error)  {
+	topics, err := ts.tc.PublicList(query)
 	if err != nil {
-		return []entity.Topic{}, err
+		return topic.TopicListDto{}, err
 	}
 
 	return topics, nil
