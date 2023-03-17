@@ -1,26 +1,24 @@
-import { Box, HStack, Text, textDecoration, VStack } from "@chakra-ui/react";
+import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import { Image } from "components/Image";
+import { Article } from "libs/api/models/article";
 import { useThemeColor } from "libs/chakra/theme";
 import { pagesPath } from "libs/pathpida/$path";
-import { Article } from "libs/strapi/models/article";
 import Link from "next/link";
 import { FC } from "react";
 
 type ArticleMediaProps = {
-  id: number;
   article: Article;
   popularNum: number;
 };
 
 export const ArticleMedia: FC<ArticleMediaProps> = ({
-  id,
   article,
   popularNum,
 }) => {
   const { bgColor } = useThemeColor();
 
   return (
-    <Link href={pagesPath.articles._id(id).$url()}>
+    <Link href={pagesPath.articles._id(article.articleId).$url()}>
       <HStack
         gap={4}
         sx={{
@@ -50,11 +48,11 @@ export const ArticleMedia: FC<ArticleMediaProps> = ({
             </Text>
           </Box>
           <Image
-            src={
-              article.thumbnail?.data
-                ? article.thumbnail.data.attributes.url
-                : undefined
-            }
+            // src={
+            //   article.thumbnail?.data
+            //     ? article.thumbnail.data.attributes.url
+            //     : undefined
+            // }
             alt={article.title}
             w={100}
             h={100}
@@ -85,9 +83,9 @@ export const ArticleMedia: FC<ArticleMediaProps> = ({
             {article.title}
           </Text>
           <HStack align="normal" w="full">
-            {article.topic?.data && (
+            {article.topic && (
               <Text fontSize="xs" fontWeight="bold" color="subInfoText">
-                {article.topic.data.attributes.name}
+                {article.topic.name}
               </Text>
             )}
           </HStack>

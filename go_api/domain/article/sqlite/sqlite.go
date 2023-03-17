@@ -149,6 +149,14 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 	if !q.WithDraft {
 		withDraftQuery = "AND articles.published_at IS NOT NULL"
 	} 
+	orderBy := "ORDER BY articles.published_at ASC"
+	switch q.OrderBy {
+	case article.PublishedAtAsc:
+		orderBy = "ORDER BY articles.published_at ASC"
+	case article.PublishedAtDesc:
+		orderBy = "ORDER BY articles.published_at DESC"
+	}
+
 
 	rows, err := sr.db.Query(`
 		SELECT 
@@ -171,7 +179,9 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 			users as authors
 		ON
 		articles.author_id = authors.user_id
-		WHERE articles.title LIKE ? ` + withDraftQuery + `;
+		WHERE articles.title LIKE ?
+		` + withDraftQuery + ` 
+		` + orderBy + `;
 	`, "%" + q.Keyword + "%")
 
 	if err != nil {
@@ -319,7 +329,7 @@ func createArticleTags(tx *sql.Tx, ai uuid.UUID, tags []entity.Tag) error  {
 				tag_id
 			FROM 
 				tags
-			WHERE tags.name = ?`, 
+			WHERE tags.name = ?;`, 
 			tag.Name,
 		)
 

@@ -35,7 +35,7 @@ var called = 0
 
 func CreateArticle(t *testing.T, fileName string, options ...articleOptions) entity.Article {
 	user := test.CreateUser(t, fileName, test.SetUsername(fmt.Sprintf("user%v", called)))
-	tag := CreateTag(t, fileName)
+	tag, _ := entity.NewTag("testTag")
 	now := time.Now()
 	a, err := entity.NewArticle(entity.ArticleArgument{
 		Title: "test article", 

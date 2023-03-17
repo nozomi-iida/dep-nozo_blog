@@ -1,22 +1,21 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
 import { Image } from "components/Image";
 import dayjs from "dayjs";
-import { Article } from "libs/strapi/models/article";
 import Link from "next/link";
 import { FC } from "react";
 import { pagesPath } from "libs/pathpida/$path";
 import { useThemeColor } from "libs/chakra/theme";
+import { Article } from "libs/api/models/article";
 
 type ArticleWidgetProps = {
-  id: number;
   article: Article;
 };
 
-export const ArticleWidget: FC<ArticleWidgetProps> = ({ id, article }) => {
+export const ArticleWidget: FC<ArticleWidgetProps> = ({ article }) => {
   const { bgColor } = useThemeColor();
 
   return (
-    <Link href={pagesPath.articles._id(id).$url()}>
+    <Link href={pagesPath.articles._id(article.articleId).$url()}>
       <Box
         position="relative"
         sx={{
@@ -36,11 +35,11 @@ export const ArticleWidget: FC<ArticleWidgetProps> = ({ id, article }) => {
         cursor="pointer"
       >
         <Image
-          src={
-            article.thumbnail?.data
-              ? article.thumbnail?.data?.attributes.url
-              : undefined
-          }
+          // src={
+          //   article.thumbnail?.data
+          //     ? article.thumbnail?.data?.attributes.url
+          //     : undefined
+          // }
           w={300}
           h={200}
           alt={article.title}
@@ -79,9 +78,9 @@ export const ArticleWidget: FC<ArticleWidgetProps> = ({ id, article }) => {
             <Text fontSize="xs" fontWeight="bold" color="subInfoText">
               {dayjs(article.publishedAt).format("YYYY-MM-DD")}
             </Text>
-            {article.topic?.data && (
+            {article.topic && (
               <Text fontSize="xs" fontWeight="bold" color="subInfoText">
-                {article.topic.data.attributes.name}
+                {article.topic.name}
               </Text>
             )}
           </HStack>

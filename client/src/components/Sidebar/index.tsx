@@ -1,23 +1,23 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 import { ArticleWidget } from "components/ArticleWidget";
 import { strapiClient } from "libs/strapi/api/axios";
-import { Article } from "libs/strapi/models/article";
 import { StrapiListResponse } from "libs/strapi/types";
 import qs from "qs";
 import { ArticleMedia } from "components/ ArticleMedia";
 import { useThemeColor } from "libs/chakra/theme";
 import useSWR from "swr";
+import { restCli } from "libs/axios";
+import {
+  Article,
+  ArticleOrderBy,
+  ArticleQueryParams,
+} from "libs/api/models/article";
 
 export const Sidebar = () => {
   const { bgColor } = useThemeColor();
-  const query = qs.stringify(
-    {
-      populate: ["thumbnail", "topic"],
-      pagination: { pageSize: 5 },
-      sort: ["publishedAt:desc"],
-    },
-    { encodeValuesOnly: true }
-  );
+  const query: ArticleQueryParams = {
+    orderBy: ArticleOrderBy.PUBLISHED_AT_ASC,
+  };
   const popularQuery = qs.stringify(
     {
       populate: ["thumbnail", "topic"],
@@ -28,15 +28,19 @@ export const Sidebar = () => {
   );
 
   const latestArticlesFetcher = () =>
-    strapiClient
-      .get<StrapiListResponse<Article>>(`articles?${query}`)
+    restCli
+      .get<{ articles: Article[] }>("/articles", {
+        params: query,
+      })
       .then((res) => {
         return res.data;
       });
 
   const popularArticlesFetcher = () =>
-    strapiClient
-      .get<StrapiListResponse<Article>>(`articles?${popularQuery}`)
+    restCli
+      .get<{ articles: Article[] }>("/articles", {
+        params: query,
+      })
       .then((res) => {
         return res.data;
       });
@@ -60,8 +64,8 @@ export const Sidebar = () => {
         </Box>
         {latestArticlesData && (
           <VStack gap={4}>
-            {latestArticlesData.data.map((el) => (
-              <ArticleWidget key={el.id} id={el.id} article={el.attributes} />
+            {latestArticlesData.articles.map((article) => (
+              <ArticleWidget key={article.articleId} article={article} />
             ))}
           </VStack>
         )}
@@ -73,12 +77,11 @@ export const Sidebar = () => {
           </Text>
         </Box>
         {popularArticlesData && (
-          <VStack gap={4} align="normal">
-            {popularArticlesData.data.map((el, idx) => (
+          <VStack w="full" gap={4} align="normal">
+            {popularArticlesData.articles.map((article, idx) => (
               <ArticleMedia
-                key={el.id}
-                id={el.id}
-                article={el.attributes}
+                key={article.articleId}
+                article={article}
                 popularNum={idx + 1}
               />
             ))}

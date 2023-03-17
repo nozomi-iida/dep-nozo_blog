@@ -3,6 +3,7 @@ package sqlite_test
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
@@ -159,7 +160,8 @@ func TestArticleSqlite_List(t *testing.T) {
 	defer ts.Remove()
 	factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
 	engineerArticle := factories.CreateArticle(t, ts.Filename, factories.SetTitle("engineer"))
-	factories.CreateArticle(t, ts.Filename)
+	time1900 := time.Date(1900, time.January, 1, 0, 0, 0, 0, time.UTC)
+	oldestArticle := factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(&time1900), factories.SetTitle("oldest article"))
 	sq, err := sqlite.New(ts.Filename)
 	if err != nil {
 		t.Errorf("sqlite error: %v", err)
@@ -191,6 +193,12 @@ func TestArticleSqlite_List(t *testing.T) {
 			expectedCount: 3,
 			expectedErr: nil,
 		},
+		{
+			test: "get oldest by published_at",
+			query: article.ArticleQuery{OrderBy: article.PublishedAtAsc},
+			expectedCount: 2,
+			expectedErr: nil,
+		},
 	}
 
 	for _, tc := range testCases {
@@ -201,6 +209,9 @@ func TestArticleSqlite_List(t *testing.T) {
 			}
 			if err == nil && len(rs.Articles) != tc.expectedCount {
 				t.Errorf("Expected count %v, got %v", tc.expectedCount, len(rs.Articles))
+			}
+			if err == nil && tc.query.OrderBy == article.PublishedAtAsc && rs.Articles[0].Title != oldestArticle.Title {
+				t.Errorf("Expected title %v, got %v", oldestArticle.Title, rs.Articles[0].Title)
 			}
 		})
 	}
