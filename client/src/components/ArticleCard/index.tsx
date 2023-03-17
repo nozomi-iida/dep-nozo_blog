@@ -8,7 +8,9 @@ import { useThemeColor } from "libs/chakra/theme";
 import { markdown2content } from "utils/helpers";
 import { Article } from "libs/api/models/article";
 
-type ArticleCardProps = { article: Article };
+type ArticleCardProps = {
+  article: Pick<Article, "title" | "content" | "publishedAt" | "articleId">;
+};
 
 export const ArticleCard: FC<ArticleCardProps> = ({ article }) => {
   const { bgColor } = useThemeColor();
