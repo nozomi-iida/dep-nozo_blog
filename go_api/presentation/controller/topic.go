@@ -3,6 +3,8 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
+	"path/filepath"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/topic"
@@ -84,6 +86,33 @@ func (tc *TopicController) ListRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	topics, err := tc.ts.PublicList(query)
+	if err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+
+	output, _ := json.MarshalIndent(topics, "", "\t")
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(output)
+}
+
+func (tc *TopicController) FindByNameRequest(w http.ResponseWriter, r *http.Request) {
+	sub := strings.TrimPrefix(r.URL.Path, "/topics")
+	_, topicName := filepath.Split(sub)
+
+	query := topic.PublicFindByNameQuery{}
+	associatedWith := r.URL.Query().Get("associatedWith")
+	if associatedWith != "" {
+		na, err := topic.NewAssociatedType(associatedWith)
+		if err != nil {
+			helpers.ErrorHandler(w, err)
+			return
+		}
+		query.AssociatedWith = na
+	}
+
+	topics, err := tc.ts.PublicFindByName(topicName, query)
 	if err != nil {
 		helpers.ErrorHandler(w, err)
 		return

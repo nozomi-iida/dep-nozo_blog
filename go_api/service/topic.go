@@ -57,3 +57,12 @@ func (ts *TopicService) PublicList(query topic.TopicQuery) (topic.TopicListDto, 
 
 	return topics, nil
 }
+
+func (ts *TopicService) PublicFindByName(name string, query topic.PublicFindByNameQuery) (topic.TopicDto, error)  {
+	tp, err := ts.tc.PublicFindByName(name, query)
+	if err != nil {
+		return topic.TopicDto{}, err
+	}
+
+	return tp, nil
+}

@@ -8,6 +8,7 @@ import (
 
 	"github.com/nozomi-iida/nozo_blog/presentation/controller"
 	"github.com/nozomi-iida/nozo_blog/test"
+	"github.com/nozomi-iida/nozo_blog/test/factories"
 )
 
 func TestTopicController_Create(t *testing.T) {
@@ -36,6 +37,22 @@ func TestTopicController_List(t *testing.T) {
 		t.Errorf("Controller error %v", err)
 	}
 	tc.ListRequest(w, r)
+	if w.Code != http.StatusOK {
+		t.Errorf("Response code is %v", w.Code)
+	}
+}
+
+func TestTopicController_FindByNameRequest(t *testing.T) {
+	ts := test.ConnectDB(t)
+	factories.CreateTopic(t, ts.Filename, factories.SetTopicName("targeted"))
+	defer ts.Remove()
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest("Get", "/topics/targeted", nil)
+	tc, err := controller.NewTopicController(ts.Filename)
+	if err != nil {
+		t.Errorf("Controller error %v", err)
+	}
+	tc.FindByNameRequest(w, r)
 	if w.Code != http.StatusOK {
 		t.Errorf("Response code is %v", w.Code)
 	}

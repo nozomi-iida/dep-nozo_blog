@@ -84,3 +84,44 @@ func TestTopicService_PublicList(t *testing.T) {
 		})
 	}
 }
+
+func TestTopicService_PublicFindByName(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	nts, err := service.NewTopicService(
+		service.WithSqliteTopicRepository(ts.Filename),
+	)
+	targetedTopic := factories.CreateTopic(t, ts.Filename, factories.SetTopicName("targeted"))
+
+	if err != nil {
+		t.Errorf("service error: %v", err)
+	}
+
+	type testCase struct {
+		test string
+		name string
+		query topic.PublicFindByNameQuery
+		expectedErr error
+	}
+
+	testCases := []testCase {
+		{
+			test: "Get 3 topics",
+			name: targetedTopic.Name,
+			query: topic.PublicFindByNameQuery{},
+			expectedErr: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			to, err := nts.PublicFindByName(tc.name, topic.PublicFindByNameQuery{})
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+			if err == nil && to.Name != tc.name {
+				t.Errorf("Expected name %v, got %v", tc.name, to.Name)
+			}	
+		})
+	}
+}

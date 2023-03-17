@@ -31,6 +31,7 @@ func NewRouter(fileString string) (*chi.Mux, error)  {
 			})
 			r.Route("/topics", func(r chi.Router) {
 				r.Get("/", tc.ListRequest)
+				r.Get("/{name}", tc.FindByNameRequest)
 			})
 			r.Route("/tags", func(r chi.Router) {
 				r.Get("/", tgc.ListRequest)

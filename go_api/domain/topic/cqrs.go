@@ -26,17 +26,22 @@ type TopicQuery struct {
 	AssociatedWith AssociatedType
 }
 
+type PublicFindByNameQuery struct {
+	AssociatedWith AssociatedType
+}
+
 type TopicDto struct {
-	TopicID uuid.UUID
-	Name string
-	Description string
-	Articles []entity.Article
+	TopicID uuid.UUID `json:"topicId"`
+	Name string `json:"name"`
+	Description string `json:"description"`
+	Articles []entity.Article `json:"articles"`
 }
 
 type TopicListDto struct {
-	Topics []TopicDto
+	Topics []TopicDto `json:"topics"`
 }
 
 type TopicQueryService interface {
 	PublicList(query TopicQuery) (TopicListDto, error)
+	PublicFindByName(name string, query PublicFindByNameQuery) (TopicDto, error)
 }
