@@ -11,13 +11,9 @@ import {
 import { Image } from "components/Image";
 import { Layout } from "components/Layout";
 import dayjs from "dayjs";
-import { strapiClient } from "libs/strapi/api/axios";
-import { Article } from "libs/strapi/models/article";
-import { StrapiGetResponse, StrapiListResponse } from "libs/strapi/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextPageWithLayout } from "pages/_app.page";
-import qs from "qs";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import gfm from "remark-gfm";
@@ -29,32 +25,36 @@ import { motion, useAnimationControls } from "framer-motion";
 import { useThemeColor } from "libs/chakra/theme";
 import { NextHead } from "components/NextHead";
 import { markdown2content } from "utils/helpers";
+import { restCli } from "libs/axios";
+import { Article } from "libs/api/models/article";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await strapiClient.get<StrapiListResponse>("articles");
-  const paths = res.data.data.map((el) => ({
+  const res = await restCli.get<{ articles: Article[] }>("/articles");
+
+  const paths = res.data.articles.map((article) => ({
     params: {
-      id: el.id.toString(),
+      id: article.articleId,
     },
   }));
 
   return { paths, fallback: false };
 };
 
-export const getStaticProps: GetStaticProps<
-  StrapiGetResponse<Article>
-> = async (context) => {
-  const query = qs.stringify({ populate: "*" }, { encodeValuesOnly: true });
-  const res = await strapiClient.get(`articles/${context.params?.id}?${query}`);
+export const getStaticProps: GetStaticProps<{ article: Article }> = async (
+  context
+) => {
+  const res = await restCli.get<Article>(`articles/${context.params?.id}`);
 
   return {
-    props: res.data,
+    props: {
+      article: res.data,
+    },
   };
 };
 
 const Article: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
-> = ({ data }) => {
+> = ({ article }) => {
   const [likeCount, setLikeCount] = useState(0);
   const { bgColor } = useThemeColor();
   const { colorMode } = useColorMode();
@@ -65,48 +65,43 @@ const Article: NextPageWithLayout<
     setTimeout(() => {
       controls.start({ scale: 1.0 });
     }, 100);
-    const newLikeCount = likeCount + 1;
-    strapiClient
-      .put(`articles/${data.id}`, {
-        data: { likeCount: newLikeCount },
-      })
-      .then(() => {
-        setLikeCount(newLikeCount);
-      });
+    // const newLikeCount = likeCount + 1;
+    // strapiClient
+    //   .put(`articles/${article.id}`, {
+    //     article: { likeCount: newLikeCount },
+    //   })
+    //   .then(() => {
+    //     setLikeCount(newLikeCount);
+    //   });
   };
-
-  useEffect(() => {
-    setLikeCount(Number(data.attributes.likeCount));
-  }, [data]);
 
   return (
     <Box>
-      <NextHead
-        title={data.attributes.title}
-        imageUrl={data.attributes.thumbnail?.data?.attributes.url}
-        url={pagesPath.articles._id(data.id).$url().pathname}
-        description={markdown2content(data.attributes.content)}
-      />
-      {data.attributes.thumbnail?.data?.attributes.url && (
+      {/* <NextHead
+        title={article.title}
+        url={pagesPath.articles._id(article.articleId).$url().pathname}
+        description={markdown2content(article.content)}
+      /> */}
+      {/* {article.thumbnail??.attributes.url && (
         <Image
-          src={data.attributes.thumbnail.data.attributes.url}
-          alt={data.id.toString()}
+          src={article.thumbnail.attributes.url}
+          alt={article.id.toString()}
           w="full"
           h={430}
         />
-      )}
+      )} */}
       <VStack gap={4} align="left" backgroundColor={bgColor} p={8}>
         <HStack gap={2}>
           <Text fontSize="sm" color="subInfoText" fontWeight="bold">
-            {dayjs(data.attributes.publishedAt).format("YYYY-MM-DD")}
+            {dayjs(article.publishedAt).format("YYYY-MM-DD")}
           </Text>
-          {data.attributes.topic?.data && (
+          {article.topic && (
             <Text fontSize="sm" color="subInfoText" fontWeight="bold">
-              {data.attributes.topic?.data.attributes.name}
+              {article.topic?.name}
             </Text>
           )}
         </HStack>
-        <Heading>{data.attributes.title}</Heading>
+        <Heading>{article.title}</Heading>
         {/* TODO: 画像は横幅いっぱいに表示したい */}
         <ReactMarkdown
           rehypePlugins={[rehypeRaw]}
@@ -138,16 +133,16 @@ const Article: NextPageWithLayout<
             },
           }}
         >
-          {data.attributes.content}
+          {article.content}
         </ReactMarkdown>
         {/* TODO: 共有機能をつけたい */}
         <HStack gap={8} w="full" justify="space-between">
-          {data.attributes.tags?.data.length && (
+          {article.tags?.length && (
             <HStack gap={0.5}>
               <Text>Tags:</Text>
-              {data.attributes.tags.data.map((tag) => (
+              {article.tags.map((tag) => (
                 // TODO: hrefを設置
-                <NextLink key={tag.id} href={pagesPath.$url()}>
+                <NextLink key={tag.tagId} href={pagesPath.$url()}>
                   <Text
                     display="inline"
                     _hover={{
@@ -155,7 +150,7 @@ const Article: NextPageWithLayout<
                       textDecoration: "underline",
                     }}
                   >
-                    #{tag.attributes.name}
+                    #{tag.name}
                   </Text>
                 </NextLink>
               ))}
@@ -170,7 +165,7 @@ const Article: NextPageWithLayout<
           >
             <motion.button animate={controls}>
               <Image
-                alt={data.attributes.title}
+                alt={article.title}
                 src={
                   colorMode === "light"
                     ? staticPath.clap_png
@@ -187,7 +182,7 @@ const Article: NextPageWithLayout<
         {/* TODO: 次と前の記事のタイトルを取得し、表示したい */}
         <HStack justify="space-between">
           {/* TODO: Linkのコンポーネントを作る */}
-          <NextLink href={pagesPath.articles._id(data.id).$url()}>
+          <NextLink href={pagesPath.articles._id(article.articleId).$url()}>
             <VStack>
               <Text
                 fontSize="sm"
@@ -200,7 +195,7 @@ const Article: NextPageWithLayout<
               </Text>
             </VStack>
           </NextLink>
-          <NextLink href={pagesPath.articles._id(data.id).$url()}>
+          <NextLink href={pagesPath.articles._id(article.articleId).$url()}>
             <VStack>
               <Text
                 fontSize="sm"
