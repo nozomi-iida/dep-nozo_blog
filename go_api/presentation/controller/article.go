@@ -11,6 +11,7 @@ import (
 	"github.com/nozomi-iida/nozo_blog/domain/article"
 	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
+	"github.com/nozomi-iida/nozo_blog/presentation/serializer"
 	"github.com/nozomi-iida/nozo_blog/service"
 )
 
@@ -123,7 +124,8 @@ func (ac *ArticleController) FindByIdRequest(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	output, _ := json.MarshalIndent(article, "", "\t")
+	aj := serializer.Article2Json(article)
+	output, _ := json.MarshalIndent(aj, "", "\t")
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
