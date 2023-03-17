@@ -157,7 +157,6 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 		orderBy = "ORDER BY articles.published_at DESC"
 	}
 
-
 	rows, err := sr.db.Query(`
 		SELECT 
 			articles.article_id,

@@ -134,7 +134,8 @@ func (ac *ArticleController) FindByIdRequest(w http.ResponseWriter, r *http.Requ
 
 func (ac *ArticleController) ListRequest(w http.ResponseWriter, r *http.Request)  {
 	keyword := r.URL.Query().Get("keyword")
-	query := article.ArticleQuery{Keyword: keyword}
+	orderBy := r.URL.Query().Get("orderBy")
+	query := article.ArticleQuery{Keyword: keyword, OrderBy: orderBy}
 	articles, err := ac.as.List(query)
 	if err != nil {
 		helpers.ErrorHandler(w, err)

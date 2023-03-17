@@ -32,28 +32,15 @@ type ListArticleDto struct {
 	Articles []ArticleDto
 }
 
-type OrderType string
-
 const (
-	PublishedAtDesc OrderType = "published_at_desc"
-	PublishedAtAsc  OrderType = "published_at_asc"
+	PublishedAtDesc = "published_at_desc"
+	PublishedAtAsc  = "published_at_asc"
 )
-
-func NewOrderType(order string) (OrderType, error) {
-	switch order {
-	case "published_at_desc":
-		return PublishedAtDesc, nil
-	case "published_at_asc":
-		return PublishedAtAsc, nil
-	default:
-		return "", ErrInvalidOrderType
-	}
-}
 
 type ArticleQuery struct {
 	Keyword string
 	WithDraft bool
-	OrderBy OrderType
+	OrderBy string 
 }
 
 // repositoryからはentityは返さない方が良い気がするけど、良い詰替え方が分からないのでこのまま
