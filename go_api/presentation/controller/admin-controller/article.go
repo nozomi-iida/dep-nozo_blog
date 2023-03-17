@@ -33,7 +33,7 @@ type ArticleRequest struct {
 	Title string `json:"title" validate:"required"`
 	Content string `json:"content" validate:"required"`
 	IsPublic bool `json:"isPublic"`
-	Tags []string `json:"tags"`
+	TagNames []string `json:"tagNames"`
 	TopicID *uuid.UUID `json:"topicId"`
 }
 
@@ -141,7 +141,7 @@ func (ac *ArticleController) PatchRequest(w http.ResponseWriter, r *http.Request
 		articleID,
 		articleRequest.Title, 
 		articleRequest.Content, 
-		articleRequest.Tags,
+		articleRequest.TagNames,
 		articleRequest.TopicID,
 		articleRequest.IsPublic, 
 	)

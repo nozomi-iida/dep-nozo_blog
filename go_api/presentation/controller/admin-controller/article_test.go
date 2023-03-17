@@ -1,18 +1,19 @@
 package admincontroller_test
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/domain/article"
 	"github.com/nozomi-iida/nozo_blog/entity"
 	"github.com/nozomi-iida/nozo_blog/presentation"
+	admincontroller "github.com/nozomi-iida/nozo_blog/presentation/controller/admin-controller"
 	"github.com/nozomi-iida/nozo_blog/presentation/serializer"
 	"github.com/nozomi-iida/nozo_blog/test"
 	"github.com/nozomi-iida/nozo_blog/test/factories"
@@ -133,8 +134,14 @@ func TestArticleController_PatchRequest(t *testing.T) {
 	})
 	us := test.CreateUser(t, ts.Filename)
 	ca := factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
-	updatedTitle := "update test"
-	body := strings.NewReader(fmt.Sprintf(`{"title": "%s", "content": "test", "isPublic": true, "tags": ["tag_1"]}`, updatedTitle))
+	areq := admincontroller.ArticleRequest{
+		Title: "update title",
+		Content: "update content",
+		IsPublic: true,
+		TagNames: []string{"tag_1"},
+	}
+	jsonBody, err := json.Marshal(areq)
+	body := bytes.NewBuffer(jsonBody)
 	req, err := http.NewRequestWithContext(context.TODO(), http.MethodPatch, testServer.URL+fmt.Sprintf("/api/v1/admin/articles/%v", ca.ArticleID), body)
 	token, err := us.UserId.Encode();
 	req.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
@@ -144,14 +151,14 @@ func TestArticleController_PatchRequest(t *testing.T) {
 	cli := &http.Client{}
 	type testCase struct {
 		test string
-		expectedArticleTitle string
+		articleRequest admincontroller.ArticleRequest 
 		expectedErr error
 	}
 
 	testCases := []testCase {
 		{
 			test: "update Article",
-			expectedArticleTitle: updatedTitle,
+			articleRequest: areq,
 			expectedErr: nil,
 		},
 	}
@@ -171,9 +178,12 @@ func TestArticleController_PatchRequest(t *testing.T) {
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}
-			if err == nil && tc.expectedArticleTitle != got.Title {
-				t.Errorf("Expected title %v, got %v", tc.expectedArticleTitle, got.Title)
+			if err == nil && tc.articleRequest.Title != got.Title {
+				t.Errorf("Expected title %v, got %v", tc.articleRequest.Title, got.Title)
 			}
+			if err == nil && len(got.Tags) <= 0 {
+				t.Errorf("Expected tags %v, got %v", tc.articleRequest.TagNames, got.Tags)
+			} 
 		})
 	}
 }

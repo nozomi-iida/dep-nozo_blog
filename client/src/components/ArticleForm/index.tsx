@@ -20,7 +20,7 @@ export const articleSchema = z.object({
   title: z.string().min(1, { message: "title is required" }),
   content: z.string().min(1, { message: "content is required" }),
   topicId: z.string().optional(),
-  tagIds: z.string().array().max(3, { message: "select up to three tags" }),
+  tagNames: z.string().array().max(3, { message: "select up to three tags" }),
   isPublic: z.boolean({ required_error: "isPublic is required" }),
 });
 
@@ -35,6 +35,7 @@ export const ArticleForm = () => {
   const fetchTopics = (url: string) =>
     restCli<{ topics: Topic[] }>(url).then((res) => res.data);
   const { data: topicData } = useSWR("/topics", fetchTopics);
+
   const options = useMemo(() => {
     if (!topicData?.topics.length) return [];
 
@@ -68,17 +69,17 @@ export const ArticleForm = () => {
         )}
         <FormErrorMessage>{errors.topicId?.message}</FormErrorMessage>
       </FormControl>
-      <FormControl isInvalid={!!errors.tagIds?.length}>
+      <FormControl isInvalid={!!errors.tagNames?.length}>
         <FormLabel>Tags</FormLabel>
         <Controller
-          name="tagIds"
+          name="tagNames"
           control={control}
           render={({ field: { value, onChange } }) => (
             <TagInput value={value} onChange={onChange} />
           )}
         />
-        {Array.isArray(errors.tagIds) &&
-          errors.tagIds?.map((error) => (
+        {Array.isArray(errors.tagNames) &&
+          errors.tagNames?.map((error) => (
             <FormErrorMessage key={error?.message}>
               {error?.message}
             </FormErrorMessage>

@@ -38,7 +38,16 @@ func WithSqliteArticleRepository(fileString string) articleConfiguration {
 	}
 }
 
-func (as *ArticleService) Post(title string, content string, tags []string, isPublic bool, authorId uuid.UUID, topicID *uuid.UUID) (entity.Article, error)  {
+func (as *ArticleService) Post(title string, content string, tagNames []string, isPublic bool, authorId uuid.UUID, topicID *uuid.UUID) (entity.Article, error)  {
+	var tags []entity.Tag
+	for _, t := range tagNames {
+		tag, err := entity.NewTag(t)
+		if err != nil {
+			return entity.Article{}, err
+		}
+		tags = append(tags, tag)
+	}
+
 	a, err := entity.NewArticle(entity.ArticleArgument{Title: title, Content: content, Tags: tags, PublishedAt: nil, AuthorID: authorId, TopicID: topicID})
 	
 	if err != nil {
@@ -47,6 +56,7 @@ func (as *ArticleService) Post(title string, content string, tags []string, isPu
 	if (isPublic) {
 		a.Public()
 	}
+
 	a, err = as.ap.Create(a)
 	if err != nil {
 		return entity.Article{}, err

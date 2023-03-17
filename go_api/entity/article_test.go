@@ -15,6 +15,10 @@ func TestArticle_NewArticle(t *testing.T) {
 	}
 
 	user, _ := entity.NewUser("Nozomi", valueobject.Password{})
+	tag, _ := entity.NewTag("tag")
+	tag1, _ := entity.NewTag("tag_1")
+	tag2, _ := entity.NewTag("tag_2")
+	tag3, _ := entity.NewTag("tag_3")
 
 	testCases := []testCase{
 		{
@@ -40,11 +44,11 @@ func TestArticle_NewArticle(t *testing.T) {
 				Title: "test",
 				Content: "test",
 				AuthorID: user.GetID(),
-				Tags: []string{
-					"tag_1",
-					"tag_2",
-					"tag_3",
-					"tag_4",
+				Tags: []entity.Tag{
+					tag,
+					tag1,
+					tag2,
+					tag3,
 				},
 			},
 			expectedErr: entity.ErrTooManyTags,

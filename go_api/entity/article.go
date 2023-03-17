@@ -26,7 +26,7 @@ type ArticleArgument struct {
 	Title string
 	Content string
 	PublishedAt *time.Time
-	Tags []string
+	Tags []Tag
 	AuthorID uuid.UUID
 	TopicID *uuid.UUID
 }
@@ -39,22 +39,13 @@ func NewArticle(aa ArticleArgument) (Article, error)  {
 	if len(aa.Tags) > 3 {
 		return Article{}, ErrTooManyTags
 	}	
-	var tags []Tag
-
-	for _, tag := range aa.Tags {
-		nt, err := NewTag(tag)
-		if err != nil {
-			return Article{}, ErrInvalidArticle
-		}
-		tags = append(tags, nt)
-	}
 
 	return Article{
 		ArticleID: uuid.New(),
 		Title: aa.Title,
 		Content: aa.Content,
 		PublishedAt: aa.PublishedAt,
-		Tags: tags,
+		Tags: aa.Tags,
 		AuthorID: aa.AuthorID,
 		TopicID: aa.TopicID,
 	}, nil

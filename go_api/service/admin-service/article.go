@@ -50,13 +50,13 @@ func (as *ArticleService) FindById(id uuid.UUID) (article.ArticleDto, error) {
 	return a, err
 }
 
-func (as *ArticleService) Update(articleID uuid.UUID, title string, content string, tags []string, topicID *uuid.UUID, isPublic bool) (entity.Article, error)  {
+func (as *ArticleService) Update(articleID uuid.UUID, title string, content string, tagNames []string, topicID *uuid.UUID, isPublic bool) (entity.Article, error)  {
 	// TODO: findByIdでentity.Articleを取得して、そのentity.ArticleをUpdateするようにする
 	a := entity.Article{}	
 	a.SetID(articleID)
 	a.SetTitle(title)
 	a.SetContent(content)
-	a.SetTags(tags)
+	a.SetTags(tagNames)
 	a.SetTopicID(topicID)
 	if(isPublic) {
 		a.Public()

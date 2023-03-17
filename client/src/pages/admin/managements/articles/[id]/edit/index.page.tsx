@@ -39,7 +39,7 @@ const EditArticleDPage: NextPageWithLayout = () => {
           title: article.title,
           content: article.content,
           topicId: article.topic?.topicId,
-          tagIds: article.tags.map((tag) => tag.tagId),
+          tagNames: article.tags.map((tag) => tag.name),
           isPublic: !!article?.publishedAt,
         });
       }

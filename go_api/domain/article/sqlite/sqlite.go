@@ -323,7 +323,9 @@ func createArticleTags(tx *sql.Tx, ai uuid.UUID, tags []entity.Tag) error  {
 			tag.Name,
 		)
 
-		if !rows.Next() {
+		if rows.Next() {
+			rows.Scan(&tag.TagID)	
+		} else {
 			_, err := tx.Exec(`
 				INSERT INTO 
 					tags(tag_id, name)
