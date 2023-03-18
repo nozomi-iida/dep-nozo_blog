@@ -25,15 +25,13 @@ func TestArticleController_PostRequest(t *testing.T) {
 		t.Errorf("Controller error %v", err)
 	}
 	// refactorしたい
-	token, err := us.UserId.Encode();
+	token, err := us.UserId.Encode()
 	r.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
 	middleware.AuthMiddleware(http.HandlerFunc(ac.PostRequest)).ServeHTTP(w, r)
 	if w.Code != http.StatusCreated {
 		t.Errorf("Response code is %v", w.Code)
 	}
 }
-
-
 
 // 最初ほぼ同じだから共通化したい
 func TestArticleController_DeleteRequest(t *testing.T) {
@@ -47,7 +45,7 @@ func TestArticleController_DeleteRequest(t *testing.T) {
 	if err != nil {
 		t.Errorf("Controller error %v", err)
 	}
-	token, err := us.UserId.Encode();
+	token, err := us.UserId.Encode()
 	r.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
 	middleware.AuthMiddleware(http.HandlerFunc(ac.DeleteRequest)).ServeHTTP(w, r)
 	if w.Code != http.StatusNoContent {
@@ -66,7 +64,7 @@ func TestArticleController_FindByIdRequest(t *testing.T) {
 	if err != nil {
 		t.Errorf("Controller error %v", err)
 	}
-	token, err := us.UserId.Encode();
+	token, err := us.UserId.Encode()
 	r.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
 	middleware.AuthMiddleware(http.HandlerFunc(ac.FindByIdRequest)).ServeHTTP(w, r)
 	if w.Code != http.StatusOK {
@@ -86,7 +84,7 @@ func TestArticleController_ListRequest(t *testing.T) {
 	if err != nil {
 		t.Errorf("Controller error %v", err)
 	}
-	token, err := us.UserId.Encode();
+	token, err := us.UserId.Encode()
 	r.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
 	middleware.AuthMiddleware(http.HandlerFunc(ac.ListRequest)).ServeHTTP(w, r)
 	if w.Code != http.StatusOK {

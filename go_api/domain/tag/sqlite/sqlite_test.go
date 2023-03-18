@@ -22,18 +22,18 @@ func TestTagSqlite_List(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		query tag.TagQuery
+		test          string
+		query         tag.TagQuery
 		expectedCount int
-		expectedErr error
+		expectedErr   error
 	}
 
 	testCases := []testCase{
 		{
-			test: "list tags",
-			query: tag.TagQuery{},
+			test:          "list tags",
+			query:         tag.TagQuery{},
 			expectedCount: 3,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 		{
 			test: "list tags with keyword",
@@ -41,7 +41,7 @@ func TestTagSqlite_List(t *testing.T) {
 				Keyword: "test",
 			},
 			expectedCount: 1,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 	}
 
@@ -67,15 +67,15 @@ func TestTagSqlite_Create(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		name string
+		test        string
+		name        string
 		expectedErr error
 	}
 
 	testCases := []testCase{
 		{
-			test: "create tag",
-			name: "tag 1",
+			test:        "create tag",
+			name:        "tag 1",
 			expectedErr: nil,
 		},
 	}

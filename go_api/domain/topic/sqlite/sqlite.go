@@ -13,13 +13,13 @@ type sqliteRepository struct {
 }
 
 type sqliteTopic struct {
-	topicId uuid.UUID
-	name string
+	topicId     uuid.UUID
+	name        string
 	description string
 }
 
 func (st sqliteTopic) toEntity() entity.Topic {
-	t := entity.Topic{}	
+	t := entity.Topic{}
 	t.SetTopicId(st.topicId)
 	t.SetName(st.name)
 	t.SetDescription(st.description)
@@ -27,9 +27,9 @@ func (st sqliteTopic) toEntity() entity.Topic {
 	return t
 }
 
-func New(fileString string) (*sqliteRepository, error)  {
+func New(fileString string) (*sqliteRepository, error) {
 	db, err := sql.Open("sqlite3", fileString)
-	
+
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (sr *sqliteRepository) Create(t entity.Topic) (entity.Topic, error) {
 	return t, nil
 }
 
-func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, error)  {
+func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, error) {
 	var tld topic.TopicListDto
 
 	rows, err := sr.db.Query(`
@@ -63,10 +63,10 @@ func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, 
 		FROM
 			topics
 		WHERE topics.name LIKE ?;
-	`, "%" + q.Keyword + "%")
+	`, "%"+q.Keyword+"%")
 
 	if err != nil {
-		return topic.TopicListDto{}, topic.ErrFailedToListTopics 
+		return topic.TopicListDto{}, topic.ErrFailedToListTopics
 	}
 
 	for rows.Next() {
@@ -76,9 +76,9 @@ func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, 
 			&td.TopicID,
 			&td.Name,
 			&td.Description,
-		)	
+		)
 		if err != nil {
-			return topic.TopicListDto{}, topic.ErrFailedToListTopics 
+			return topic.TopicListDto{}, topic.ErrFailedToListTopics
 		}
 
 		if q.AssociatedWith == topic.Article {
@@ -96,7 +96,7 @@ func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, 
 					articles.topic_id == ?;
 			`, td.TopicID)
 			if err != nil {
-				return topic.TopicListDto{}, topic.ErrFailedToListTopics 
+				return topic.TopicListDto{}, topic.ErrFailedToListTopics
 			}
 			for articleRows.Next() {
 				var ac entity.Article
@@ -109,7 +109,7 @@ func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, 
 					&ac.TopicID,
 				)
 				if err != nil {
-					return topic.TopicListDto{}, topic.ErrFailedToListTopics 
+					return topic.TopicListDto{}, topic.ErrFailedToListTopics
 				}
 				var tg entity.Tag
 				tagRows, err := sr.db.Query(`
@@ -124,8 +124,8 @@ func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, 
 						tags.tag_id == article_tags.tag_id
 					WHERE	
 						article_tags.article_id == ?;
-				`, ac.ArticleID)	
-				if err != nil {	
+				`, ac.ArticleID)
+				if err != nil {
 					return topic.TopicListDto{}, topic.ErrFailedToListTopics
 				}
 				for tagRows.Next() {
@@ -144,18 +144,18 @@ func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, 
 			}
 		}
 
-		tld.Topics = append(tld.Topics, td)	
+		tld.Topics = append(tld.Topics, td)
 	}
 	return tld, nil
 }
 
-func (sr *sqliteRepository) PublicFindByName(name string, q topic.PublicFindByNameQuery) (topic.TopicDto, error)  {
+func (sr *sqliteRepository) PublicFindByName(name string, q topic.PublicFindByNameQuery) (topic.TopicDto, error) {
 	var td topic.TopicDto
 	err := sr.db.QueryRow("SELECT topic_id, name FROM topics WHERE topics.name == ?", name).Scan(&td.TopicID, &td.Name)
 	if err != nil || td.Name == "" {
 		return topic.TopicDto{}, topic.ErrTopicNotFound
 	}
-	
+
 	if q.AssociatedWith == topic.Article {
 		articleRows, err := sr.db.Query(`
 			SELECT
@@ -171,7 +171,7 @@ func (sr *sqliteRepository) PublicFindByName(name string, q topic.PublicFindByNa
 				articles.topic_id == ?;
 		`, td.TopicID)
 		if err != nil {
-			return topic.TopicDto{}, topic.ErrFailedToListTopics 
+			return topic.TopicDto{}, topic.ErrFailedToListTopics
 		}
 		for articleRows.Next() {
 			var ac entity.Article
@@ -184,7 +184,7 @@ func (sr *sqliteRepository) PublicFindByName(name string, q topic.PublicFindByNa
 				&ac.TopicID,
 			)
 			if err != nil {
-				return topic.TopicDto{}, topic.ErrFailedToListTopics 
+				return topic.TopicDto{}, topic.ErrFailedToListTopics
 			}
 			var tg entity.Tag
 			tagRows, err := sr.db.Query(`
@@ -199,8 +199,8 @@ func (sr *sqliteRepository) PublicFindByName(name string, q topic.PublicFindByNa
 					tags.tag_id == article_tags.tag_id
 				WHERE	
 					article_tags.article_id == ?;
-			`, ac.ArticleID)	
-			if err != nil {	
+			`, ac.ArticleID)
+			if err != nil {
 				return topic.TopicDto{}, topic.ErrFailedToListTopics
 			}
 			for tagRows.Next() {

@@ -8,17 +8,16 @@ import (
 )
 
 type ArticleJson struct {
-	ArticleID uuid.UUID `json:"articleId"`
-	Title string `json:"title"`
-	Content string `json:"content"`
+	ArticleID   uuid.UUID  `json:"articleId"`
+	Title       string     `json:"title"`
+	Content     string     `json:"content"`
 	PublishedAt *time.Time `json:"publishedAt,omitempty"`
-	Tags []TagJson `json:"tags"`
-	Topic *TopicJson `json:"topic,omitempty"`
-	Author UserJson `json:"author"`
+	Tags        []TagJson  `json:"tags"`
+	Topic       *TopicJson `json:"topic,omitempty"`
+	Author      UserJson   `json:"author"`
 }
 
-
-func Article2Json(article article.ArticleDto) ArticleJson  {
+func Article2Json(article article.ArticleDto) ArticleJson {
 	tags := []TagJson{}
 	if len(article.Tags) > 0 {
 		for _, tag := range article.Tags {
@@ -31,12 +30,12 @@ func Article2Json(article article.ArticleDto) ArticleJson  {
 	}
 
 	return ArticleJson{
-			ArticleID: article.ArticleID, 
-			Title: article.Title, 
-			Content: article.Content, 
-			PublishedAt: article.PublishedAt, 
-			Tags: tags, 
-			Topic: &topic, 
-			Author: User2Json(article.Author),	
-	}		
+		ArticleID:   article.ArticleID,
+		Title:       article.Title,
+		Content:     article.Content,
+		PublishedAt: article.PublishedAt,
+		Tags:        tags,
+		Topic:       &topic,
+		Author:      User2Json(article.Author),
+	}
 }

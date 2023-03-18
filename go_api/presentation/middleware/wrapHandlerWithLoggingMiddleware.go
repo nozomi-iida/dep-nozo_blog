@@ -16,22 +16,22 @@ type loggingResponseWriter struct {
 }
 
 func newLoggingResponseWriter(w http.ResponseWriter) *loggingResponseWriter {
-	return &loggingResponseWriter{w, http.StatusOK}	
+	return &loggingResponseWriter{w, http.StatusOK}
 }
 
-func (lrw *loggingResponseWriter) WriteHeader(code int)  {
-	lrw.statusCode = code	
+func (lrw *loggingResponseWriter) WriteHeader(code int) {
+	lrw.statusCode = code
 	lrw.ResponseWriter.WriteHeader(code)
 }
 
-func logByStatusCode(code int)  {
+func logByStatusCode(code int) {
 	switch {
 	case code >= 400 && code < 600:
-		libs.ZipLogger().Error("Completed", 
+		libs.ZipLogger().Error("Completed",
 			zap.Int("status", code),
 		)
 	default:
-		libs.ZipLogger().Info("Completed", 
+		libs.ZipLogger().Info("Completed",
 			zap.Int("status", code),
 		)
 	}
@@ -45,7 +45,7 @@ func WrapHandlerWithLoggingMiddleware(next http.Handler) http.Handler {
 		if err != nil {
 			libs.ZipLogger().Error(fmt.Sprintf("ioutil.ReadAll: %v", err))
 		}
-		libs.ZipLogger().Info("Started", 
+		libs.ZipLogger().Info("Started",
 			zap.String("method", r.Method),
 			zap.String("path", r.URL.Path),
 			zap.Any("Parameters", string(buf)),

@@ -13,7 +13,7 @@ type TopicService struct {
 	tc topic.TopicQueryService
 }
 
-func NewTopicService (cfgs ...topicConfigurations) (*TopicService, error) {
+func NewTopicService(cfgs ...topicConfigurations) (*TopicService, error) {
 	ts := &TopicService{}
 
 	for _, cfg := range cfgs {
@@ -39,8 +39,8 @@ func WithSqliteTopicRepository(fileString string) topicConfigurations {
 	}
 }
 
-func (ts *TopicService) Create(name string, description string) (entity.Topic, error)  {
-	tp, err := entity.NewTopic(entity.Topic{Name: name, Description: description})	
+func (ts *TopicService) Create(name string, description string) (entity.Topic, error) {
+	tp, err := entity.NewTopic(entity.Topic{Name: name, Description: description})
 	tp, err = ts.tp.Create(tp)
 	if err != nil {
 		return entity.Topic{}, err
@@ -49,7 +49,7 @@ func (ts *TopicService) Create(name string, description string) (entity.Topic, e
 	return tp, nil
 }
 
-func (ts *TopicService) PublicList(query topic.TopicQuery) (topic.TopicListDto, error)  {
+func (ts *TopicService) PublicList(query topic.TopicQuery) (topic.TopicListDto, error) {
 	topics, err := ts.tc.PublicList(query)
 	if err != nil {
 		return topic.TopicListDto{}, err
@@ -58,7 +58,7 @@ func (ts *TopicService) PublicList(query topic.TopicQuery) (topic.TopicListDto, 
 	return topics, nil
 }
 
-func (ts *TopicService) PublicFindByName(name string, query topic.PublicFindByNameQuery) (topic.TopicDto, error)  {
+func (ts *TopicService) PublicFindByName(name string, query topic.PublicFindByNameQuery) (topic.TopicDto, error) {
 	tp, err := ts.tc.PublicFindByName(name, query)
 	if err != nil {
 		return topic.TopicDto{}, err

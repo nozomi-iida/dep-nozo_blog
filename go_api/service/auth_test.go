@@ -6,7 +6,7 @@ import (
 	"github.com/nozomi-iida/nozo_blog/service"
 	"github.com/nozomi-iida/nozo_blog/test"
 )
-	
+
 func TestAuth_SignUp(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()

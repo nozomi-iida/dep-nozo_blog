@@ -7,9 +7,9 @@ import (
 )
 
 var (
-	ErrTopicNotFound = errors.New("the topic was not found in the repository")
-	ErrTopicAlreadyExist = errors.New("topic already exits")
-	ErrFailedToListTopics = errors.New("failed to get the topics to the repository")
+	ErrTopicNotFound         = errors.New("the topic was not found in the repository")
+	ErrTopicAlreadyExist     = errors.New("topic already exits")
+	ErrFailedToListTopics    = errors.New("failed to get the topics to the repository")
 	ErrInvalidAssociatedType = errors.New("invalid associated type")
 )
 

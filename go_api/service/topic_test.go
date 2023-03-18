@@ -21,15 +21,15 @@ func TestTopicService_Create(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		name string
+		test        string
+		name        string
 		expectedErr error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Success to create topic",
-			name: "test", 
+			test:        "Success to create topic",
+			name:        "test",
 			expectedErr: nil,
 		},
 	}
@@ -59,16 +59,16 @@ func TestTopicService_PublicList(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		expectedCount int 
-		expectedErr error
+		test          string
+		expectedCount int
+		expectedErr   error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Get 3 topics",
+			test:          "Get 3 topics",
 			expectedCount: 3,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 	}
 
@@ -98,17 +98,17 @@ func TestTopicService_PublicFindByName(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		name string
-		query topic.PublicFindByNameQuery
+		test        string
+		name        string
+		query       topic.PublicFindByNameQuery
 		expectedErr error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Get 3 topics",
-			name: targetedTopic.Name,
-			query: topic.PublicFindByNameQuery{},
+			test:        "Get 3 topics",
+			name:        targetedTopic.Name,
+			query:       topic.PublicFindByNameQuery{},
 			expectedErr: nil,
 		},
 	}
@@ -121,7 +121,7 @@ func TestTopicService_PublicFindByName(t *testing.T) {
 			}
 			if err == nil && to.Name != tc.name {
 				t.Errorf("Expected name %v, got %v", tc.name, to.Name)
-			}	
+			}
 		})
 	}
 }

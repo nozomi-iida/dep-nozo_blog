@@ -11,12 +11,12 @@ var (
 )
 
 type Topic struct {
-	TopicID uuid.UUID
-	Name string
+	TopicID     uuid.UUID
+	Name        string
 	Description string
 }
 
-func NewTopic(topic Topic) (Topic, error)  {
+func NewTopic(topic Topic) (Topic, error) {
 	if topic.Name == "" {
 		return Topic{}, ErrInvalidTopic
 	}
@@ -28,18 +28,18 @@ func NewTopic(topic Topic) (Topic, error)  {
 	return topic, nil
 }
 
-func (t *Topic) SetTopicId(id uuid.UUID)  {
+func (t *Topic) SetTopicId(id uuid.UUID) {
 	t.TopicID = id
 }
 
-func (t *Topic) SetName(name string)  {
+func (t *Topic) SetName(name string) {
 	if name == "" {
 		return
 	}
 	t.Name = name
 }
 
-func (t *Topic) SetDescription(description string)  {
+func (t *Topic) SetDescription(description string) {
 	if description == "" {
 		return
 	}

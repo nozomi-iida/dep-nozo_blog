@@ -18,26 +18,26 @@ type SqliteRepository struct {
 }
 
 type QueryArticleSqlite struct {
-	ArticleID uuid.UUID 
-	Title string 
-	Content string 
-	PublishedAt *time.Time
-	Tags []entity.Tag 
-	TopicID uuid.NullUUID
-	TopicName sql.NullString
+	ArticleID        uuid.UUID
+	Title            string
+	Content          string
+	PublishedAt      *time.Time
+	Tags             []entity.Tag
+	TopicID          uuid.NullUUID
+	TopicName        sql.NullString
 	TopicDescription sql.NullString
-	Author entity.User 
+	Author           entity.User
 }
 
 func (qa QueryArticleSqlite) ToDto() article.ArticleDto {
 	ad := article.ArticleDto{
-		ArticleID: qa.ArticleID,
-		Title: qa.Title,
-		Content: qa.Content,
+		ArticleID:   qa.ArticleID,
+		Title:       qa.Title,
+		Content:     qa.Content,
 		PublishedAt: qa.PublishedAt,
-		Tags: qa.Tags,
-		Author: qa.Author,
-	}	
+		Tags:        qa.Tags,
+		Author:      qa.Author,
+	}
 
 	if qa.TopicID.Valid {
 		var topic = entity.Topic{}
@@ -50,9 +50,9 @@ func (qa QueryArticleSqlite) ToDto() article.ArticleDto {
 	return ad
 }
 
-func New(fileString string) (*SqliteRepository, error)  {
+func New(fileString string) (*SqliteRepository, error) {
 	db, err := sql.Open("sqlite3", fileString)
-	
+
 	db = sqldblogger.OpenDriver(fileString, db.Driver(), zapadapter.New(libs.ZipLogger()))
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func (sr *SqliteRepository) Create(a entity.Article) (entity.Article, error) {
 				author_id, 
 				topic_id
 			) 
-		VALUES (?, ?, ?, ?, ?, ?)`, 
+		VALUES (?, ?, ?, ?, ?, ?)`,
 		a.ArticleID, a.Title, a.Content, a.PublishedAt, a.AuthorID, a.TopicID,
 	)
 	if err != nil {
@@ -117,14 +117,14 @@ func (sr *SqliteRepository) Update(a entity.Article) error {
 		tx.Rollback()
 		return article.ErrFailedToUpdateArticle
 	}
-	
+
 	err = createArticleTags(tx, a.ArticleID, a.Tags)
 	if err != nil {
 		tx.Rollback()
 		return article.ErrFailedToUpdateArticle
 	}
 
-	return nil	
+	return nil
 }
 
 func (sr *SqliteRepository) Delete(id uuid.UUID) error {
@@ -138,17 +138,17 @@ func (sr *SqliteRepository) Delete(id uuid.UUID) error {
 		return article.ErrArticleNotFound
 	}
 
-	return nil	
+	return nil
 }
 
-func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto, error)  {
+func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto, error) {
 	var rs article.ListArticleDto
 	var articleIDs []interface{}
-	articleMap := make(map[uuid.UUID]article.ArticleDto) 
+	articleMap := make(map[uuid.UUID]article.ArticleDto)
 	withDraftQuery := ""
 	if !q.WithDraft {
 		withDraftQuery = "AND articles.published_at IS NOT NULL"
-	} 
+	}
 	orderBy := "ORDER BY articles.published_at ASC"
 	switch q.OrderBy {
 	case article.PublishedAtAsc:
@@ -179,9 +179,9 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 		ON
 		articles.author_id = authors.user_id
 		WHERE articles.title LIKE ?
-		` + withDraftQuery + ` 
-		` + orderBy + `;
-	`, "%" + q.Keyword + "%")
+		`+withDraftQuery+` 
+		`+orderBy+`;
+	`, "%"+q.Keyword+"%")
 
 	if err != nil {
 		return article.ListArticleDto{}, article.ErrFailedToListArticle
@@ -190,10 +190,10 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 	for rows.Next() {
 		var qa QueryArticleSqlite
 		err = rows.Scan(
-			&qa.ArticleID, 
-			&qa.Title, 
-			&qa.Content, 
-			&qa.PublishedAt, 
+			&qa.ArticleID,
+			&qa.Title,
+			&qa.Content,
+			&qa.PublishedAt,
 			&qa.TopicID,
 			&qa.TopicName,
 			&qa.TopicDescription,
@@ -209,7 +209,7 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 	}
 
 	if len(articleMap) > 0 {
-		repeat := strings.Repeat("?,", len(articleIDs)-1) +"?"
+		repeat := strings.Repeat("?,", len(articleIDs)-1) + "?"
 		rows, err = sr.db.Query(`
 			SELECT
 				tags.tag_id,
@@ -221,8 +221,8 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 				tags
 			ON
 				article_tags.tag_id = tags.tag_id
-			WHERE article_tags.article_id IN ( `+ repeat +`);
-		`, articleIDs... 
+			WHERE article_tags.article_id IN ( `+repeat+`);
+		`, articleIDs...,
 		)
 
 		if err != nil {
@@ -232,7 +232,7 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 		defer rows.Close()
 		for rows.Next() {
 			var tag entity.Tag
-			var articleID uuid.UUID 
+			var articleID uuid.UUID
 			err = rows.Scan(&tag.TagID, &tag.Name, &articleID)
 			if err != nil {
 				return article.ListArticleDto{}, article.ErrFailedToListArticle
@@ -251,7 +251,7 @@ func (sr *SqliteRepository) List(q article.ArticleQuery) (article.ListArticleDto
 }
 
 func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
-	var qa QueryArticleSqlite 
+	var qa QueryArticleSqlite
 
 	err := sr.db.QueryRow(`
 		SELECT 
@@ -276,10 +276,10 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 			articles.author_id = authors.user_id
 		WHERE articles.article_id = ?;
 	`, id).Scan(
-		&qa.ArticleID, 
-		&qa.Title, 
-		&qa.Content, 
-		&qa.PublishedAt, 
+		&qa.ArticleID,
+		&qa.Title,
+		&qa.Content,
+		&qa.PublishedAt,
 		&qa.TopicID,
 		&qa.TopicName,
 		&qa.TopicDescription,
@@ -317,28 +317,28 @@ func (sr *SqliteRepository) FindById(id uuid.UUID) (article.ArticleDto, error) {
 	}
 
 	ad := qa.ToDto()
-	
-	return ad, nil	
+
+	return ad, nil
 }
 
-func createArticleTags(tx *sql.Tx, ai uuid.UUID, tags []entity.Tag) error  {
+func createArticleTags(tx *sql.Tx, ai uuid.UUID, tags []entity.Tag) error {
 	for _, tag := range tags {
 		rows, err := tx.Query(`
 			SELECT
 				tag_id
 			FROM 
 				tags
-			WHERE tags.name = ?;`, 
+			WHERE tags.name = ?;`,
 			tag.Name,
 		)
 
 		if rows.Next() {
-			rows.Scan(&tag.TagID)	
+			rows.Scan(&tag.TagID)
 		} else {
 			_, err := tx.Exec(`
 				INSERT INTO 
 					tags(tag_id, name)
-				VALUES(?, ?)`, 
+				VALUES(?, ?)`,
 				tag.TagID, tag.Name,
 			)
 			if err != nil {
@@ -350,9 +350,9 @@ func createArticleTags(tx *sql.Tx, ai uuid.UUID, tags []entity.Tag) error  {
 		_, err = tx.Exec(`
 			INSERT INTO 
 				article_tags(article_id, tag_id) 
-			VALUES (?, ?)`, 
+			VALUES (?, ?)`,
 			ai, tag.TagID,
-		)	
+		)
 		if err != nil {
 			tx.Rollback()
 			return article.ErrFailedToCreateArticle

@@ -9,7 +9,7 @@ import (
 
 var (
 	ErrTooShortPassword = errors.New("Password must be at least 8 characters long")
-	ErrInvalidPassword = errors.New("Password must be in string and numbers")
+	ErrInvalidPassword  = errors.New("Password must be in string and numbers")
 )
 
 type Password struct {
@@ -17,8 +17,8 @@ type Password struct {
 }
 
 func NewPassword(plainText string) (Password, error) {
-	if(len(plainText) < 8) {
-		return Password{}, ErrTooShortPassword 
+	if len(plainText) < 8 {
+		return Password{}, ErrTooShortPassword
 	}
 
 	regString := regexp.MustCompile(`[a-zA-Z]`).Match([]byte(plainText))
@@ -33,7 +33,7 @@ func NewPassword(plainText string) (Password, error) {
 	return Password{Value: plainText}, nil
 }
 
-func (p *Password)Encrypt() (string, error) {
+func (p *Password) Encrypt() (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(p.Value), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err

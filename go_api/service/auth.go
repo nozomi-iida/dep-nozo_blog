@@ -12,7 +12,7 @@ import (
 
 var (
 	ErrDuplicateUsername = errors.New("Duplicate username")
-	ErrUnMatchPassword = errors.New("Unmatch password")
+	ErrUnMatchPassword   = errors.New("Unmatch password")
 )
 
 type AuthConfiguration func(as *AuthService) error
@@ -22,11 +22,11 @@ type AuthService struct {
 }
 
 type AuthResponse struct {
-	User entity.User `json:"user"`
-	Token string `json:"token"`
+	User  entity.User `json:"user"`
+	Token string      `json:"token"`
 }
 
-func NewAuthService(cfgs ...AuthConfiguration) (*AuthService, error)  {
+func NewAuthService(cfgs ...AuthConfiguration) (*AuthService, error) {
 	os := &AuthService{}
 
 	for _, cfg := range cfgs {
@@ -50,7 +50,7 @@ func WithSqliteUserRepository(fileString string) AuthConfiguration {
 	}
 }
 
-func (as *AuthService) SignUp(username string, password string) (AuthResponse, error)  {
+func (as *AuthService) SignUp(username string, password string) (AuthResponse, error) {
 	ps, err := valueobject.NewPassword(password)
 	u, err := entity.NewUser(username, ps)
 	if err != nil {
@@ -62,23 +62,23 @@ func (as *AuthService) SignUp(username string, password string) (AuthResponse, e
 		return AuthResponse{}, err
 	}
 
-	token, err := generateToken(user.GetID());
+	token, err := generateToken(user.GetID())
 	if err != nil {
 		return AuthResponse{}, err
 	}
-	
+
 	return AuthResponse{User: user, Token: token}, nil
 }
 
-func (as *AuthService) SignIn(username string, password string) (AuthResponse, error)  {
-	user, err := as.users.FindByUsername(username)	
+func (as *AuthService) SignIn(username string, password string) (AuthResponse, error) {
+	user, err := as.users.FindByUsername(username)
 	if err != nil {
 		return AuthResponse{}, err
 	}
 	if !user.IsMatchPassword(password) {
 		return AuthResponse{}, ErrUnMatchPassword
 	}
-	token, err := generateToken(user.GetID());
+	token, err := generateToken(user.GetID())
 	if err != nil {
 		return AuthResponse{}, err
 	}
@@ -86,9 +86,9 @@ func (as *AuthService) SignIn(username string, password string) (AuthResponse, e
 	return AuthResponse{User: user, Token: token}, nil
 }
 
-func generateToken(id uuid.UUID) (string, error)  {
+func generateToken(id uuid.UUID) (string, error) {
 	tokenString, _ := valueobject.NewJwtToken(id)
-	token, err := tokenString.Encode();
+	token, err := tokenString.Encode()
 	if err != nil {
 		return "", err
 	}

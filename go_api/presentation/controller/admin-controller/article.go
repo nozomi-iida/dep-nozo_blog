@@ -19,32 +19,32 @@ type ArticleController struct {
 	as *adminservice.ArticleService
 }
 
-func NewArticleController(fileString string) (ArticleController, error)  {
+func NewArticleController(fileString string) (ArticleController, error) {
 	as, err := adminservice.NewArticleService(
 		adminservice.WithSqliteArticleRepository(fileString),
 	)
 	if err != nil {
 		return ArticleController{}, err
 	}
-	return ArticleController{as: as}, nil	
+	return ArticleController{as: as}, nil
 }
 
 type ArticleRequest struct {
-	Title string `json:"title" validate:"required"`
-	Content string `json:"content" validate:"required"`
-	IsPublic bool `json:"isPublic"`
-	TagNames []string `json:"tagNames"`
-	TopicID *uuid.UUID `json:"topicId"`
+	Title    string     `json:"title" validate:"required"`
+	Content  string     `json:"content" validate:"required"`
+	IsPublic bool       `json:"isPublic"`
+	TagNames []string   `json:"tagNames"`
+	TopicID  *uuid.UUID `json:"topicId"`
 }
 
 type ArticleResponse struct {
-	ArticleID uuid.UUID `json:"articleId"`
-	Title string `json:"title"`
-	Content string `json:"content"`
-	PublishedAt *time.Time `json:"publishedAt,omitempty"`
-	Tags []entity.Tag `json:"tags"`
-	Topic *entity.Topic `json:"topic,omitempty"`
-	Author entity.User `json:"author"`
+	ArticleID   uuid.UUID     `json:"articleId"`
+	Title       string        `json:"title"`
+	Content     string        `json:"content"`
+	PublishedAt *time.Time    `json:"publishedAt,omitempty"`
+	Tags        []entity.Tag  `json:"tags"`
+	Topic       *entity.Topic `json:"topic,omitempty"`
+	Author      entity.User   `json:"author"`
 }
 
 type ArticleListResponse struct {
@@ -57,34 +57,34 @@ func articleToJson(article article.ArticleDto) ArticleResponse {
 		tags = []entity.Tag{}
 	}
 	return ArticleResponse{
-			ArticleID: article.ArticleID, 
-			Title: article.Title, 
-			Content: article.Content, 
-			PublishedAt: article.PublishedAt, 
-			Tags: tags, 
-			Topic: article.Topic, 
-			Author: article.Author,	
-	}	
+		ArticleID:   article.ArticleID,
+		Title:       article.Title,
+		Content:     article.Content,
+		PublishedAt: article.PublishedAt,
+		Tags:        tags,
+		Topic:       article.Topic,
+		Author:      article.Author,
+	}
 }
 
 func articleListToJson(articleDto article.ListArticleDto) ArticleListResponse {
 	var ars = []ArticleResponse{}
 	for _, a := range articleDto.Articles {
 		ars = append(ars, ArticleResponse{
-			ArticleID: a.ArticleID, 
-			Title: a.Title, 
-			Content: a.Content, 
-			PublishedAt: a.PublishedAt, 
-			Tags: a.Tags, 
-			Topic: a.Topic, 
-			Author: a.Author,
+			ArticleID:   a.ArticleID,
+			Title:       a.Title,
+			Content:     a.Content,
+			PublishedAt: a.PublishedAt,
+			Tags:        a.Tags,
+			Topic:       a.Topic,
+			Author:      a.Author,
 		})
 	}
 
 	return ArticleListResponse{Articles: ars}
 }
 
-func (ac *ArticleController) ListRequest(w http.ResponseWriter, r *http.Request)  {
+func (ac *ArticleController) ListRequest(w http.ResponseWriter, r *http.Request) {
 	articles, err := ac.as.List()
 	if err != nil {
 		helpers.ErrorHandler(w, err)
@@ -99,7 +99,7 @@ func (ac *ArticleController) ListRequest(w http.ResponseWriter, r *http.Request)
 	w.Write(output)
 }
 
-func (ac *ArticleController) FindByIdRequest(w http.ResponseWriter, r *http.Request)  {
+func (ac *ArticleController) FindByIdRequest(w http.ResponseWriter, r *http.Request) {
 	sub := strings.TrimPrefix(r.URL.Path, "/articles")
 	_, queryArticleID := filepath.Split(sub)
 	articleID, err := uuid.Parse(queryArticleID)
@@ -121,7 +121,7 @@ func (ac *ArticleController) FindByIdRequest(w http.ResponseWriter, r *http.Requ
 	w.Write(output)
 }
 
-func (ac *ArticleController) PatchRequest(w http.ResponseWriter, r *http.Request)  {
+func (ac *ArticleController) PatchRequest(w http.ResponseWriter, r *http.Request) {
 	sub := strings.TrimPrefix(r.URL.Path, "/articles")
 	_, queryArticleID := filepath.Split(sub)
 	articleID, err := uuid.Parse(queryArticleID)
@@ -130,7 +130,7 @@ func (ac *ArticleController) PatchRequest(w http.ResponseWriter, r *http.Request
 		return
 	}
 	body := make([]byte, r.ContentLength)
-	r.Body.Read(body)	
+	r.Body.Read(body)
 	var articleRequest ArticleRequest
 	json.Unmarshal(body, &articleRequest)
 	if !helpers.IsValid(w, articleRequest) {
@@ -139,11 +139,11 @@ func (ac *ArticleController) PatchRequest(w http.ResponseWriter, r *http.Request
 
 	a, err := ac.as.Update(
 		articleID,
-		articleRequest.Title, 
-		articleRequest.Content, 
+		articleRequest.Title,
+		articleRequest.Content,
 		articleRequest.TagNames,
 		articleRequest.TopicID,
-		articleRequest.IsPublic, 
+		articleRequest.IsPublic,
 	)
 	if err != nil {
 		helpers.ErrorHandler(w, err)

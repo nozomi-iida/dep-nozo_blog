@@ -8,22 +8,22 @@ import (
 
 func TestTopic_NewTopic(t *testing.T) {
 	type testCase struct {
-		test string
-		name string
+		test        string
+		name        string
 		description string
 		expectedErr error
 	}
 
 	testCases := []testCase{
 		{
-			test: "Name blank",
-			name: "",
+			test:        "Name blank",
+			name:        "",
 			description: "test",
 			expectedErr: entity.ErrInvalidTopic,
 		},
 		{
-			test: "Valid topic",
-			name: "test",
+			test:        "Valid topic",
+			name:        "test",
 			description: "test",
 			expectedErr: nil,
 		},

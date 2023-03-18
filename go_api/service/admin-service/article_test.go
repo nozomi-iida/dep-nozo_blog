@@ -24,18 +24,18 @@ func TestArticle_List(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		query article.ArticleQuery
+		test          string
+		query         article.ArticleQuery
 		expectedCount int
-		expectedErr error
+		expectedErr   error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Success to list articles",
-			query: article.ArticleQuery{},
+			test:          "Success to list articles",
+			query:         article.ArticleQuery{},
 			expectedCount: 3,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 	}
 
@@ -65,15 +65,15 @@ func TestArticle_FindById(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		articleID uuid.UUID
+		test        string
+		articleID   uuid.UUID
 		expectedErr error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Success to find by id article",
-			articleID: ac.ArticleID,
+			test:        "Success to find by id article",
+			articleID:   ac.ArticleID,
 			expectedErr: nil,
 		},
 	}
@@ -105,25 +105,25 @@ func TestArticle_Update(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		articleID uuid.UUID
-		title string
-		content string
-		isPublic bool
-		tags []string
-		topicID *uuid.UUID
+		test        string
+		articleID   uuid.UUID
+		title       string
+		content     string
+		isPublic    bool
+		tags        []string
+		topicID     *uuid.UUID
 		expectedErr error
-	}	
+	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Update article",
-			articleID: ac.ArticleID,
-			title: "Update Title",
-			content: ac.Content,
-			isPublic: true,
-			tags: tags,
-			topicID: nil,
+			test:        "Update article",
+			articleID:   ac.ArticleID,
+			title:       "Update Title",
+			content:     ac.Content,
+			isPublic:    true,
+			tags:        tags,
+			topicID:     nil,
 			expectedErr: nil,
 		},
 	}

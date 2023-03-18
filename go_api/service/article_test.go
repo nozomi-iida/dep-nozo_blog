@@ -23,32 +23,32 @@ func TestArticle_Post(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		title string
-		content string
-		isPublic bool
-		tags []string
-		authorId uuid.UUID
+		test        string
+		title       string
+		content     string
+		isPublic    bool
+		tags        []string
+		authorId    uuid.UUID
 		expectedErr error
-	}	
+	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Public article",
-			title: "Test",
-			content: "Test",
-			isPublic: true,
-			tags: []string{"tag"},
-			authorId: us.GetID(),
+			test:        "Public article",
+			title:       "Test",
+			content:     "Test",
+			isPublic:    true,
+			tags:        []string{"tag"},
+			authorId:    us.GetID(),
 			expectedErr: nil,
 		},
 		{
-			test: "Private article",
-			title: "Test",
-			content: "Test",
-			isPublic: false,
-			tags: []string{"tag"},
-			authorId: us.GetID(),
+			test:        "Private article",
+			title:       "Test",
+			content:     "Test",
+			isPublic:    false,
+			tags:        []string{"tag"},
+			authorId:    us.GetID(),
 			expectedErr: nil,
 		},
 	}
@@ -66,8 +66,6 @@ func TestArticle_Post(t *testing.T) {
 	}
 }
 
-
-
 func TestArticle_Delete(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
@@ -80,15 +78,15 @@ func TestArticle_Delete(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		articleID uuid.UUID
+		test        string
+		articleID   uuid.UUID
 		expectedErr error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Success to delete article",
-			articleID: ac.ArticleID,
+			test:        "Success to delete article",
+			articleID:   ac.ArticleID,
 			expectedErr: nil,
 		},
 	}
@@ -117,20 +115,20 @@ func TestArticle_FindById(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		articleID uuid.UUID
+		test        string
+		articleID   uuid.UUID
 		expectedErr error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Success to find by id article",
-			articleID: ac.ArticleID,
+			test:        "Success to find by id article",
+			articleID:   ac.ArticleID,
 			expectedErr: nil,
 		},
 		{
-			test: "Failed to find by id article",
-			articleID: pa.ArticleID,
+			test:        "Failed to find by id article",
+			articleID:   pa.ArticleID,
 			expectedErr: article.ErrArticleNotFound,
 		},
 	}
@@ -160,24 +158,24 @@ func TestArticle_List(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		query article.ArticleQuery
+		test          string
+		query         article.ArticleQuery
 		expectedCount int
-		expectedErr error
+		expectedErr   error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Success to list articles",
-			query: article.ArticleQuery{},
+			test:          "Success to list articles",
+			query:         article.ArticleQuery{},
 			expectedCount: 3,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 		{
-			test: "List from keyword",
-			query: article.ArticleQuery{Keyword: engineerAC.Title},
+			test:          "List from keyword",
+			query:         article.ArticleQuery{Keyword: engineerAC.Title},
 			expectedCount: 1,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 	}
 

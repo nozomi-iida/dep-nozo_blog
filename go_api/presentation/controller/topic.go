@@ -17,10 +17,10 @@ type TopicController struct {
 	ts *service.TopicService
 }
 
-func NewTopicController(fileString string) (TopicController, error)  {
+func NewTopicController(fileString string) (TopicController, error) {
 	ts, err := service.NewTopicService(
 		service.WithSqliteTopicRepository(fileString),
-	)	
+	)
 
 	if err != nil {
 		return TopicController{}, nil
@@ -30,14 +30,14 @@ func NewTopicController(fileString string) (TopicController, error)  {
 }
 
 type topicRequest struct {
-	Name string `json:"name" validate:"required"`
+	Name        string `json:"name" validate:"required"`
 	Description string `json:"description,omitempty"`
 }
 
 type topicResponse struct {
-	TopicId uuid.UUID `json:"topicId" validate:"required"`
-	Name string `json:"name" validate:"required"`
-	Description string `json:"description,omitempty"`
+	TopicId     uuid.UUID `json:"topicId" validate:"required"`
+	Name        string    `json:"name" validate:"required"`
+	Description string    `json:"description,omitempty"`
 }
 
 type topicListResponse struct {

@@ -15,10 +15,10 @@ type TagController struct {
 	ts *service.TagService
 }
 
-func NewTagController(fileString string) (TagController, error)  {
+func NewTagController(fileString string) (TagController, error) {
 	ts, err := service.NewTagService(
 		service.WithSqliteTagRepository(fileString),
-	)	
+	)
 
 	if err != nil {
 		return TagController{}, nil
@@ -29,7 +29,7 @@ func NewTagController(fileString string) (TagController, error)  {
 
 type tagResponse struct {
 	TagId uuid.UUID `json:"tagId" validate:"required"`
-	Name string `json:"name" validate:"required"`
+	Name  string    `json:"name" validate:"required"`
 }
 
 type tagListResponse struct {

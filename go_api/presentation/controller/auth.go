@@ -17,14 +17,14 @@ type AuthRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 
-func NewAuthController(fileString string) (AuthController, error)  {
+func NewAuthController(fileString string) (AuthController, error) {
 	as, err := service.NewAuthService(
 		service.WithSqliteUserRepository(fileString),
 	)
 	if err != nil {
 		return AuthController{}, err
 	}
-	return AuthController{as: as}, nil	
+	return AuthController{as: as}, nil
 }
 
 func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +39,7 @@ func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) 
 	ur, err := ac.as.SignUp(authRequest.Username, authRequest.Password)
 	if err != nil {
 		helpers.ErrorHandler(w, err)
-		return	
+		return
 	}
 
 	output, _ := json.MarshalIndent(ur, "", "\t")
@@ -49,7 +49,7 @@ func (ac *AuthController) SignUpRequest(w http.ResponseWriter, r *http.Request) 
 	w.Write(output)
 }
 
-func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request)  {
+func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
 	var authRequest AuthRequest
@@ -57,7 +57,7 @@ func (ac *AuthController) SignInRequest(w http.ResponseWriter, r *http.Request) 
 	if !helpers.IsValid(w, authRequest) {
 		return
 	}
-	
+
 	ur, err := ac.as.SignIn(authRequest.Username, authRequest.Password)
 	if err != nil {
 		helpers.ErrorHandler(w, err)

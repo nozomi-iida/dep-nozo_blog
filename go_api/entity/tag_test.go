@@ -8,20 +8,20 @@ import (
 
 func TestTag_NewTag(t *testing.T) {
 	type testCase struct {
-		test string
-		name string
+		test        string
+		name        string
 		expectedErr error
 	}
 
 	testCases := []testCase{
 		{
-			test: "Empty Name validation",
-			name: "",
+			test:        "Empty Name validation",
+			name:        "",
 			expectedErr: entity.ErrInvalidTag,
 		},
 		{
-			test: "Valid tag",
-			name: "test",
+			test:        "Valid tag",
+			name:        "test",
 			expectedErr: nil,
 		},
 	}

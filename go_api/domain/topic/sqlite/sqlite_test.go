@@ -18,20 +18,20 @@ func TestTopicSqlite_Create(t *testing.T) {
 		t.Errorf("sqlite error: %v", err)
 	}
 	type testCase struct {
-		test string
-		name string
+		test        string
+		name        string
 		expectedErr error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Success to create topic",
-			name: "test",
+			test:        "Success to create topic",
+			name:        "test",
 			expectedErr: nil,
 		},
 		{
-			test: "Failed to create topic, because topic already exist",
-			name: "test",
+			test:        "Failed to create topic, because topic already exist",
+			name:        "test",
 			expectedErr: topic.ErrTopicAlreadyExist,
 		},
 	}
@@ -61,30 +61,30 @@ func TestTopicSqlite_PublicList(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		query topic.TopicQuery
-		expectedCount int 
-		expectedErr error
+		test          string
+		query         topic.TopicQuery
+		expectedCount int
+		expectedErr   error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Get 3 topics",
-			query: topic.TopicQuery{},
+			test:          "Get 3 topics",
+			query:         topic.TopicQuery{},
 			expectedCount: 3,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 		{
-			test: "Get targeted topic",
-			query: topic.TopicQuery{Keyword: "targeted"},
+			test:          "Get targeted topic",
+			query:         topic.TopicQuery{Keyword: "targeted"},
 			expectedCount: 1,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 		{
-			test: "Get topics with article association",
-			query: topic.TopicQuery{AssociatedWith: topic.Article},
+			test:          "Get topics with article association",
+			query:         topic.TopicQuery{AssociatedWith: topic.Article},
 			expectedCount: 3,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 	}
 
@@ -97,7 +97,7 @@ func TestTopicSqlite_PublicList(t *testing.T) {
 			if err == nil && len(tld.Topics) != tc.expectedCount {
 				t.Errorf("Expected count %v, got %v", tc.expectedCount, len(tld.Topics))
 			}
-		})	
+		})
 	}
 }
 
@@ -109,23 +109,23 @@ func TestTopicSqlite_PublicFindByName(t *testing.T) {
 	factories.CreateArticle(t, ts.Filename, factories.SetTopic(targetTopic.TopicID))
 
 	type testCase struct {
-		test string
-		name string
-		query topic.PublicFindByNameQuery
+		test        string
+		name        string
+		query       topic.PublicFindByNameQuery
 		expectedErr error
 	}
-	
-	testCases := []testCase {
+
+	testCases := []testCase{
 		{
-			test: "Get targeted topic",
-			name: targetTopic.Name,
-			query: topic.PublicFindByNameQuery{},
+			test:        "Get targeted topic",
+			name:        targetTopic.Name,
+			query:       topic.PublicFindByNameQuery{},
 			expectedErr: nil,
 		},
 		{
-			test: "Get targeted topic with article association",
-			name: "targeted",
-			query: topic.PublicFindByNameQuery{AssociatedWith: topic.Article},
+			test:        "Get targeted topic with article association",
+			name:        "targeted",
+			query:       topic.PublicFindByNameQuery{AssociatedWith: topic.Article},
 			expectedErr: nil,
 		},
 	}

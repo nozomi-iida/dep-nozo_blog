@@ -10,33 +10,33 @@ import (
 	"github.com/nozomi-iida/nozo_blog/test"
 )
 
-func mockHandler(w http.ResponseWriter, r *http.Request)  {
+func mockHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 func TestAuthMiddleware(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
 	u := test.CreateUser(t, ts.Filename)
-	token, err := u.UserId.Encode();
+	token, err := u.UserId.Encode()
 	if err != nil {
 		t.Errorf("encode error: %v\n", err.Error())
 	}
 	type testCase struct {
-		test string
+		test  string
 		token string
-		code int
+		code  int
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Unauthorized error",
+			test:  "Unauthorized error",
 			token: "",
-			code: http.StatusUnauthorized,
+			code:  http.StatusUnauthorized,
 		},
 		{
-			test: "Authorized",
+			test:  "Authorized",
 			token: token,
-			code: http.StatusOK,
+			code:  http.StatusOK,
 		},
 	}
 

@@ -23,18 +23,18 @@ func TestTag_List(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		query tag.TagQuery
+		test          string
+		query         tag.TagQuery
 		expectedCount int
-		expectedErr error
+		expectedErr   error
 	}
 
 	testCases := []testCase{
 		{
-			test: "list tags",
-			query: tag.TagQuery{},
+			test:          "list tags",
+			query:         tag.TagQuery{},
 			expectedCount: 3,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 		{
 			test: "list tags with keyword",
@@ -42,7 +42,7 @@ func TestTag_List(t *testing.T) {
 				Keyword: "test",
 			},
 			expectedCount: 1,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 	}
 

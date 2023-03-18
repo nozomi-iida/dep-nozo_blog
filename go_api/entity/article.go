@@ -9,45 +9,45 @@ import (
 
 var (
 	ErrInvalidArticle = errors.New("A Article has to have an a valid article")
-	ErrTooManyTags = errors.New("The maximum number of tags an article can have is 5")
+	ErrTooManyTags    = errors.New("The maximum number of tags an article can have is 5")
 )
 
 type Article struct {
-	ArticleID uuid.UUID `json:"article_id"`
-	Title string `json:"title"`
-	Content string `json:"content"`
+	ArticleID   uuid.UUID  `json:"article_id"`
+	Title       string     `json:"title"`
+	Content     string     `json:"content"`
 	PublishedAt *time.Time `json:"published_at,omitempty"`
-	Tags []Tag `json:"tags,omitempty"`
-	AuthorID uuid.UUID `json:"authorID"`
-	TopicID *uuid.UUID `json:"topicID,omitempty"`
+	Tags        []Tag      `json:"tags,omitempty"`
+	AuthorID    uuid.UUID  `json:"authorID"`
+	TopicID     *uuid.UUID `json:"topicID,omitempty"`
 }
 
 type ArticleArgument struct {
-	Title string
-	Content string
+	Title       string
+	Content     string
 	PublishedAt *time.Time
-	Tags []Tag
-	AuthorID uuid.UUID
-	TopicID *uuid.UUID
+	Tags        []Tag
+	AuthorID    uuid.UUID
+	TopicID     *uuid.UUID
 }
 
-func NewArticle(aa ArticleArgument) (Article, error)  {
-	if aa.Title == "" || aa.Content == "" || aa.AuthorID.ID() <= 0{
+func NewArticle(aa ArticleArgument) (Article, error) {
+	if aa.Title == "" || aa.Content == "" || aa.AuthorID.ID() <= 0 {
 		return Article{}, ErrInvalidArticle
-	}	
+	}
 
 	if len(aa.Tags) > 3 {
 		return Article{}, ErrTooManyTags
-	}	
+	}
 
 	return Article{
-		ArticleID: uuid.New(),
-		Title: aa.Title,
-		Content: aa.Content,
+		ArticleID:   uuid.New(),
+		Title:       aa.Title,
+		Content:     aa.Content,
 		PublishedAt: aa.PublishedAt,
-		Tags: aa.Tags,
-		AuthorID: aa.AuthorID,
-		TopicID: aa.TopicID,
+		Tags:        aa.Tags,
+		AuthorID:    aa.AuthorID,
+		TopicID:     aa.TopicID,
 	}, nil
 }
 
@@ -56,21 +56,21 @@ func (a *Article) Public() {
 	a.PublishedAt = &now
 }
 
-func (a *Article) SetID(id uuid.UUID)  {
+func (a *Article) SetID(id uuid.UUID) {
 	if id.ID() < 0 {
 		return
 	}
-	a.ArticleID = id	
+	a.ArticleID = id
 }
 
-func (a *Article) SetTitle(title string)  {
+func (a *Article) SetTitle(title string) {
 	if title == "" {
 		return
 	}
 	a.Title = title
 }
 
-func (a *Article) SetContent(content string)  {
+func (a *Article) SetContent(content string) {
 	if content == "" {
 		return
 	}
@@ -93,9 +93,9 @@ func (a *Article) SetTags(tagNames []string) {
 	a.Tags = tags
 }
 
-func (a *Article) SetTopicID(id *uuid.UUID)  {
+func (a *Article) SetTopicID(id *uuid.UUID) {
 	if id == nil || id.ID() < 0 {
 		return
 	}
-	a.TopicID = id	
+	a.TopicID = id
 }

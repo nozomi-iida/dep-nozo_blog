@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	ErrBadRequest = errors.New("Bad Request")
+	ErrBadRequest             = errors.New("Bad Request")
 	ErrStatusMethodNotAllowed = errors.New(http.StatusText(http.StatusMethodNotAllowed))
-	ErrUnauthorized = errors.New("Unauthorized users")
+	ErrUnauthorized           = errors.New("Unauthorized users")
 )
 
 type ErrorPresentation struct {
@@ -23,21 +23,21 @@ type ErrorPresentation struct {
 
 type errMessage struct {
 	Message string `json:"message"`
-	Code int `json:"code"`
-	Type string `json:"type"`
+	Code    int    `json:"code"`
+	Type    string `json:"type"`
 }
 
-func newErrMsg(message string, code int) ErrorPresentation  {
+func newErrMsg(message string, code int) ErrorPresentation {
 	return ErrorPresentation{
 		Error: errMessage{
 			Message: message,
-			Code: code,
-			Type: http.StatusText(code),
+			Code:    code,
+			Type:    http.StatusText(code),
 		},
 	}
 }
 
-func NewErrorPresentation(err error) ErrorPresentation  {
+func NewErrorPresentation(err error) ErrorPresentation {
 	fmt.Printf("err: %v\n", err)
 	switch err {
 	case user.ErrUserNotFound:
@@ -54,7 +54,7 @@ func NewErrorPresentation(err error) ErrorPresentation  {
 	}
 }
 
-func ErrorHandler(w http.ResponseWriter, err error)  {
+func ErrorHandler(w http.ResponseWriter, err error) {
 	ep := NewErrorPresentation(err)
 	output, _ := json.MarshalIndent(ep, "", "\t")
 	w.WriteHeader(ep.Error.Code)
@@ -65,9 +65,9 @@ func ErrorHandler(w http.ResponseWriter, err error)  {
 // 少し冗長な気がする
 func IsValid(w http.ResponseWriter, s interface{}) bool {
 	var vl = validator.New()
-	err := vl.Struct(s)	
+	err := vl.Struct(s)
 	if err == nil {
-		return true 
+		return true
 	} else {
 		msg := ""
 		for _, err := range err.(validator.ValidationErrors) {
@@ -75,7 +75,7 @@ func IsValid(w http.ResponseWriter, s interface{}) bool {
 		}
 		ep := newErrMsg(msg, http.StatusBadRequest)
 		output, _ := json.MarshalIndent(ep, "", "\t")
-		w.WriteHeader(ep.Error.Code)	
+		w.WriteHeader(ep.Error.Code)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(output)
 		return false
@@ -84,7 +84,7 @@ func IsValid(w http.ResponseWriter, s interface{}) bool {
 
 func Validate(w http.ResponseWriter, s interface{}) {
 	var vl = validator.New()
-	err := vl.Struct(s)	
+	err := vl.Struct(s)
 	if err != nil {
 		msg := ""
 		for _, err := range err.(validator.ValidationErrors) {
@@ -92,7 +92,7 @@ func Validate(w http.ResponseWriter, s interface{}) {
 		}
 		ep := newErrMsg(msg, http.StatusBadRequest)
 		output, _ := json.MarshalIndent(ep, "", "\t")
-		w.WriteHeader(ep.Error.Code)	
+		w.WriteHeader(ep.Error.Code)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(output)
 	}

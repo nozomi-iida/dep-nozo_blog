@@ -31,23 +31,23 @@ func TestArticleController_ListRequest(t *testing.T) {
 	factories.CreateArticle(t, ts.Filename)
 	factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
 	req, err := http.NewRequestWithContext(context.TODO(), http.MethodGet, testServer.URL+"/api/v1/admin/articles", nil)
-	token, err := us.UserId.Encode();
+	token, err := us.UserId.Encode()
 	req.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
 	if err != nil {
 		t.Fatal(err)
 	}
 	cli := &http.Client{}
 	type testCase struct {
-		test string
+		test          string
 		expectedCount int
-		expectedErr error
+		expectedErr   error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "get all Article",
+			test:          "get all Article",
 			expectedCount: 3,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 	}
 
@@ -83,23 +83,23 @@ func TestArticleController_FindByIdRequest(t *testing.T) {
 	us := test.CreateUser(t, ts.Filename)
 	ca := factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
 	req, err := http.NewRequestWithContext(context.TODO(), http.MethodGet, testServer.URL+fmt.Sprintf("/api/v1/admin/articles/%v", ca.ArticleID), nil)
-	token, err := us.UserId.Encode();
+	token, err := us.UserId.Encode()
 	req.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
 	if err != nil {
 		t.Fatal(err)
 	}
 	cli := &http.Client{}
 	type testCase struct {
-		test string
+		test              string
 		expectedArticleId uuid.UUID
-		expectedErr error
+		expectedErr       error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "get Article",
+			test:              "get Article",
 			expectedArticleId: ca.ArticleID,
-			expectedErr: nil,
+			expectedErr:       nil,
 		},
 	}
 
@@ -135,31 +135,31 @@ func TestArticleController_PatchRequest(t *testing.T) {
 	us := test.CreateUser(t, ts.Filename)
 	ca := factories.CreateArticle(t, ts.Filename, factories.SetPublishedAt(nil))
 	areq := admincontroller.ArticleRequest{
-		Title: "update title",
-		Content: "update content",
+		Title:    "update title",
+		Content:  "update content",
 		IsPublic: true,
 		TagNames: []string{"tag_1"},
 	}
 	jsonBody, err := json.Marshal(areq)
 	body := bytes.NewBuffer(jsonBody)
 	req, err := http.NewRequestWithContext(context.TODO(), http.MethodPatch, testServer.URL+fmt.Sprintf("/api/v1/admin/articles/%v", ca.ArticleID), body)
-	token, err := us.UserId.Encode();
+	token, err := us.UserId.Encode()
 	req.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
 	if err != nil {
 		t.Fatal(err)
 	}
 	cli := &http.Client{}
 	type testCase struct {
-		test string
-		articleRequest admincontroller.ArticleRequest 
-		expectedErr error
+		test           string
+		articleRequest admincontroller.ArticleRequest
+		expectedErr    error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "update Article",
+			test:           "update Article",
 			articleRequest: areq,
-			expectedErr: nil,
+			expectedErr:    nil,
 		},
 	}
 
@@ -183,7 +183,7 @@ func TestArticleController_PatchRequest(t *testing.T) {
 			}
 			if err == nil && len(got.Tags) <= 0 {
 				t.Errorf("Expected tags %v, got %v", tc.articleRequest.TagNames, got.Tags)
-			} 
+			}
 		})
 	}
 }

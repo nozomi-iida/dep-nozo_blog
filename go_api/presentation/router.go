@@ -7,7 +7,7 @@ import (
 	"github.com/nozomi-iida/nozo_blog/presentation/middleware"
 )
 
-func NewRouter(fileString string) (*chi.Mux, error)  {
+func NewRouter(fileString string) (*chi.Mux, error) {
 	atc, err := controller.NewAuthController(fileString)
 	ac, err := controller.NewArticleController(fileString)
 	tc, err := controller.NewTopicController(fileString)
@@ -49,6 +49,5 @@ func NewRouter(fileString string) (*chi.Mux, error)  {
 		})
 	})
 
-	
 	return r, nil
 }

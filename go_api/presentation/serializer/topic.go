@@ -6,15 +6,15 @@ import (
 )
 
 type TopicJson struct {
-	TopicID uuid.UUID `json:"topicId"`
-	Name string `json:"name"`
-	Description string `json:"description"`
+	TopicID     uuid.UUID `json:"topicId"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
 }
 
 func Topic2Json(topic entity.Topic) TopicJson {
 	return TopicJson{
-		TopicID: topic.TopicID,
-		Name: topic.Name,
+		TopicID:     topic.TopicID,
+		Name:        topic.Name,
 		Description: topic.Description,
 	}
 }

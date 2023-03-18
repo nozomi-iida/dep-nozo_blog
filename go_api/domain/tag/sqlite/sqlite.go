@@ -7,14 +7,13 @@ import (
 	"github.com/nozomi-iida/nozo_blog/entity"
 )
 
-
 type sqliteRepository struct {
 	db *sql.DB
 }
 
-func New(fileString string) (*sqliteRepository, error)  {
+func New(fileString string) (*sqliteRepository, error) {
 	db, err := sql.Open("sqlite3", fileString)
-	
+
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +23,7 @@ func New(fileString string) (*sqliteRepository, error)  {
 	}, err
 }
 
-func (sr *sqliteRepository) Create(t entity.Tag) (entity.Tag, error)  {
+func (sr *sqliteRepository) Create(t entity.Tag) (entity.Tag, error) {
 	_, err := sr.db.Exec("INSERT INTO tags(tag_id, name) VALUES (?, ?)", t.TagID, t.Name)
 	if err != nil {
 		return entity.Tag{}, err
@@ -33,7 +32,7 @@ func (sr *sqliteRepository) Create(t entity.Tag) (entity.Tag, error)  {
 	return t, nil
 }
 
-func (sr *sqliteRepository) List(query tag.TagQuery) ([]entity.Tag, error)  {
+func (sr *sqliteRepository) List(query tag.TagQuery) ([]entity.Tag, error) {
 	var ts []entity.Tag
 
 	rows, err := sr.db.Query(`
@@ -44,7 +43,7 @@ func (sr *sqliteRepository) List(query tag.TagQuery) ([]entity.Tag, error)  {
 			tags
 		WHERE
 			tags.name LIKE ?
-	`,  "%" + query.Keyword + "%")
+	`, "%"+query.Keyword+"%")
 	if err != nil {
 		return []entity.Tag{}, tag.ErrFailedToListTags
 	}
@@ -59,5 +58,5 @@ func (sr *sqliteRepository) List(query tag.TagQuery) ([]entity.Tag, error)  {
 		ts = append(ts, t)
 	}
 
-	return ts, nil	
+	return ts, nil
 }

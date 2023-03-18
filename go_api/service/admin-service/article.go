@@ -15,7 +15,7 @@ type ArticleService struct {
 
 func NewArticleService(cfgs ...articleConfiguration) (*ArticleService, error) {
 	aas := &ArticleService{}
-	
+
 	for _, cfg := range cfgs {
 		err := cfg(aas)
 		if err != nil {
@@ -39,7 +39,7 @@ func WithSqliteArticleRepository(fileString string) articleConfiguration {
 	}
 }
 
-func (as *ArticleService) List() (article.ListArticleDto, error)  {
+func (as *ArticleService) List() (article.ListArticleDto, error) {
 	aq := article.ArticleQuery{WithDraft: true}
 	a, err := as.ap.List(aq)
 	return a, err
@@ -50,15 +50,15 @@ func (as *ArticleService) FindById(id uuid.UUID) (article.ArticleDto, error) {
 	return a, err
 }
 
-func (as *ArticleService) Update(articleID uuid.UUID, title string, content string, tagNames []string, topicID *uuid.UUID, isPublic bool) (entity.Article, error)  {
+func (as *ArticleService) Update(articleID uuid.UUID, title string, content string, tagNames []string, topicID *uuid.UUID, isPublic bool) (entity.Article, error) {
 	// TODO: findByIdでentity.Articleを取得して、そのentity.ArticleをUpdateするようにする
-	a := entity.Article{}	
+	a := entity.Article{}
 	a.SetID(articleID)
 	a.SetTitle(title)
 	a.SetContent(content)
 	a.SetTags(tagNames)
 	a.SetTopicID(topicID)
-	if(isPublic) {
+	if isPublic {
 		a.Public()
 	}
 

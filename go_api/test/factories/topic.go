@@ -12,11 +12,11 @@ type topicOptions func(*entity.Topic)
 func SetTopicName(name string) topicOptions {
 	return func(t *entity.Topic) {
 		t.SetName(name)
-	}	
+	}
 }
 
-func CreateTopic(t *testing.T, fileName string, options ...topicOptions) entity.Topic  {
-	topic, err := entity.NewTopic(entity.Topic{Name: "test topic", Description: "description"})	
+func CreateTopic(t *testing.T, fileName string, options ...topicOptions) entity.Topic {
+	topic, err := entity.NewTopic(entity.Topic{Name: "test topic", Description: "description"})
 	for _, op := range options {
 		op(&topic)
 	}

@@ -9,23 +9,23 @@ import (
 
 func TestUser_NewUser(t *testing.T) {
 	type testCase struct {
-		test string
-		username string
-		password string
+		test        string
+		username    string
+		password    string
 		expectedErr error
 	}
 
 	testCases := []testCase{
 		{
-			test: "Empty Username validation",
-			username: "",
-			password: "",
+			test:        "Empty Username validation",
+			username:    "",
+			password:    "",
 			expectedErr: entity.ErrInvalidUser,
 		},
 		{
-			test: "Valid User",
-			username: "test",
-			password: "password",
+			test:        "Valid User",
+			username:    "test",
+			password:    "password",
 			expectedErr: nil,
 		},
 	}

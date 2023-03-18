@@ -6,13 +6,13 @@ import (
 )
 
 type UserJson struct {
-	UserID uuid.UUID `json:"userId"`
-	UserName string `json:"userName"`
+	UserID   uuid.UUID `json:"userId"`
+	UserName string    `json:"userName"`
 }
 
 func User2Json(user entity.User) UserJson {
 	return UserJson{
-		UserID: user.UserId.ID,
+		UserID:   user.UserId.ID,
 		UserName: user.Username,
-	}	
+	}
 }

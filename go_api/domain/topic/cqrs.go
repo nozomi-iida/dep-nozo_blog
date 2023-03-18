@@ -17,7 +17,7 @@ func NewAssociatedType(associate string) (AssociatedType, error) {
 		return Article, nil
 	default:
 		return "", ErrInvalidAssociatedType
-	}	
+	}
 }
 
 type TopicQuery struct {
@@ -31,10 +31,10 @@ type PublicFindByNameQuery struct {
 }
 
 type TopicDto struct {
-	TopicID uuid.UUID `json:"topicId"`
-	Name string `json:"name"`
-	Description string `json:"description"`
-	Articles []entity.Article `json:"articles"`
+	TopicID     uuid.UUID        `json:"topicId"`
+	Name        string           `json:"name"`
+	Description string           `json:"description"`
+	Articles    []entity.Article `json:"articles"`
 }
 
 type TopicListDto struct {

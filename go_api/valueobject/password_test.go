@@ -8,25 +8,25 @@ import (
 
 func TestPassword_NewPassword(t *testing.T) {
 	type testCase struct {
-		test string
-		plainText string
+		test        string
+		plainText   string
 		expectedErr error
 	}
 
 	testCases := []testCase{
 		{
-			test: "Password is too short",
-			plainText: "hoge",
+			test:        "Password is too short",
+			plainText:   "hoge",
 			expectedErr: valueobject.ErrTooShortPassword,
 		},
 		{
-			test: "Invalid password",
-			plainText: "password",
+			test:        "Invalid password",
+			plainText:   "password",
 			expectedErr: valueobject.ErrInvalidPassword,
 		},
 		{
-			test: "Valid password",
-			plainText: "password123",
+			test:        "Valid password",
+			plainText:   "password123",
 			expectedErr: nil,
 		},
 	}

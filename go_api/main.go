@@ -7,9 +7,7 @@ import (
 	"github.com/nozomi-iida/nozo_blog/presentation"
 )
 
-
-
-func main()  {
+func main() {
 	var r, _ = presentation.NewRouter("./tmp/data.db")
 	// handler := cors.AllowAll().Handler(r)
 

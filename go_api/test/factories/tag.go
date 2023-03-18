@@ -12,11 +12,11 @@ type tagOptions func(*entity.Tag)
 func SetTagName(name string) tagOptions {
 	return func(t *entity.Tag) {
 		t.SetName(name)
-	}	
+	}
 }
 
-func CreateTag(t *testing.T, fileName string, options ...tagOptions) entity.Tag  {
-	tag, err := entity.NewTag("testTag")	
+func CreateTag(t *testing.T, fileName string, options ...tagOptions) entity.Tag {
+	tag, err := entity.NewTag("testTag")
 	for _, op := range options {
 		op(&tag)
 	}

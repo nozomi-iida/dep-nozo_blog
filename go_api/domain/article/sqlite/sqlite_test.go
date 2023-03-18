@@ -23,8 +23,8 @@ func TestArticleSqlite_Create(t *testing.T) {
 		t.Errorf("sqlite error: %v", err)
 	}
 	type testCase struct {
-		test string
-		article entity.Article
+		test        string
+		article     entity.Article
 		expectedErr error
 	}
 
@@ -32,14 +32,14 @@ func TestArticleSqlite_Create(t *testing.T) {
 		{
 			test: "Success to create user",
 			article: entity.Article{
-				ArticleID: uuid.New(), 
-				Title: "test", 
-				Content: "test", 
-				AuthorID: u.GetID(), 
+				ArticleID: uuid.New(),
+				Title:     "test",
+				Content:   "test",
+				AuthorID:  u.GetID(),
 				Tags: []entity.Tag{
-					{ TagID: uuid.New(), Name: "tag_1" }, 
-					{ TagID: uuid.New(), Name: "tag_2" }, 
-				}, 
+					{TagID: uuid.New(), Name: "tag_1"},
+					{TagID: uuid.New(), Name: "tag_2"},
+				},
 				TopicID: &tp.TopicID,
 			},
 			expectedErr: nil,
@@ -47,14 +47,14 @@ func TestArticleSqlite_Create(t *testing.T) {
 		{
 			test: "Success to create null topic article",
 			article: entity.Article{
-				ArticleID: uuid.New(), 
-				Title: "test", 
-				Content: "test", 
-				AuthorID: u.GetID(), 
+				ArticleID: uuid.New(),
+				Title:     "test",
+				Content:   "test",
+				AuthorID:  u.GetID(),
 				Tags: []entity.Tag{
-					{ TagID: uuid.New(), Name: "tag_1" }, 
-					{ TagID: uuid.New(), Name: "tag_2" }, 
-				}, 
+					{TagID: uuid.New(), Name: "tag_1"},
+					{TagID: uuid.New(), Name: "tag_2"},
+				},
 				TopicID: nil,
 			},
 			expectedErr: nil,
@@ -83,19 +83,19 @@ func TestArticleSqlite_Update(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
+		test           string
 		updatedArticle entity.Article
-		expectedErr error
+		expectedErr    error
 	}
 	a.SetTitle("update title")
 	a.SetTopicID(&topic.TopicID)
 	a.SetTags([]string{"update"})
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Success to update article",
+			test:           "Success to update article",
 			updatedArticle: a,
-			expectedErr: nil,
+			expectedErr:    nil,
 		},
 	}
 
@@ -127,20 +127,20 @@ func TestArticleSqlite_Delete(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		articleId uuid.UUID
+		test        string
+		articleId   uuid.UUID
 		expectedErr error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Success to delete article",
-			articleId: a.ArticleID,
+			test:        "Success to delete article",
+			articleId:   a.ArticleID,
 			expectedErr: nil,
 		},
 		{
-			test: "Failed to delete article",
-			articleId: uuid.New(),
+			test:        "Failed to delete article",
+			articleId:   uuid.New(),
 			expectedErr: article.ErrArticleNotFound,
 		},
 	}
@@ -168,36 +168,36 @@ func TestArticleSqlite_List(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		query article.ArticleQuery
+		test          string
+		query         article.ArticleQuery
 		expectedCount int
-		expectedErr error
+		expectedErr   error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "get Article",
-			query: article.ArticleQuery{},
+			test:          "get Article",
+			query:         article.ArticleQuery{},
 			expectedCount: 2,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 		{
-			test: "get keyword engineer",
-			query: article.ArticleQuery{Keyword: engineerArticle.Title},
+			test:          "get keyword engineer",
+			query:         article.ArticleQuery{Keyword: engineerArticle.Title},
 			expectedCount: 1,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 		{
-			test: "get all Article",
-			query: article.ArticleQuery{WithDraft: true},
+			test:          "get all Article",
+			query:         article.ArticleQuery{WithDraft: true},
 			expectedCount: 3,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 		{
-			test: "get oldest by published_at",
-			query: article.ArticleQuery{OrderBy: article.PublishedAtAsc},
+			test:          "get oldest by published_at",
+			query:         article.ArticleQuery{OrderBy: article.PublishedAtAsc},
 			expectedCount: 2,
-			expectedErr: nil,
+			expectedErr:   nil,
 		},
 	}
 
@@ -216,7 +216,7 @@ func TestArticleSqlite_List(t *testing.T) {
 		})
 	}
 }
-	
+
 func TestArticleSqlite_FindById(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
@@ -227,20 +227,20 @@ func TestArticleSqlite_FindById(t *testing.T) {
 	}
 
 	type testCase struct {
-		test string
-		articleId uuid.UUID
+		test        string
+		articleId   uuid.UUID
 		expectedErr error
 	}
 
-	testCases := []testCase {
+	testCases := []testCase{
 		{
-			test: "Get article",
-			articleId: a.ArticleID,
+			test:        "Get article",
+			articleId:   a.ArticleID,
 			expectedErr: nil,
 		},
 		{
-			test: "Not found article",
-			articleId: uuid.New(),
+			test:        "Not found article",
+			articleId:   uuid.New(),
 			expectedErr: article.ErrArticleNotFound,
 		},
 	}
@@ -257,4 +257,3 @@ func TestArticleSqlite_FindById(t *testing.T) {
 		})
 	}
 }
-

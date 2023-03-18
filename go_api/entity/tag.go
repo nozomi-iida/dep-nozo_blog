@@ -12,7 +12,7 @@ var (
 
 type Tag struct {
 	TagID uuid.UUID `json:"tag_id"`
-	Name string `json:"name"` 
+	Name  string    `json:"name"`
 }
 
 func NewTag(name string) (Tag, error) {
@@ -22,11 +22,11 @@ func NewTag(name string) (Tag, error) {
 
 	return Tag{
 		TagID: uuid.New(),
-		Name: name,
-	}, nil	
+		Name:  name,
+	}, nil
 }
 
-func (t *Tag) SetName(name string)  {
+func (t *Tag) SetName(name string) {
 	if name == "" {
 		return
 	}

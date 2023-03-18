@@ -18,7 +18,7 @@ func NewTagService(cfgs ...tagConfigurations) (*TagService, error) {
 	for _, cfg := range cfgs {
 		err := cfg(tg)
 		if err != nil {
-			return nil, err 
+			return nil, err
 		}
 	}
 
@@ -34,10 +34,10 @@ func WithSqliteTagRepository(fileString string) tagConfigurations {
 		tg.tg = s
 
 		return nil
-	}	
+	}
 }
 
-func (tg *TagService) List(query tag.TagQuery) ([]entity.Tag, error)  {
+func (tg *TagService) List(query tag.TagQuery) ([]entity.Tag, error) {
 	tags, err := tg.tg.List(query)
 	if err != nil {
 		return []entity.Tag{}, err

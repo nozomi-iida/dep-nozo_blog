@@ -9,8 +9,8 @@ import (
 
 func TestArticle_NewArticle(t *testing.T) {
 	type testCase struct {
-		test string
-		article entity.ArticleArgument
+		test        string
+		article     entity.ArticleArgument
 		expectedErr error
 	}
 
@@ -24,8 +24,8 @@ func TestArticle_NewArticle(t *testing.T) {
 		{
 			test: "Empty Title validation",
 			article: entity.ArticleArgument{
-				Title: "",
-				Content: "test",
+				Title:    "",
+				Content:  "test",
 				AuthorID: user.GetID(),
 			},
 			expectedErr: entity.ErrInvalidArticle,
@@ -33,7 +33,7 @@ func TestArticle_NewArticle(t *testing.T) {
 		{
 			test: "Empty AuthorId validation",
 			article: entity.ArticleArgument{
-				Title: "test",
+				Title:   "test",
 				Content: "test",
 			},
 			expectedErr: entity.ErrInvalidArticle,
@@ -41,8 +41,8 @@ func TestArticle_NewArticle(t *testing.T) {
 		{
 			test: "Too many tags",
 			article: entity.ArticleArgument{
-				Title: "test",
-				Content: "test",
+				Title:    "test",
+				Content:  "test",
 				AuthorID: user.GetID(),
 				Tags: []entity.Tag{
 					tag,
@@ -56,8 +56,8 @@ func TestArticle_NewArticle(t *testing.T) {
 		{
 			test: "valid article",
 			article: entity.ArticleArgument{
-				Title: "test",
-				Content: "test",
+				Title:    "test",
+				Content:  "test",
 				AuthorID: user.GetID(),
 			},
 			expectedErr: nil,

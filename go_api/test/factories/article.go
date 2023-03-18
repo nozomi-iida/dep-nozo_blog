@@ -16,19 +16,19 @@ type articleOptions func(*entity.Article)
 func SetTitle(title string) articleOptions {
 	return func(a *entity.Article) {
 		a.Title = title
-	}	
+	}
 }
 
 func SetPublishedAt(time *time.Time) articleOptions {
 	return func(a *entity.Article) {
 		a.PublishedAt = time
-	}	
+	}
 }
 
 func SetTopic(topicID uuid.UUID) articleOptions {
 	return func(a *entity.Article) {
-		a.TopicID = &topicID 
-	}	
+		a.TopicID = &topicID
+	}
 }
 
 var called = 0
@@ -38,19 +38,19 @@ func CreateArticle(t *testing.T, fileName string, options ...articleOptions) ent
 	tag, _ := entity.NewTag("testTag")
 	now := time.Now()
 	a, err := entity.NewArticle(entity.ArticleArgument{
-		Title: "test article", 
-		Content: "content", 
+		Title:   "test article",
+		Content: "content",
 		Tags: []entity.Tag{
 			tag,
-		}, 
+		},
 		PublishedAt: &now,
-		AuthorID: user.GetID(),
-		TopicID: nil,
+		AuthorID:    user.GetID(),
+		TopicID:     nil,
 	})
 	for _, op := range options {
 		op(&a)
 	}
-	
+
 	sq, err := sqlite.New(fileName)
 	_, err = sq.Create(a)
 	if err != nil {
@@ -60,4 +60,3 @@ func CreateArticle(t *testing.T, fileName string, options ...articleOptions) ent
 	called = called + 1
 	return a
 }
-

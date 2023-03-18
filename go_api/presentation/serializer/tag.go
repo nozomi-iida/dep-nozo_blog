@@ -7,12 +7,12 @@ import (
 
 type TagJson struct {
 	TagID uuid.UUID `json:"tagId"`
-	Name string `json:"name"`
+	Name  string    `json:"name"`
 }
 
 func Tag2Json(tag entity.Tag) TagJson {
 	return TagJson{
 		TagID: tag.TagID,
-		Name: tag.Name,
+		Name:  tag.Name,
 	}
 }

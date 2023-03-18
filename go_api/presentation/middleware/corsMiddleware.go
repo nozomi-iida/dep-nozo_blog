@@ -15,10 +15,10 @@ func CorsMiddleware(next http.Handler) http.Handler {
 		headers.Set("ExposedHeaders", "Link")
 
 		if r.Method == "OPTIONS" {
-				w.WriteHeader(http.StatusOK)
-				return
+			w.WriteHeader(http.StatusOK)
+			return
 		}
 
-		next.ServeHTTP(w, r)	
-	})	
+		next.ServeHTTP(w, r)
+	})
 }
