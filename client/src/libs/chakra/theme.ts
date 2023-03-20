@@ -3,6 +3,7 @@ import {
   StyleFunctionProps,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { colors } from "./colors";
 
 export const useThemeColor = () => {
   const bgColor = useColorModeValue("white", "#18191b");
@@ -11,13 +12,7 @@ export const useThemeColor = () => {
 };
 
 const chakraTheme = extendTheme({
-  colors: {
-    // theme color
-    activeColor: "#6ca4db",
-    borderColor: "#e3e5e6",
-    // text color
-    subInfoText: "#989ea6",
-  },
+  colors,
   components: {
     Text: {
       baseStyle: (props: StyleFunctionProps) => ({

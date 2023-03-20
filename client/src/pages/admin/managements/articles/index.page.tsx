@@ -39,6 +39,7 @@ const ManagementArticlesPage: NextPageWithLayout = () => {
               router.push(pagesPath.admin.managements.articles.create.$url())
             }
             leftIcon={<AiOutlinePlus />}
+            colorScheme="primary"
           >
             Create
           </Button>
@@ -66,7 +67,7 @@ const ManagementArticlesPage: NextPageWithLayout = () => {
                       ._id(article.articleId)
                       .edit.$url()}
                   >
-                    <Button>編集</Button>
+                    <Button colorScheme="primary">編集</Button>
                   </Link>
                 </Td>
               </Tr>
