@@ -1,4 +1,4 @@
-import { Button, Heading, useToast, VStack } from "@chakra-ui/react";
+import { Button, Heading, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AdminRouter } from "components/AdminRouter";
 import {
@@ -8,12 +8,13 @@ import {
 } from "components/ArticleForm";
 import { AdminLayout } from "components/Layout/AdminLayout";
 import { restAdminCli } from "libs/axios/restAdminCli";
+import { useCustomToast } from "libs/chakra/useCustomToast";
 import { NextPageWithLayout } from "pages/_app.page";
 import { ReactElement } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 const CreateArticlePage: NextPageWithLayout = () => {
-  const toast = useToast();
+  const toast = useCustomToast();
   const methods = useForm<ArticleFormData>({
     resolver: zodResolver(articleSchema),
     defaultValues: { tagNames: [] },
