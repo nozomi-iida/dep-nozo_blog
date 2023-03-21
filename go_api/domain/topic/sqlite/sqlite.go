@@ -52,6 +52,40 @@ func (sr *sqliteRepository) Create(t entity.Topic) (entity.Topic, error) {
 	return t, nil
 }
 
+func (sr *sqliteRepository) List() ([]entity.Topic, error) {
+	var tld []entity.Topic
+
+	rows, err := sr.db.Query(`
+		SELECT
+			topics.topic_id,
+			topics.name,
+			topics.description
+		FROM
+			topics;
+	`)
+
+	if err != nil {
+		return []entity.Topic{}, topic.ErrFailedToListTopics
+	}
+
+	for rows.Next() {
+		var td entity.Topic
+
+		err = rows.Scan(
+			&td.TopicID,
+			&td.Name,
+			&td.Description,
+		)
+		if err != nil {
+			return []entity.Topic{}, topic.ErrFailedToListTopics
+		}
+
+		tld = append(tld, td)
+	}
+	return tld, nil
+}
+
+// cqrs
 func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, error) {
 	var tld topic.TopicListDto
 
@@ -111,34 +145,34 @@ func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, 
 				if err != nil {
 					return topic.TopicListDto{}, topic.ErrFailedToListTopics
 				}
-				var tg entity.Tag
-				tagRows, err := sr.db.Query(`
-					SELECT
-						tags.tag_id,
-						tags.name
-					FROM
-						tags
-					INNER JOIN
-						article_tags
-					ON
-						tags.tag_id == article_tags.tag_id
-					WHERE	
-						article_tags.article_id == ?;
-				`, ac.ArticleID)
-				if err != nil {
-					return topic.TopicListDto{}, topic.ErrFailedToListTopics
-				}
-				for tagRows.Next() {
-					err = tagRows.Scan(
-						&tg.TagID,
-						&tg.Name,
-					)
+				if ac.PublishedAt != nil {
+					var tg entity.Tag
+					tagRows, err := sr.db.Query(`
+						SELECT
+							tags.tag_id,
+							tags.name
+						FROM
+							tags
+						INNER JOIN
+							article_tags
+						ON
+							tags.tag_id == article_tags.tag_id
+						WHERE	
+							article_tags.article_id == ?;
+					`, ac.ArticleID)
 					if err != nil {
 						return topic.TopicListDto{}, topic.ErrFailedToListTopics
 					}
-					ac.Tags = append(ac.Tags, tg)
-				}
-				if ac.PublishedAt != nil {
+					for tagRows.Next() {
+						err = tagRows.Scan(
+							&tg.TagID,
+							&tg.Name,
+						)
+						if err != nil {
+							return topic.TopicListDto{}, topic.ErrFailedToListTopics
+						}
+						ac.Tags = append(ac.Tags, tg)
+					}
 					td.Articles = append(td.Articles, ac)
 				}
 			}

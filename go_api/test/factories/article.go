@@ -57,6 +57,6 @@ func CreateArticle(t *testing.T, fileName string, options ...articleOptions) ent
 		t.Error("create user err:", err)
 	}
 
-	called = called + 1
+	called++
 	return a
 }

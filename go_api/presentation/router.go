@@ -13,6 +13,8 @@ func NewRouter(fileString string) (*chi.Mux, error) {
 	tc, err := controller.NewTopicController(fileString)
 	tgc, err := controller.NewTagController(fileString)
 	aac, err := admincontroller.NewArticleController(fileString)
+	adtc, err := admincontroller.NewTopicController(fileString)
+
 	if err != nil {
 		return &chi.Mux{}, err
 	}
@@ -45,6 +47,9 @@ func NewRouter(fileString string) (*chi.Mux, error) {
 				r.Get("/{article_id}", aac.FindByIdRequest)
 				r.Patch("/{article_id}", aac.PatchRequest)
 				r.Delete("/{article_id}", ac.DeleteRequest)
+			})
+			r.Route("/topics", func(r chi.Router) {
+				r.Get("/", adtc.ListRequest)
 			})
 		})
 	})

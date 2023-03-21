@@ -15,4 +15,5 @@ var (
 
 type TopicRepository interface {
 	Create(topic entity.Topic) (entity.Topic, error)
+	List() ([]entity.Topic, error)
 }

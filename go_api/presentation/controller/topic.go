@@ -34,6 +34,10 @@ type topicRequest struct {
 	Description string `json:"description,omitempty"`
 }
 
+func (tr *topicRequest) FromJson(data []byte) error {
+	return json.Unmarshal(data, tr)
+}
+
 type topicResponse struct {
 	TopicId     uuid.UUID `json:"topicId" validate:"required"`
 	Name        string    `json:"name" validate:"required"`
@@ -57,7 +61,10 @@ func (tc *TopicController) CreteRequest(w http.ResponseWriter, r *http.Request) 
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
 	var topicRequest topicRequest
-	json.Unmarshal(body, &topicRequest)
+	if err := topicRequest.FromJson(body); err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
 	helpers.Validate(w, topicRequest)
 
 	t, err := tc.ts.Create(topicRequest.Name, topicRequest.Description)

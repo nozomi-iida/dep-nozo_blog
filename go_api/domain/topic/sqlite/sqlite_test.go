@@ -48,6 +48,46 @@ func TestTopicSqlite_Create(t *testing.T) {
 	}
 }
 
+func TestTopicSqlite_List(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	sq, err := sqlite.New(ts.Filename)
+	factories.CreateTopic(t, ts.Filename)
+	factories.CreateTopic(t, ts.Filename, factories.SetTopicName("topic 2"))
+	factories.CreateTopic(t, ts.Filename, factories.SetTopicName("topic 3"))
+	if err != nil {
+		t.Errorf("sqlite error: %v", err)
+	}
+
+	type testCase struct {
+		test          string
+		query         topic.TopicQuery
+		expectedCount int
+		expectedErr   error
+	}
+
+	testCases := []testCase{
+		{
+			test:          "Get 3 topics",
+			query:         topic.TopicQuery{},
+			expectedCount: 3,
+			expectedErr:   nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			tld, err := sq.PublicList(tc.query)
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+			if err == nil && len(tld.Topics) != tc.expectedCount {
+				t.Errorf("Expected count %v, got %v", tc.expectedCount, len(tld.Topics))
+			}
+		})
+	}
+}
+
 func TestTopicSqlite_PublicList(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
