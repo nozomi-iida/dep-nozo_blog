@@ -13,6 +13,17 @@ export const pagesPath = {
           $url: (url?: { hash?: string }) => ({ pathname: '/admin/managements/articles/create' as const, hash: url?.hash })
         },
         $url: (url?: { hash?: string }) => ({ pathname: '/admin/managements/articles' as const, hash: url?.hash })
+      },
+      "topics": {
+        _id: (id: string | number) => ({
+          "edit": {
+            $url: (url?: { hash?: string }) => ({ pathname: '/admin/managements/topics/[id]/edit' as const, query: { id }, hash: url?.hash })
+          }
+        }),
+        "create": {
+          $url: (url?: { hash?: string }) => ({ pathname: '/admin/managements/topics/create' as const, hash: url?.hash })
+        },
+        $url: (url?: { hash?: string }) => ({ pathname: '/admin/managements/topics' as const, hash: url?.hash })
       }
     },
     "sign_in": {

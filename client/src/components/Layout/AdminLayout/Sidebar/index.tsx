@@ -23,7 +23,7 @@ export const AdminSidebar = () => {
     {
       name: "Topics",
       icon: MdTopic,
-      path: pagesPath.admin.managements.articles.$url().pathname,
+      path: pagesPath.admin.managements.topics.$url().pathname,
     },
   ];
   const router = useRouter();
