@@ -39,17 +39,17 @@ func New(fileString string) (*sqliteRepository, error) {
 	}, err
 }
 
-func (sr *sqliteRepository) Create(t entity.Topic) (entity.Topic, error) {
+func (sr *sqliteRepository) Create(t entity.Topic) error {
 	if sr.exist(t.Name) {
-		return entity.Topic{}, topic.ErrTopicAlreadyExist
+		return topic.ErrTopicAlreadyExist
 	}
 
 	_, err := sr.db.Exec("INSERT INTO topics(topic_id, name, description) VALUES (?, ?, ?)", t.TopicID, t.Name, t.Description)
 	if err != nil {
-		return entity.Topic{}, err
+		return err
 	}
 
-	return t, nil
+	return nil
 }
 
 func (sr *sqliteRepository) List() ([]entity.Topic, error) {

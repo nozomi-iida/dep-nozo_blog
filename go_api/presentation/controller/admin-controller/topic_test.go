@@ -67,3 +67,48 @@ func TestTopicController_ListRequest(t *testing.T) {
 		})
 	}
 }
+
+func TestTopicController_PostRequest(t *testing.T) {
+	ts := test.ConnectDB(t)
+	var r, _ = presentation.NewRouter(ts.Filename)
+	testServer := httptest.NewServer(r)
+	t.Cleanup(func() {
+		testServer.Close()
+	})
+	us := test.CreateUser(t, ts.Filename)
+	req, err := http.NewRequestWithContext(context.TODO(), http.MethodPost, testServer.URL+"/api/v1/admin/topics", nil)
+	token, err := us.UserId.Encode()
+	req.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, token))
+	if err != nil {
+		t.Fatal(err)
+	}
+	cli := &http.Client{}
+	type testCase struct {
+		test          string
+		name string
+		description string
+		expectedErr   error
+	}
+
+	testCases := []testCase{
+		{
+			test:          "Success to create topic",
+			name: "test",
+			description: "test",
+			expectedErr:   nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			resp, err := cli.Do(req)
+			if err != nil {
+				t.Fatal(err)
+			}
+			resp.Body.Close()
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
+			}
+		})
+	}
+}

@@ -64,10 +64,18 @@ func WithSqliteTopicRepository(fileString string) topicConfiguration {
 	}
 }
 
-
-
 func (as *TopicService) List() (TopicListDto, error) {
 	t, err := as.ap.List()
 	topicDtos := topicEntitiesToListDto(t)
 	return topicDtos, err
+}
+
+func (as *TopicService) Create(name string, description string) error {
+	tp, err := entity.NewTopic(entity.Topic{Name: name, Description: description})
+	err = as.ap.Create(tp)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

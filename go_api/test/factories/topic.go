@@ -25,7 +25,7 @@ func CreateTopic(t *testing.T, fileName string, options ...topicOptions) entity.
 	}
 
 	sq, err := sqlite.New(fileName)
-	_, err = sq.Create(topic)
+	err = sq.Create(topic)
 	if err != nil {
 		t.Error("create topic err:", err)
 	}

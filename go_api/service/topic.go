@@ -3,7 +3,6 @@ package service
 import (
 	"github.com/nozomi-iida/nozo_blog/domain/topic"
 	"github.com/nozomi-iida/nozo_blog/domain/topic/sqlite"
-	"github.com/nozomi-iida/nozo_blog/entity"
 )
 
 type topicConfigurations func(tp *TopicService) error
@@ -37,16 +36,6 @@ func WithSqliteTopicRepository(fileString string) topicConfigurations {
 
 		return nil
 	}
-}
-
-func (ts *TopicService) Create(name string, description string) (entity.Topic, error) {
-	tp, err := entity.NewTopic(entity.Topic{Name: name, Description: description})
-	tp, err = ts.tp.Create(tp)
-	if err != nil {
-		return entity.Topic{}, err
-	}
-
-	return tp, nil
 }
 
 func (ts *TopicService) PublicList(query topic.TopicQuery) (topic.TopicListDto, error) {

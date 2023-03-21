@@ -29,15 +29,6 @@ func NewTopicController(fileString string) (TopicController, error) {
 	return TopicController{ts: ts}, nil
 }
 
-type topicRequest struct {
-	Name        string `json:"name" validate:"required"`
-	Description string `json:"description,omitempty"`
-}
-
-func (tr *topicRequest) FromJson(data []byte) error {
-	return json.Unmarshal(data, tr)
-}
-
 type topicResponse struct {
 	TopicId     uuid.UUID `json:"topicId" validate:"required"`
 	Name        string    `json:"name" validate:"required"`
@@ -57,27 +48,6 @@ func topicListToJson(topics []entity.Topic) topicListResponse {
 	return topicListResponse{Topics: trs}
 }
 
-func (tc *TopicController) CreteRequest(w http.ResponseWriter, r *http.Request) {
-	body := make([]byte, r.ContentLength)
-	r.Body.Read(body)
-	var topicRequest topicRequest
-	if err := topicRequest.FromJson(body); err != nil {
-		helpers.ErrorHandler(w, err)
-		return
-	}
-	helpers.Validate(w, topicRequest)
-
-	t, err := tc.ts.Create(topicRequest.Name, topicRequest.Description)
-	tp := topicResponse{TopicId: t.TopicID, Name: t.Name, Description: t.Description}
-	if err != nil {
-		helpers.ErrorHandler(w, err)
-		return
-	}
-	output, _ := json.MarshalIndent(tp, "", "\t")
-
-	w.WriteHeader(http.StatusCreated)
-	w.Write(output)
-}
 
 func (tc *TopicController) ListRequest(w http.ResponseWriter, r *http.Request) {
 	keyword := r.URL.Query().Get("keyword")
