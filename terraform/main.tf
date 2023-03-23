@@ -15,22 +15,36 @@ module "vpc" {
   app_name = var.app_name
 }
 
-# module "ec2" {
-#   source = "./modules/ec2"
-#   common_tags = local.tags
-#   app_name = var.app_name
-# }
+module "alb" {
+  source = "./modules/alb"
+  common_tags = local.tags
+  app_name = var.app_name
+  vpc_id = module.vpc.vpc_id
+  public_subnet_ids= module.vpc.public_subnet_ids
+}
 
-# module "s3" {
-#   source = "./modules/s3"
-#   common_tags = local.tags
-#   app_name = var.app_name
-# }
+module "ec2" {
+  source = "./modules/ec2"
+  common_tags = local.tags
+  app_name = var.app_name
+  vpc_id = module.vpc.vpc_id
+  subnet_id = module.vpc.private_subnet_id
+  alb_sg_id = module.alb.alb_sg_id
+}
 
-# module "route53" {
-#   source = "./modules/route53"
-#   common_tags = local.tags
-# }
+module "s3" {
+  source = "./modules/s3"
+  common_tags = local.tags
+  app_name = var.app_name
+}
+
+module "route53" {
+  source = "./modules/route53"
+  common_tags = local.tags
+  vpc_id = module.vpc.vpc_id
+  dns_name = module.alb.dns_name
+  zone_id = module.alb.zone_id
+}
 
 # module "acm" {
 #   source = "./modules/acm"

@@ -13,3 +13,15 @@ variable "instance_type" {
 variable "key_name" {
   default = "nozo_blog_kp"
 }
+
+variable "vpc_id" {
+  type = string 
+}
+
+variable "subnet_id" {
+  type = string 
+}
+
+variable "alb_sg_id" {
+  type = string
+}
