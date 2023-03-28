@@ -56,4 +56,6 @@ module "alb" {
 
 module "ecs" {
   source = "./modules/ecs"
+  common_tags       = local.tags
+  app_name          = var.app_name
 }
