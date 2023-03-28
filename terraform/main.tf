@@ -51,5 +51,6 @@ module "alb" {
   vpc_id = module.vpc.vpc_id
   public_subnet_ids= module.vpc.public_subnet_ids
   certificate_arn= module.acm.certificate_arn
+  instance_id= module.ec2.instance_id
 }
 
