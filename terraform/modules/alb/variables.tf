@@ -7,7 +7,7 @@ variable "app_name" {
 }
 
 variable "vpc_id" {
-  type = string 
+  type = string
 }
 
 variable "certificate_arn" {
@@ -19,5 +19,5 @@ variable "public_subnet_ids" {
 }
 
 variable "instance_id" {
-  type = string 
+  type = string
 }
