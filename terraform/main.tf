@@ -35,15 +35,15 @@ module "ec2" {
 module "s3" {
   source = "./modules/s3"
   common_tags = local.tags
-  app_name = var.app_name
+  app_name = "nozo-blog"
 }
 
 module "route53" {
   source = "./modules/route53"
   common_tags = local.tags
   vpc_id = module.vpc.vpc_id
-  dns_name = module.alb.dns_name
-  zone_id = module.alb.zone_id
+  alb_zone_id = module.alb.zone_id
+  alb_dns_name = module.alb.dns_name
 }
 
 # module "acm" {

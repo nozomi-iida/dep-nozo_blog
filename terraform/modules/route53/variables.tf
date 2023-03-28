@@ -10,10 +10,10 @@ variable "vpc_id" {
   type = string 
 }
 
-variable "zone_id" {
+variable "alb_zone_id" {
   type = string 
 }
 
-variable "dns_name" {
+variable "alb_dns_name" {
   type = string 
 }
