@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/domain/article"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/article"
 )
 
 type ArticleJson struct {

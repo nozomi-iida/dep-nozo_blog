@@ -3,7 +3,7 @@ package valueobject_test
 import (
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/valueobject"
+	"github.com/nozomi-iida/nozo_blog_go_api/valueobject"
 )
 
 func TestPassword_NewPassword(t *testing.T) {

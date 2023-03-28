@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/nozomi-iida/nozo_blog/libs"
-	"github.com/nozomi-iida/nozo_blog/presentation"
+	"github.com/nozomi-iida/nozo_blog_go_api/libs"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation"
 )
 
 func main() {

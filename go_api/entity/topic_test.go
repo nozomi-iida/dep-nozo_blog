@@ -3,7 +3,7 @@ package entity_test
 import (
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
 )
 
 func TestTopic_NewTopic(t *testing.T) {

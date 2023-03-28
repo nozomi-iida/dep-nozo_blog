@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/domain/tag"
-	"github.com/nozomi-iida/nozo_blog/entity"
-	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
-	"github.com/nozomi-iida/nozo_blog/service"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/tag"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/helpers"
+	"github.com/nozomi-iida/nozo_blog_go_api/service"
 )
 
 type TagController struct {

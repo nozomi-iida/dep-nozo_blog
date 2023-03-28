@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/nozomi-iida/nozo_blog/domain/user"
-	"github.com/nozomi-iida/nozo_blog/service"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/user"
+	"github.com/nozomi-iida/nozo_blog_go_api/service"
 )
 
 var (

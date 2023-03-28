@@ -1,4 +1,4 @@
-module github.com/nozomi-iida/nozo_blog
+module github.com/nozomi-iida/nozo_blog_go_api
 
 go 1.18
 

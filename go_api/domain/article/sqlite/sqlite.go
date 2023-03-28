@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/domain/article"
-	"github.com/nozomi-iida/nozo_blog/entity"
-	"github.com/nozomi-iida/nozo_blog/libs"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/article"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/libs"
 	sqldblogger "github.com/simukti/sqldb-logger"
 	"github.com/simukti/sqldb-logger/logadapter/zapadapter"
 )

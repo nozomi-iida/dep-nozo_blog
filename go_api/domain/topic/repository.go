@@ -3,7 +3,7 @@ package topic
 import (
 	"errors"
 
-	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
 )
 
 var (

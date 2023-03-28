@@ -4,10 +4,10 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/domain/user"
-	"github.com/nozomi-iida/nozo_blog/domain/user/sqlite"
-	"github.com/nozomi-iida/nozo_blog/entity"
-	"github.com/nozomi-iida/nozo_blog/valueobject"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/user"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/user/sqlite"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/valueobject"
 )
 
 var (

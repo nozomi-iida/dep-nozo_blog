@@ -3,11 +3,11 @@ package sqlite_test
 import (
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/domain/tag"
-	"github.com/nozomi-iida/nozo_blog/domain/tag/sqlite"
-	"github.com/nozomi-iida/nozo_blog/entity"
-	"github.com/nozomi-iida/nozo_blog/test"
-	"github.com/nozomi-iida/nozo_blog/test/factories"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/tag"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/tag/sqlite"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/test"
+	"github.com/nozomi-iida/nozo_blog_go_api/test/factories"
 )
 
 func TestTagSqlite_List(t *testing.T) {

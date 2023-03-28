@@ -3,8 +3,8 @@ package service_test
 import (
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/service"
-	"github.com/nozomi-iida/nozo_blog/test"
+	"github.com/nozomi-iida/nozo_blog_go_api/service"
+	"github.com/nozomi-iida/nozo_blog_go_api/test"
 )
 
 func TestAuth_SignUp(t *testing.T) {

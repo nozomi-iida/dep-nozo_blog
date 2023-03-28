@@ -3,8 +3,8 @@ package factories
 import (
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/domain/tag/sqlite"
-	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/tag/sqlite"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
 )
 
 type tagOptions func(*entity.Tag)

@@ -1,4 +1,4 @@
-@startuml nozo_blog
+@startuml nozo_blog_go_api
 
 entity users {
   *user_id(pk)

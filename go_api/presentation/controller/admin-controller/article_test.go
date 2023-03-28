@@ -10,13 +10,13 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/domain/article"
-	"github.com/nozomi-iida/nozo_blog/entity"
-	"github.com/nozomi-iida/nozo_blog/presentation"
-	admincontroller "github.com/nozomi-iida/nozo_blog/presentation/controller/admin-controller"
-	"github.com/nozomi-iida/nozo_blog/presentation/serializer"
-	"github.com/nozomi-iida/nozo_blog/test"
-	"github.com/nozomi-iida/nozo_blog/test/factories"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/article"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation"
+	admincontroller "github.com/nozomi-iida/nozo_blog_go_api/presentation/controller/admin-controller"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/serializer"
+	"github.com/nozomi-iida/nozo_blog_go_api/test"
+	"github.com/nozomi-iida/nozo_blog_go_api/test/factories"
 )
 
 func TestArticleController_ListRequest(t *testing.T) {

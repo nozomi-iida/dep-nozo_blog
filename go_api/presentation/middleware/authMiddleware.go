@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
-	"github.com/nozomi-iida/nozo_blog/valueobject"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/helpers"
+	"github.com/nozomi-iida/nozo_blog_go_api/valueobject"
 )
 
 func AuthMiddleware(next http.Handler) http.Handler {

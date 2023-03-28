@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
-	"github.com/nozomi-iida/nozo_blog/service"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/helpers"
+	"github.com/nozomi-iida/nozo_blog_go_api/service"
 )
 
 type AuthController struct {

@@ -5,9 +5,9 @@ import (
 
 	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/nozomi-iida/nozo_blog/domain"
-	"github.com/nozomi-iida/nozo_blog/domain/user"
-	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/user"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
 )
 
 type SqliteRepository struct {

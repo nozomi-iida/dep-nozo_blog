@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/domain/topic/sqlite"
-	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/topic/sqlite"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
 )
 
 type topicOptions func(*entity.Topic)

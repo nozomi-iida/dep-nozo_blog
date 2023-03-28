@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/nozomi-iida/nozo_blog/libs"
+	"github.com/nozomi-iida/nozo_blog_go_api/libs"
 	"go.uber.org/zap"
 )
 

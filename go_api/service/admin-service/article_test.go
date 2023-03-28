@@ -4,10 +4,10 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/domain/article"
-	adminservice "github.com/nozomi-iida/nozo_blog/service/admin-service"
-	"github.com/nozomi-iida/nozo_blog/test"
-	"github.com/nozomi-iida/nozo_blog/test/factories"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/article"
+	adminservice "github.com/nozomi-iida/nozo_blog_go_api/service/admin-service"
+	"github.com/nozomi-iida/nozo_blog_go_api/test"
+	"github.com/nozomi-iida/nozo_blog_go_api/test/factories"
 )
 
 func TestArticle_List(t *testing.T) {

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/presentation/controller"
-	"github.com/nozomi-iida/nozo_blog/test"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/controller"
+	"github.com/nozomi-iida/nozo_blog_go_api/test"
 )
 
 func TestAuthController_SignUpRequest(t *testing.T) {

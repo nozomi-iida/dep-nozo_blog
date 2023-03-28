@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	adminservice "github.com/nozomi-iida/nozo_blog/service/admin-service"
-	"github.com/nozomi-iida/nozo_blog/test"
-	"github.com/nozomi-iida/nozo_blog/test/factories"
+	adminservice "github.com/nozomi-iida/nozo_blog_go_api/service/admin-service"
+	"github.com/nozomi-iida/nozo_blog_go_api/test"
+	"github.com/nozomi-iida/nozo_blog_go_api/test/factories"
 )
 
 func TestTopic_List(t *testing.T) {

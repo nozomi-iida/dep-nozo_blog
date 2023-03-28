@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
-	adminservice "github.com/nozomi-iida/nozo_blog/service/admin-service"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/helpers"
+	adminservice "github.com/nozomi-iida/nozo_blog_go_api/service/admin-service"
 )
 
 type TopicController struct {

@@ -5,7 +5,7 @@ import (
 	"regexp"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/valueobject"
+	"github.com/nozomi-iida/nozo_blog_go_api/valueobject"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/domain/article"
-	"github.com/nozomi-iida/nozo_blog/entity"
-	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
-	"github.com/nozomi-iida/nozo_blog/presentation/serializer"
-	adminservice "github.com/nozomi-iida/nozo_blog/service/admin-service"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/article"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/helpers"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/serializer"
+	adminservice "github.com/nozomi-iida/nozo_blog_go_api/service/admin-service"
 )
 
 type ArticleController struct {

@@ -4,8 +4,8 @@ import (
 	"database/sql"
 
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/domain/topic"
-	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/topic"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
 )
 
 type sqliteRepository struct {

@@ -2,9 +2,9 @@ package presentation
 
 import (
 	"github.com/go-chi/chi/v5"
-	"github.com/nozomi-iida/nozo_blog/presentation/controller"
-	admincontroller "github.com/nozomi-iida/nozo_blog/presentation/controller/admin-controller"
-	"github.com/nozomi-iida/nozo_blog/presentation/middleware"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/controller"
+	admincontroller "github.com/nozomi-iida/nozo_blog_go_api/presentation/controller/admin-controller"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/middleware"
 )
 
 func NewRouter(fileString string) (*chi.Mux, error) {

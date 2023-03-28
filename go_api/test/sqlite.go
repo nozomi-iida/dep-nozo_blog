@@ -7,9 +7,9 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/domain/user/sqlite"
-	"github.com/nozomi-iida/nozo_blog/entity"
-	"github.com/nozomi-iida/nozo_blog/valueobject"
+	"github.com/nozomi-iida/nozo_blog_go_api/domain/user/sqlite"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/valueobject"
 	migrate "github.com/rubenv/sql-migrate"
 )
 
@@ -33,7 +33,7 @@ func ConnectDB(t *testing.T) TestSqlite {
 	_, b, _, _ := runtime.Caller(0)
 	root := filepath.Join(filepath.Dir(b), "../../../")
 	migrations := &migrate.FileMigrationSource{
-		Dir: root + "/nozo_blog/go_api/db/migrations",
+		Dir: root + "/nozo_blog_go_api/go_api/db/migrations",
 	}
 	_, err = migrate.Exec(db, "sqlite3", migrations, migrate.Up)
 	if err != nil {

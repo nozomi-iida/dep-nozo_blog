@@ -2,7 +2,7 @@ package serializer
 
 import (
 	"github.com/google/uuid"
-	"github.com/nozomi-iida/nozo_blog/entity"
+	"github.com/nozomi-iida/nozo_blog_go_api/entity"
 )
 
 type TopicJson struct {

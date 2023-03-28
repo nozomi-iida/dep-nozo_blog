@@ -8,10 +8,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/presentation"
-	adminservice "github.com/nozomi-iida/nozo_blog/service/admin-service"
-	"github.com/nozomi-iida/nozo_blog/test"
-	"github.com/nozomi-iida/nozo_blog/test/factories"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation"
+	adminservice "github.com/nozomi-iida/nozo_blog_go_api/service/admin-service"
+	"github.com/nozomi-iida/nozo_blog_go_api/test"
+	"github.com/nozomi-iida/nozo_blog_go_api/test/factories"
 )
 
 func TestTopicController_ListRequest(t *testing.T) {

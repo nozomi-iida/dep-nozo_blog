@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/presentation/middleware"
-	"github.com/nozomi-iida/nozo_blog/test"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/middleware"
+	"github.com/nozomi-iida/nozo_blog_go_api/test"
 )
 
 func mockHandler(w http.ResponseWriter, r *http.Request) {

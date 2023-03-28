@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/nozomi-iida/nozo_blog/presentation/controller"
-	"github.com/nozomi-iida/nozo_blog/presentation/middleware"
-	"github.com/nozomi-iida/nozo_blog/test"
-	"github.com/nozomi-iida/nozo_blog/test/factories"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/controller"
+	"github.com/nozomi-iida/nozo_blog_go_api/presentation/middleware"
+	"github.com/nozomi-iida/nozo_blog_go_api/test"
+	"github.com/nozomi-iida/nozo_blog_go_api/test/factories"
 )
 
 func TestArticleController_PostRequest(t *testing.T) {
