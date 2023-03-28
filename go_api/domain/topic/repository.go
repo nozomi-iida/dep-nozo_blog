@@ -15,5 +15,6 @@ var (
 
 type TopicRepository interface {
 	Create(topic entity.Topic) error
+	Update(topic entity.Topic) error
 	List() ([]entity.Topic, error)
 }

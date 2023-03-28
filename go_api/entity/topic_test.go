@@ -31,7 +31,7 @@ func TestTopic_NewTopic(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			_, err := entity.NewTopic(entity.Topic{Name: tc.name, Description: tc.description})
+			_, err := entity.NewTopic(entity.TopicArgument{Name: tc.name, Description: tc.description})
 			if err != tc.expectedErr {
 				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}

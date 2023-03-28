@@ -85,6 +85,27 @@ func (sr *sqliteRepository) List() ([]entity.Topic, error) {
 	return tld, nil
 }
 
+func (sr *sqliteRepository) Update(t entity.Topic) error {
+	if sr.exist(t.Name) {
+		return topic.ErrTopicAlreadyExist
+	}
+
+	_, err := sr.db.Exec(`
+		UPDATE
+			topics
+		SET
+			name = ?,
+			description = ?
+		WHERE
+			topic_id = ?;
+	`, t.TopicID, t.Name, t.Description)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // cqrs
 func (sr *sqliteRepository) PublicList(q topic.TopicQuery) (topic.TopicListDto, error) {
 	var tld topic.TopicListDto

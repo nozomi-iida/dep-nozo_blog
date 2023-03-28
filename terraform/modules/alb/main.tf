@@ -4,13 +4,6 @@ resource "aws_security_group" "allow_http" {
   vpc_id = var.vpc_id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -33,4 +26,15 @@ resource "aws_lb" "app" {
   security_groups = [aws_security_group.allow_http.id]
   subnets = var.public_subnet_ids
   tags = merge(var.common_tags, { Name = "${var.app_name}_alb" })
+}
+
+resource "aws_lb_listener" "app" {
+  load_balancer_arn = aws_lb.app.arn
+  port = "443"
+  protocol = "HTTPS"
+  certificate_arn = var.certificate_arn
+  default_action {
+    target_group_arn = aws_lb_target_group.name.arn
+    type = "forward"
+  }
 }

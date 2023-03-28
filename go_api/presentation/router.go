@@ -51,6 +51,8 @@ func NewRouter(fileString string) (*chi.Mux, error) {
 			r.Route("/topics", func(r chi.Router) {
 				r.Get("/", adtc.ListRequest)
 				r.Post("/", adtc.PostRequest)
+				r.Patch("/{topic_id}", adtc.PatchRequest)
+				// r.Delete("/{topic_id}", adtc.DeleteRequest)
 			})
 		})
 	})

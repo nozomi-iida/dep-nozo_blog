@@ -48,7 +48,6 @@ func topicListToJson(topics []entity.Topic) topicListResponse {
 	return topicListResponse{Topics: trs}
 }
 
-
 func (tc *TopicController) ListRequest(w http.ResponseWriter, r *http.Request) {
 	keyword := r.URL.Query().Get("keyword")
 	query := topic.TopicQuery{Keyword: keyword}

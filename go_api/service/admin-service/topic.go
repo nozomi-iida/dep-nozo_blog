@@ -14,9 +14,9 @@ type TopicService struct {
 }
 
 type TopicDto struct {
-	TopicID 	 uuid.UUID `json:"topicId"`
-	Name 			 string    `json:"name"`
-	Description  string    `json:"description"`
+	TopicID     uuid.UUID `json:"topicId"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
 }
 
 type TopicListDto struct {
@@ -27,8 +27,8 @@ func topicEntitiesToListDto(topics []entity.Topic) TopicListDto {
 	t := TopicListDto{}
 	for _, topic := range topics {
 		topicDto := TopicDto{
-			TopicID: topic.TopicID,
-			Name: topic.Name,
+			TopicID:     topic.TopicID,
+			Name:        topic.Name,
 			Description: topic.Description,
 		}
 
@@ -37,7 +37,7 @@ func topicEntitiesToListDto(topics []entity.Topic) TopicListDto {
 
 	return t
 }
-	
+
 func NewTopicService(cfgs ...topicConfiguration) (*TopicService, error) {
 	aas := &TopicService{}
 
@@ -71,8 +71,18 @@ func (as *TopicService) List() (TopicListDto, error) {
 }
 
 func (as *TopicService) Create(name string, description string) error {
-	tp, err := entity.NewTopic(entity.Topic{Name: name, Description: description})
+	tp, err := entity.NewTopic(entity.TopicArgument{Name: name, Description: description})
 	err = as.ap.Create(tp)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (as *TopicService) Update(topicID uuid.UUID, name string, description string) error {
+	tp, err := entity.NewTopic(entity.TopicArgument{TopicID: topicID, Name: name, Description: description})
+	err = as.ap.Update(tp)
 	if err != nil {
 		return err
 	}

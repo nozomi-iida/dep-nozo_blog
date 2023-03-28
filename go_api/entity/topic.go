@@ -16,16 +16,26 @@ type Topic struct {
 	Description string
 }
 
-func NewTopic(topic Topic) (Topic, error) {
+type TopicArgument struct {
+	TopicID     uuid.UUID
+	Name        string
+	Description string
+}
+
+func NewTopic(topic TopicArgument) (Topic, error) {
 	if topic.Name == "" {
 		return Topic{}, ErrInvalidTopic
 	}
 
-	if topic.TopicID.ID() == 0 {
+	if topic.TopicID == uuid.Nil {
 		topic.TopicID = uuid.New()
 	}
 
-	return topic, nil
+	return Topic{
+		TopicID:     topic.TopicID,
+		Name:        topic.Name,
+		Description: topic.Description,
+	}, nil
 }
 
 func (t *Topic) SetTopicId(id uuid.UUID) {

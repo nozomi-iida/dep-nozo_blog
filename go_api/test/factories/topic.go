@@ -19,7 +19,13 @@ func SetTopicName(name string) topicOptions {
 var topicCalled = 0
 
 func CreateTopic(t *testing.T, fileName string, options ...topicOptions) entity.Topic {
-	topic, err := entity.NewTopic(entity.Topic{Name: fmt.Sprintf("topic %v", topicCalled), Description: "description"})
+	topic, err := entity.NewTopic(
+		entity.TopicArgument{
+			Name: fmt.Sprintf("topic %v", 
+			topicCalled), 
+			Description: "description",
+		},
+	)
 	for _, op := range options {
 		op(&topic)
 	}

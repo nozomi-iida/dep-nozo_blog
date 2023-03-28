@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/nozomi-iida/nozo_blog/presentation/helpers"
 	adminservice "github.com/nozomi-iida/nozo_blog/service/admin-service"
 )
@@ -56,6 +57,30 @@ func (tc *TopicController) PostRequest(w http.ResponseWriter, r *http.Request) {
 	helpers.Validate(w, topicRequest)
 
 	err := tc.ts.Create(topicRequest.Name, topicRequest.Description)
+	if err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+}
+
+func (tc *TopicController) PatchRequest(w http.ResponseWriter, r *http.Request) {
+	topicId, err := uuid.Parse(r.URL.Query().Get("topic_id"))
+	if err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+	body := make([]byte, r.ContentLength)
+	r.Body.Read(body)
+	var topicRequest topicRequest
+	if err := topicRequest.FromJson(body); err != nil {
+		helpers.ErrorHandler(w, err)
+		return
+	}
+	helpers.Validate(w, topicRequest)
+
+	err = tc.ts.Update(topicId, topicRequest.Name, topicRequest.Description)
 	if err != nil {
 		helpers.ErrorHandler(w, err)
 		return

@@ -38,7 +38,7 @@ func TestTopicSqlite_Create(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.test, func(t *testing.T) {
-			tp, err := entity.NewTopic(entity.Topic{Name: tc.name})
+			tp, err := entity.NewTopic(entity.TopicArgument{Name: tc.name})
 			err = sq.Create(tp)
 
 			if err != tc.expectedErr {
@@ -181,6 +181,43 @@ func TestTopicSqlite_PublicFindByName(t *testing.T) {
 			}
 			if err == nil && tc.query.AssociatedWith == topic.Article && len(tp.Articles) == 0 {
 				t.Errorf("Expected article association, but got none")
+			}
+		})
+	}
+}
+
+func TestTopicSqlite_Update(t *testing.T) {
+	ts := test.ConnectDB(t)
+	defer ts.Remove()
+	sq, _ := sqlite.New(ts.Filename)
+	targetTopic := factories.CreateTopic(t, ts.Filename, factories.SetTopicName("targeted"))
+	updatedTopic, _ := entity.NewTopic(
+		entity.TopicArgument{
+			TopicID: targetTopic.TopicID, 
+			Name: "updated", 
+			Description: targetTopic.Description,
+		},
+	)
+
+	type testCase struct {
+		test        string
+		topic       entity.Topic
+		expectedErr error
+	}
+
+	testCases := []testCase{
+		{
+			test:        "Update targeted topic",
+			topic:       updatedTopic,
+			expectedErr: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test, func(t *testing.T) {
+			err := sq.Update(tc.topic)
+			if err != tc.expectedErr {
+				t.Errorf("Expected error %v, got %v", tc.expectedErr, err)
 			}
 		})
 	}

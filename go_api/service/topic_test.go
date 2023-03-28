@@ -9,8 +9,6 @@ import (
 	"github.com/nozomi-iida/nozo_blog/test/factories"
 )
 
-
-
 func TestTopicService_PublicList(t *testing.T) {
 	ts := test.ConnectDB(t)
 	defer ts.Remove()
