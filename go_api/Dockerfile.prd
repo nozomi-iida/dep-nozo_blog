@@ -11,6 +11,6 @@ RUN go mod download
 
 COPY . . 
 
-RUN go build -o nozo_blog_go_api_go_api 
+RUN go build -o nozo_blog_go_api 
 
-CMD ["./main"]
+CMD ["./nozo_blog_go_api"]
