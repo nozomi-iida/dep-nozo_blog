@@ -20,20 +20,30 @@ resource "aws_security_group" "instance" {
   tags = var.common_tags
 }
 
+data "aws_ssm_parameter" "ecs_ami" {
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended"
+}
+
 resource "aws_launch_template" "app" {
   name                   = "${var.app_name}_launch_template"
-  image_id               = "ami-0ec1b47781bc9d6d1"
+  image_id               = jsondecode(data.aws_ssm_parameter.ecs_ami.value)["image_id"]
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.instance.id]
   key_name               = var.key_name
+  tags                   = var.common_tags
 }
 
 resource "aws_autoscaling_group" "app" {
   name                = "${var.app_name}_autoscaling_group"
   desired_capacity    = 1
-  max_size            = 1
+  max_size            = 3
   min_size            = 1
   vpc_zone_identifier = var.public_subnet_ids
+  tag {
+    key                 = "Name"
+    value               = "${var.app_name}_instance"
+    propagate_at_launch = true
+  }
 
   launch_template {
     id      = aws_launch_template.app.id

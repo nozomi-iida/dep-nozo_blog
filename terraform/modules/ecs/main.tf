@@ -12,6 +12,10 @@ resource "aws_ecs_capacity_provider" "app" {
   name = "${var.app_name}_ecs_capacity_provider"
   auto_scaling_group_provider {
     auto_scaling_group_arn = var.autoscaling_group_arn
+    managed_scaling {
+      status          = "ENABLED"
+      target_capacity = 80
+    }
   }
 }
 
@@ -40,15 +44,20 @@ resource "aws_ecs_task_definition" "app" {
     host_path = "./app"
   }
   memory                   = 512
+  cpu                      = 256
   requires_compatibilities = ["EC2"]
 }
 
 resource "aws_ecs_service" "app" {
   name            = "${var.app_name}_ecs_service"
-  launch_type     = "EC2"
   cluster         = aws_ecs_cluster.app.id
   task_definition = aws_ecs_task_definition.app.arn
   desired_count   = 1
+  capacity_provider_strategy {
+    capacity_provider = aws_ecs_capacity_provider.app.name
+    weight            = 1
+    base              = 0
+  }
   load_balancer {
     target_group_arn = var.alb_tg_id
     container_name   = "app"
