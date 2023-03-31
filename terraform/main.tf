@@ -32,7 +32,7 @@ module "route53" {
 module "alb" {
   source            = "./modules/alb"
   common_tags       = local.tags
-  app_name          = var.app_name
+  app_name          = "nozo-blog"
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
   certificate_arn   = module.acm.certificate_arn
