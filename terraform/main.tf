@@ -15,19 +15,10 @@ module "vpc" {
   app_name    = var.app_name
 }
 
-module "ec2" {
-  source      = "./modules/ec2"
-  common_tags = local.tags
-  app_name    = var.app_name
-  vpc_id      = module.vpc.vpc_id
-  subnet_id   = module.vpc.private_subnet_id
-  alb_sg_id   = module.alb.alb_sg_id
-}
-
-module "s3" {
-  source      = "./modules/s3"
-  common_tags = local.tags
-  app_name    = "nozo-blog"
+module "acm" {
+  source          = "./modules/acm"
+  route53_zone_id = module.route53.zone_id
+  common_tags     = local.tags
 }
 
 module "route53" {
@@ -38,12 +29,6 @@ module "route53" {
   alb_dns_name = module.alb.dns_name
 }
 
-module "acm" {
-  source          = "./modules/acm"
-  route53_zone_id = module.route53.zone_id
-  common_tags     = local.tags
-}
-
 module "alb" {
   source            = "./modules/alb"
   common_tags       = local.tags
@@ -51,11 +36,31 @@ module "alb" {
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
   certificate_arn   = module.acm.certificate_arn
-  instance_id       = module.ec2.instance_id
+}
+
+module "ec2" {
+  source            = "./modules/ec2"
+  common_tags       = local.tags
+  app_name          = var.app_name
+  alb_sg_id         = module.alb.alb_sg_id
+  public_subnet_ids = module.vpc.public_subnet_ids
+  vpc_id            = module.vpc.vpc_id
+  key_name          = "nozo_blog_kp"
 }
 
 module "ecs" {
-  source = "./modules/ecs"
-  common_tags       = local.tags
-  app_name          = var.app_name
+  source                = "./modules/ecs"
+  common_tags           = local.tags
+  app_name              = var.app_name
+  alb_tg_id             = module.alb.alb_tg_id
+  autoscaling_group_arn = module.ec2.autoscaling_group_arn
 }
+
+module "s3" {
+  source      = "./modules/s3"
+  common_tags = local.tags
+  app_name    = "nozo-blog"
+}
+
+
+

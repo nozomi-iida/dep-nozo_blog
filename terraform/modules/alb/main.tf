@@ -13,20 +13,14 @@ resource "aws_security_group" "allow_http" {
   tags = var.common_tags
 }
 
-resource "aws_lb_target_group" "name" {
+resource "aws_lb_target_group" "app" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id
+  tags     = merge(var.common_tags, { Name = "${var.app_name}_tg" })
   health_check {
     path = "/health"
   }
-  tags = merge(var.common_tags, { Name = "${var.app_name}_tg" })
-}
-
-resource "aws_lb_target_group_attachment" "app" {
-  target_group_arn = aws_lb_target_group.name.arn
-  target_id        = var.instance_id
-  port             = 80
 }
 
 resource "aws_lb" "app" {
@@ -43,7 +37,7 @@ resource "aws_lb_listener" "app" {
   protocol          = "HTTPS"
   certificate_arn   = var.certificate_arn
   default_action {
-    target_group_arn = aws_lb_target_group.name.arn
+    target_group_arn = aws_lb_target_group.app.arn
     type             = "forward"
   }
 }

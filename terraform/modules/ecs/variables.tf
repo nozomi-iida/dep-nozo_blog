@@ -5,3 +5,12 @@ variable "common_tags" {
 variable "app_name" {
   type = string
 }
+
+
+variable "alb_tg_id" {
+  type = string
+}
+
+variable "autoscaling_group_arn" {
+  type = string
+}

@@ -1,7 +1,3 @@
-output "instance_public_ip" {
-  value = aws_instance.app.public_ip
-}
-
-output "instance_id" {
-  value = aws_instance.app.id
+output "autoscaling_group_arn" {
+  value = aws_autoscaling_group.app.arn
 }

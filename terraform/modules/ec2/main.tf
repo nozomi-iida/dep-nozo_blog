@@ -1,4 +1,4 @@
-resource "aws_security_group" "allow_ssh" {
+resource "aws_security_group" "instance" {
   name        = "${var.app_name}_instance_sg"
   description = "Allow SSH traffic"
   vpc_id      = var.vpc_id
@@ -20,13 +20,23 @@ resource "aws_security_group" "allow_ssh" {
   tags = var.common_tags
 }
 
-resource "aws_instance" "app" {
-  ami           = "ami-0f758aaed03c79cf3" # Amazon Linux 2 LTS AMI
-  instance_type = var.instance_type
-  key_name      = var.key_name
-  subnet_id     = var.subnet_id
+resource "aws_launch_template" "app" {
+  name                   = "${var.app_name}_launch_template"
+  image_id               = "ami-0ec1b47781bc9d6d1"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.instance.id]
+  key_name               = var.key_name
+}
 
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+resource "aws_autoscaling_group" "app" {
+  name                = "${var.app_name}_autoscaling_group"
+  desired_capacity    = 1
+  max_size            = 1
+  min_size            = 1
+  vpc_zone_identifier = var.public_subnet_ids
 
-  tags = merge(var.common_tags, { Name = "${var.app_name}_instance" })
+  launch_template {
+    id      = aws_launch_template.app.id
+    version = "$Latest"
+  }
 }
