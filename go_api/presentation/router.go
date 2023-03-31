@@ -1,6 +1,8 @@
 package presentation
 
 import (
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/nozomi-iida/nozo_blog_go_api/presentation/controller"
 	admincontroller "github.com/nozomi-iida/nozo_blog_go_api/presentation/controller/admin-controller"
@@ -21,6 +23,12 @@ func NewRouter(fileString string) (*chi.Mux, error) {
 	r := chi.NewRouter()
 	r.Use(middleware.WrapHandlerWithLoggingMiddleware)
 	r.Use(middleware.CorsMiddleware)
+	r.Route("/health", func(r chi.Router) {
+		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("OK"))
+		})
+	})
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/sign_in", atc.SignInRequest)

@@ -193,8 +193,8 @@ func TestTopicSqlite_Update(t *testing.T) {
 	targetTopic := factories.CreateTopic(t, ts.Filename, factories.SetTopicName("targeted"))
 	updatedTopic, _ := entity.NewTopic(
 		entity.TopicArgument{
-			TopicID: targetTopic.TopicID, 
-			Name: "updated", 
+			TopicID:     targetTopic.TopicID,
+			Name:        "updated",
 			Description: targetTopic.Description,
 		},
 	)

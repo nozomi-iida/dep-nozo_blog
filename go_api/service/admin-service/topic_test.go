@@ -93,7 +93,7 @@ func TestTopicService_Update(t *testing.T) {
 	testCases := []testCase{
 		{
 			test:        "Success to update topic",
-			topicID: 	 target.TopicID,
+			topicID:     target.TopicID,
 			name:        "updated",
 			description: target.Description,
 			expectedErr: nil,

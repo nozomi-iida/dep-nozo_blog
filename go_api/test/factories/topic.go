@@ -21,8 +21,8 @@ var topicCalled = 0
 func CreateTopic(t *testing.T, fileName string, options ...topicOptions) entity.Topic {
 	topic, err := entity.NewTopic(
 		entity.TopicArgument{
-			Name: fmt.Sprintf("topic %v", 
-			topicCalled), 
+			Name: fmt.Sprintf("topic %v",
+				topicCalled),
 			Description: "description",
 		},
 	)

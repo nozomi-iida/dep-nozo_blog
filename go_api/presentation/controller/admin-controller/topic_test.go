@@ -123,9 +123,9 @@ func TestTopicController_PatchRequest(t *testing.T) {
 	us := test.CreateUser(t, ts.Filename)
 	targeted := factories.CreateTopic(t, ts.Filename)
 	req, err := http.NewRequestWithContext(
-		context.TODO(), 
-		http.MethodPatch, 
-		testServer.URL+fmt.Sprintf("/api/v1/admin/topics/%s", targeted.TopicID), 
+		context.TODO(),
+		http.MethodPatch,
+		testServer.URL+fmt.Sprintf("/api/v1/admin/topics/%s", targeted.TopicID),
 		nil,
 	)
 	token, err := us.UserId.Encode()
