@@ -21,3 +21,7 @@ variable "vpc_id" {
 variable "key_name" {
   type = string
 }
+
+variable "cluster_name" {
+  type = string
+}
