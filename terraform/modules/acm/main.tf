@@ -1,6 +1,7 @@
 resource "aws_acm_certificate" "app" {
-  domain_name       = var.domain_name
-  validation_method = "DNS"
+  domain_name               = var.domain_name
+  validation_method         = "DNS"
+  subject_alternative_names = ["*.${var.domain_name}"]
 
   tags = var.common_tags
 }

@@ -39,7 +39,7 @@ resource "aws_ecs_task_definition" "app" {
       portMappings = [
         {
           containerPort = 8080
-          hostPort      = 8080
+          hostPort      = 80
         }
       ]
       logConfiguration = {
@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "app" {
     name      = "app"
     host_path = "./app"
   }
-  memory                   = 128 
+  memory                   = 128
   cpu                      = 256
   requires_compatibilities = ["EC2"]
 }
