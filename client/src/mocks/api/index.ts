@@ -41,7 +41,7 @@ export const handler = {
     },
   },
   getTags: {
-    success: (tags: Tag[] = [{ tagID: randomUUID(), name: "tag1" }]) => {
+    success: (tags: Tag[] = [{ tagId: randomUUID(), name: "tag1" }]) => {
       return rest.get("/tags", (_, res, ctx) => {
         return res(
           ctx.status(200),
