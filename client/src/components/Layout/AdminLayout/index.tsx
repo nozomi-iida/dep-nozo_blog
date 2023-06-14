@@ -1,7 +1,7 @@
 import { Box, Flex, useColorModeValue } from "@chakra-ui/react";
 import { Footer } from "components/Footer";
 import { FC, ReactNode } from "react";
-import { AdminSidebar } from "./Sidebar";
+import { AdminSidebar } from "./AdminSidebar";
 
 type LayoutProps = {
   children: ReactNode;
@@ -26,7 +26,7 @@ export const AdminLayout: FC<LayoutProps> & LayoutSubComponent = ({
 const ContentLayout: FC<LayoutProps> = ({ children }) => {
   return (
     <Flex flexDir="column" mx="auto" maxW={970} w="full">
-      <Box as="main" flex={1} px={4} py={14}>
+      <Box flex={1} mx="auto" maxW={970} w="full" py={4}>
         {children}
       </Box>
       <Box mx="auto">

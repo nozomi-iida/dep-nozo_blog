@@ -15,3 +15,7 @@ $ sqlite3
 $ docker compose exec app bash
 > sql-migrate up
 ```
+
+## log ファイルのセットアップ
+
+`logs/development.json`を作成する
